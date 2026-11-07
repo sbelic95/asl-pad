@@ -1,0 +1,16 @@
+{
+  "name": "ASL Pad",
+  "short_name": "ASL Pad",
+  "description": "Crew pad for virtual Air Serbia flights in the flight simulator (unofficial).",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#04122b",
+  "theme_color": "#04122b",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
