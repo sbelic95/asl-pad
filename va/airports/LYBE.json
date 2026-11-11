@@ -45,7 +45,8 @@
       "lda": 3400,
       "thrElev": 317,
       "lights": "ALS CAT II/III 900 m · TDZ · CL · PAPI 3°",
-      "cat": "CAT I/II/III"
+      "cat": "CAT I/II/III",
+      "ldaGs": 3122
     },
     {
       "id": "30R",
@@ -57,7 +58,8 @@
       "lda": 3000,
       "thrElev": 333,
       "lights": "ALS CAT I 900 m · CL · PAPI 3° · THR displaced 400 m",
-      "cat": "CAT I"
+      "cat": "CAT I",
+      "ldaGs": 2704
     },
     {
       "id": "12R",
@@ -69,7 +71,8 @@
       "lda": 2814,
       "thrElev": 322,
       "lights": "ALS CAT II/III 900 m · TDZ · CL · PAPI 3° · THR displaced 690 m",
-      "cat": "CAT I/II/III"
+      "cat": "CAT I/II/III",
+      "ldaGs": 2499
     },
     {
       "id": "30L",
@@ -328,8 +331,8 @@
           "sr": "Javi se na poziciji pre gašenja motora. Van pozicije uvek budi na vezi sa kontrolom."
         },
         {
-          "en": "Docking guidance (VDGS): A1–A10 and C1–C14. Marshaller: A11–A15, GA1–GA3, B1–B10, B1A, B9A, C3A, C5A, N1, N1A, N2, E1–E4, E1A, E2A, W1, W1A, W2.",
-          "sr": "Navođenje (VDGS): A1–A10 i C1–C14. Maršaler: A11–A15, GA1–GA3, B1–B10, B1A, B9A, C3A, C5A, N1, N1A, N2, E1–E4, E1A, E2A, W1, W1A, W2."
+          "en": "Docking guidance (VDGS): A1–A10, C1–C14, C7A, C9A and C11A. Marshaller: A11–A15, GA1–GA3, B1–B10, B1A, B9A, C3A, C5A, N1, N1A, N2, E1–E4, E1A, E2A, W1, W1A, W2.",
+          "sr": "Navođenje (VDGS): A1–A10, C1–C14, C7A, C9A i C11A. Maršaler: A11–A15, GA1–GA3, B1–B10, B1A, B9A, C3A, C5A, N1, N1A, N2, E1–E4, E1A, E2A, W1, W1A, W2."
         },
         {
           "en": "Self-manoeuvring: GA1–GA3; B1 and E1 (turn right), B2–B9 and E2 (left or right) when the next stand is free; E3 and E4 under conditions. All other stands need a push-back.",
@@ -340,12 +343,37 @@
           "sr": "C11A: push-back sa nosom na zapad. Široki avioni sa C3A/C5A licem ka stop baru F1. Sa E1A ili B9A: na TWY H licem ka E1, pa minimalnom snagom preko L, J ili K na G. Sa E2A: na TWY G licem na jug, pa preko L, J ili K na H."
         },
         {
+          "en": "A15: push-back facing south, or power-back to the TWY G centreline and then forward, nose north, onto G. After a push-back from A14 stop abeam A13 (jet blast).",
+          "sr": "A15: push-back sa nosom na jug, ili power-back do ose TWY G pa napred, nosom na sever, na G. Posle push-backa sa A14 stani u visini A13 (mlaz motora)."
+        },
+        {
           "en": "A11–A15 and GA1–GA3 are not used at the same time. GA1–GA3 with LVP: taxi out only with a marshaller.",
           "sr": "A11–A15 i GA1–GA3 se ne koriste istovremeno. GA1–GA3 pri LVP: izlazak samo uz maršalera."
         },
         {
           "en": "On the stand engines may only be started and run at IDLE; engine runs are forbidden on aprons and taxiways.",
           "sr": "Na poziciji motori smeju samo da se pokrenu i rade na IDLE; testiranje motora na platformama i rulnim stazama je zabranjeno."
+        }
+      ]
+    },
+    {
+      "id": "dock",
+      "title": {
+        "en": "Docking guidance",
+        "sr": "Sistemi za navođenje"
+      },
+      "items": [
+        {
+          "en": "APIS++ (A1–A5, C1–C6): the left box shows arrows to steer back to the centreline, the bar on the right shrinks from about 15 m to the stop line; STOP shows in red. If it is off, a marshaller parks you.",
+          "sr": "APIS++ (A1–A5, C1–C6): levo polje pokazuje strelice za povratak na osu, stubić desno se smanjuje od oko 15 m do linije zaustavljanja; STOP crvenom bojom. Ako ne radi, parkira te maršaler."
+        },
+        {
+          "en": "Safedock (A6–A10): a T with arrows for steering; the text shows the aircraft type, the distance to go, SLOW, STOP and OK. ERR or ID FAIL: stop and wait.",
+          "sr": "Safedock (A6–A10): T sa strelicama za skretanje; tekst pokazuje tip aviona, preostalu udaljenost, SLOW, STOP i OK. ERR ili ID FAIL: stani i čekaj."
+        },
+        {
+          "en": "PA3 (C7–C14, C7A, C9A, C11A): a vertical bar with arrows for steering; the text shows the type, the distance, STOP, OK or “too far”.",
+          "sr": "PA3 (C7–C14, C7A, C9A, C11A): uspravna traka sa strelicama za skretanje; tekst pokazuje tip, udaljenost, STOP, OK ili „predaleko“."
         }
       ]
     },
@@ -371,10 +399,56 @@
       ]
     },
     {
+      "id": "rnav",
+      "title": {
+        "en": "RNAV arrivals",
+        "sr": "RNAV dolasci"
+      },
+      "items": [
+        {
+          "en": "The turn onto final is usually by radar vectors. Without suitable equipment say “UNABLE RNAV STAR”.",
+          "sr": "Okret na finalni je obično radarskim vektorisanjem. Bez odgovarajuće opreme javi „UNABLE RNAV STAR“."
+        },
+        {
+          "en": "“Cleared … arrival” covers the lateral path only – ATC gives the altitudes. “Cleared direct …” means fly direct to that point, then continue on the STAR to the runway in use.",
+          "sr": "„Cleared … arrival“ odnosi se samo na putanju – visine daje kontrola. „Cleared direct …“ znači direktno na tu tačku, pa dalje po STAR-u do piste u upotrebi."
+        },
+        {
+          "en": "Fuel: in rush hours plan the full STAR. Outside them you may plan to intercept the final 10–15 NM from the threshold – about 30 NM shorter.",
+          "sr": "Gorivo: u špicu planiraj ceo STAR. Van špica možeš planirati presretanje finalnog 10–15 NM od praga – oko 30 NM kraće."
+        }
+      ]
+    },
+    {
+      "id": "xpdr",
+      "title": {
+        "en": "Transponder, A-CDM and TCAS",
+        "sr": "Transponder, A-CDM i TCAS"
+      },
+      "items": [
+        {
+          "en": "LYBE is an A-CDM airport: when you leave the stand your take-off time (TTOT) goes to the Network Manager. If you have to return to the stand, the flight plan is suspended and needs a new EOBT.",
+          "sr": "LYBE je A-CDM aerodrom: kad napustiš poziciju, vreme poletanja (TTOT) ide Network Manageru. Ako se vratiš na poziciju, plan leta se suspenduje i treba novi EOBT."
+        },
+        {
+          "en": "Transponder on the ground: AUTO with the assigned code – or ON with the code from the push-back request, and after landing until you stop on the stand. Parked: STBY.",
+          "sr": "Transponder na zemlji: AUTO sa dodeljenim kodom – ili ON sa kodom od zahteva za push-back, i posle sletanja dok ne staneš na poziciji. Parkiran: STBY."
+        },
+        {
+          "en": "Enter your flight call sign (ICAO format) in the FMS or transponder before you ask for push-back.",
+          "sr": "Pre zahteva za push-back unesi pozivni znak leta (ICAO format) u FMS ili transponder."
+        },
+        {
+          "en": "TCAS (TA/RA) only once cleared to line up; switch it off after vacating the runway.",
+          "sr": "TCAS (TA/RA) tek kad dobiješ odobrenje za izlazak na pistu; isključi ga posle napuštanja piste."
+        }
+      ]
+    },
+    {
       "id": "comfail",
       "title": {
-        "en": "Communication failure on arrival",
-        "sr": "Gubitak veze u dolasku"
+        "en": "Communication failure",
+        "sr": "Gubitak veze"
       },
       "items": [
         {
@@ -392,6 +466,18 @@
         {
           "en": "Already on the STAR or vectored: keep the last level, follow the STAR (or as cleared), hold at LABUD, LAMBA or TUPKO, descend to the MHA and fly the approach.",
           "sr": "Već na STAR-u ili pod vektorisanjem: zadrži nivo, prati STAR (ili odobrenje), holding na LABUD, LAMBA ili TUPKO, MHA i prilaz."
+        },
+        {
+          "en": "Holding when the radio fails: keep the level for 7 minutes, then descend to the MHA in the holding; leave it at the EAT or the flight plan ETA, whichever is later, and fly the approach.",
+          "sr": "U holdingu kad nestane veza: zadrži nivo 7 minuta, pa se u holdingu spusti na MHA; izađi u EAT ili ETA iz plana leta, šta je kasnije, i leti prilaz."
+        },
+        {
+          "en": "During a missed approach: fly it and climb to the cleared altitude; after OBR fly to LOGAR (12L/12R) or RIPAN (30L/30R), then the approach to the same runway – or to the opposite one if the wind caused the go-around.",
+          "sr": "U neuspelom prilazu: leti ga i penji na odobrenu visinu; posle OBR leti na LOGAR (12L/12R) ili RIPAN (30L/30R), pa prilaz na istu pistu – ili na suprotnu ako je vetar uzrok."
+        },
+        {
+          "en": "After departure: normally continue the flight under the ICAO rules. To return to LYBE: squawk 7600, keep the level or climb to the minimum safe altitude; after 7 minutes or at the FIR boundary (whichever is first) fly back to the last SID waypoint, plan the departure runway, then LABUD (12L), LAMBA (12R) or TUPKO (30L/30R), descend to 10 000 ft if higher, hold, descend to the MHA and fly the approach.",
+          "sr": "Posle poletanja: po pravilu nastavi let po ICAO pravilima. Za povratak na LYBE: squawk 7600, zadrži nivo ili se popni na minimalnu sigurnu visinu; posle 7 minuta ili na granici FIR-a (šta je ranije) vrati se na poslednju tačku SID-a, planiraj pistu poletanja, pa LABUD (12L), LAMBA (12R) ili TUPKO (30L/30R), spusti se na 10 000 ft ako si više, holding, MHA i prilaz."
         }
       ]
     },
@@ -560,7 +646,10 @@
     "C11",
     "C12",
     "C13",
-    "C14"
+    "C14",
+    "C7A",
+    "C9A",
+    "C11A"
   ],
   "selfManoeuvring": [
     "GA1-1",
@@ -597,6 +686,10 @@
     {
       "en": "30L full length is from the turn pad as well.",
       "sr": "30L cela dužina je takođe sa okretnice."
+    },
+    {
+      "en": "SID TISAK 4Z: take-off from the full length of 12L (or 12R when in use) is mandatory early in the morning – summer 04–05 UTC Mon–Fri and 04–06 UTC Sat–Sun, winter 05–06 UTC Mon–Fri and 05–07 UTC Sat–Sun.",
+      "sr": "SID TISAK 4Z: rano ujutru obavezno poletanje sa cele dužine 12L (ili 12R kad je u upotrebi) – leti 04–05 UTC pon–pet i 04–06 UTC sub–ned, zimi 05–06 UTC pon–pet i 05–07 UTC sub–ned."
     }
   ],
   "procedures": {
@@ -608,9 +701,53 @@
     },
     "12R": {
       "nadp": {
-        "en": "Same noise abatement procedure as RWY 12L (take-off thrust to 800 ft, climb thrust and V2+10 to 20 kt to 3000 ft, then accelerate).",
-        "sr": "Isti postupak za smanjenje buke kao za RWY 12L (potisak za poletanje do 800 ft, potisak za penjanje i V2+10 do 20 kt do 3000 ft, pa ubrzanje)."
+        "en": "Same noise abatement procedure as RWY 12L (take-off thrust to 800 ft, climb thrust and V2+10 to 20 kt to 3000 ft, then accelerate). The ban on the IL-76 and aircraft below noise Stage 3 applies here too.",
+        "sr": "Isti postupak za smanjenje buke kao za RWY 12L (potisak za poletanje do 800 ft, potisak za penjanje i V2+10 do 20 kt do 3000 ft, pa ubrzanje). I ovde važi zabrana za IL-76 i avione ispod nivoa buke 3."
       }
     }
+  },
+  "taxiRunways": {
+    "12L": [
+      "12R/30L"
+    ],
+    "30R": [
+      "12R/30L"
+    ],
+    "_note": "while 12L/30R is in use, 12R/30L is a taxi route"
+  },
+  "vdgsType": {
+    "APIS++": [
+      "A1",
+      "A2",
+      "A3",
+      "A4",
+      "A5",
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "C5",
+      "C6"
+    ],
+    "Safedock": [
+      "A6",
+      "A7",
+      "A8",
+      "A9",
+      "A10"
+    ],
+    "PA3": [
+      "C7",
+      "C8",
+      "C9",
+      "C10",
+      "C11",
+      "C12",
+      "C13",
+      "C14",
+      "C7A",
+      "C9A",
+      "C11A"
+    ]
   }
 }
