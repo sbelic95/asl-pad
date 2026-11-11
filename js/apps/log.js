@@ -4,6 +4,7 @@ import { t, nf, dateShort, LOCALE } from "../i18n.js";
 import { esc, hhmmz, dur, distNm, greatCircle } from "../util.js";
 import { aptDb } from "../tz.js";
 import { sheet } from "../sheet.js";
+import { career, careerHtml } from "../career.js";
 
 export const name = "Logbook";
 export const tabs = [];
@@ -13,7 +14,9 @@ export function render(body, ctx) {
   C = ctx;
   if (!body._log) { body._log = true; body.addEventListener("click", onClick); }
   const list = logbook();
-  body.innerHTML = hero(list) + (list.length ? year(list) : "") + toolbar() + (list.length ? months(list) : `<div class="empty">${t("No flights yet. Flights are added when you reach the gate.")}</div>`);
+  const c = career();
+  body.innerHTML = hero(list) + (c ? `<div class="card" style="margin-top:14px"><div class="lbl" style="margin-bottom:6px">${t("Career")}</div>${careerHtml(c, true)}</div>` : "")
+    + (list.length ? year(list) : "") + toolbar() + (list.length ? months(list) : `<div class="empty">${t("No flights yet. Flights are added when you reach the gate.")}</div>`);
 }
 export function summary() {
   const l = logbook();

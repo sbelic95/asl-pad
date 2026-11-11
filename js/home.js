@@ -1,7 +1,8 @@
 // Home screen: widgets on the left, apps and the dock.
-import { S, derived, wxOf } from "./data.js";
+import { S, settings, derived, wxOf } from "./data.js";
+import { career, careerHtml } from "./career.js";
 import { actions } from "./actions.js";
-import { t, getLang, LOCALE } from "./i18n.js";
+import { t, LOCALE, loc } from "./i18n.js";
 import { esc, store, hhmmz } from "./util.js";
 import { sheet } from "./sheet.js";
 import { APP_ICONS, I } from "./icons.js";
@@ -11,7 +12,7 @@ import { cityOf } from "./tz.js";
 export const HOME_APPS = [
   { id: "fly", name: "ASL Fly", icon: "fly" }, { id: "ops", name: "ASL Ops", icon: "ops" }, { id: "log", name: "Logbook", icon: "log" },
   { id: "cabin", name: "Cabin", icon: "cabin" }, { id: "vdgs", name: "VDGS", icon: "vdgs" }, { id: "simbrief", name: "SimBrief", icon: "simbrief" },
-  { id: "settings", name: "Settings", icon: "settings" },
+  { id: "downloads", name: "Downloads", icon: "downloads" }, { id: "settings", name: "Settings", icon: "settings" },
 ];
 const DOCK = ["fly", "ops", "log", "settings"];
 
@@ -28,15 +29,19 @@ export function renderHome(el, now = Date.now()) {
   const sub = o ? t("{f} to {city} today", { f: o.iataNo || o.callsign, city: cityOf(o.dest) || o.dest?.icao }) : t("No flight loaded");
   el.innerHTML = `
     <div class="hm-widgets">
-      <div><p class="hm-greet">${esc(greeting(now))}, ${t("Captain")}</p><div class="hm-sub">${esc(sub)}</div>${wxHere(o, d)}</div>
+      <div><p class="hm-greet">${esc(greeting(now))}, ${t("Captain")}</p><div class="hm-sub">${esc(sub)}</div>${show("wx") ? wxHere(o, d) : ""}${show("career") ? careerHtml(career()) : ""}</div>
       ${flightWidget(o, d, now)}${timesWidget(o, now)}${todayWidget(now)}
     </div>
     <div class="hm-main">
       <div class="hm-apps">${HOME_APPS.map((a) => icon(a, badges[a.id])).join("")}</div>
-      <div class="hm-board">${noticesCard(now)}${eventsCard(o, now)}</div>
+      <div class="hm-board">${show("notices") ? noticesCard(now, d) : ""}${show("events") ? eventsCard(o, now) : ""}</div>
     </div>
     <div class="dock">${DOCK.map((id) => icon(HOME_APPS.find((a) => a.id === id), badges[id])).join("")}</div>`;
 }
+
+// cards the pilot can hide (Settings → Home screen)
+export const HOME_CARDS = [["wx", "Weather here"], ["career", "Career"], ["notices", "Notices"], ["events", "Network events"]];
+const show = (k) => !(settings.homeHide || []).includes(k);
 
 // ---------- weather where you are: departure until take-off, then destination ----------
 function wxHere(o, d) {
@@ -49,21 +54,28 @@ function wxHere(o, d) {
 }
 
 // ---------- notices and tips of the airline (va/notices.json) ----------
-const loc = (x) => (x == null ? "" : typeof x === "string" ? x : x[getLang()] || x.en || x.sr || Object.values(x)[0] || "");
 const day = (ts) => new Date(ts).toISOString().slice(0, 10);
 function activeNotices(now) {
   const today = day(now);
   return (S.notices?.notices || []).filter((n) => n.id && (!n.date || n.date <= today) && (!n.until || n.until >= today))
     .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
 }
-function noticesCard(now) {
+// a tip for the phase of the flight ("crew info"), else the tip of the day
+function tipFor(now, d) {
+  const tips = S.notices?.tips || [], ph = d?.phase;
+  const forPhase = ph ? tips.filter((x) => (x.phase || []).includes(ph)) : [];
+  if (forPhase.length) return [t("Crew info"), loc(forPhase[Math.floor(now / 6e5) % forPhase.length])];
+  const daily = tips.filter((x) => !x.phase);
+  return daily.length ? [t("Tip of the day"), loc(daily[Math.floor(now / 864e5) % daily.length])] : ["", ""];
+}
+function noticesCard(now, d) {
   const list = activeNotices(now).slice(0, 3), read = store.get("asl.noticesRead", []);
-  const tips = S.notices?.tips || [], tip = tips.length ? loc(tips[Math.floor(now / 864e5) % tips.length]) : "";
+  const [tipLbl, tip] = tipFor(now, d);
   const fmt = new Intl.DateTimeFormat(LOCALE(), { day: "numeric", month: "short", timeZone: "UTC" });
   return `<div class="hb-card"><div class="lbl">Air Serbia Virtual · ${t("Notices")}</div>
     ${list.length ? list.map((n) => `<button class="hb-row" data-notice="${esc(n.id)}">${read.includes(n.id) ? "" : `<i class="dot"></i>`}<b>${esc(loc(n.title))}</b><span class="dim">${n.date ? esc(fmt.format(new Date(n.date))) : ""}</span></button>`).join("")
       : `<div class="dim hb-empty">${t("No notices right now.")}</div>`}
-    ${tip ? `<div class="hb-tip"><div class="lbl">${t("Tip of the day")}</div>${esc(tip)}</div>` : ""}</div>`;
+    ${tip ? `<div class="hb-tip"><div class="lbl">${esc(tipLbl)}</div>${esc(tip)}</div>` : ""}</div>`;
 }
 export function openNotice(id) {
   const n = activeNotices(Date.now()).find((x) => x.id === id) || (S.notices?.notices || []).find((x) => x.id === id);

@@ -12,10 +12,12 @@ export const API = {
   viff: "https://viff-system.network",
   ukcp: "https://raw.githubusercontent.com/sbelic95/vdgs-slot-board/data/ukcp.json",
   events: "https://raw.githubusercontent.com/sbelic95/asl-pad/data/events.json", // .github/workflows/vatsim-events.yml
-  notices: "va/notices.json", // written by the airline's staff on GitHub
+  notices: "va/notices.json", // written by the airline's staff on GitHub, like the two below
+  downloads: "va/downloads.json",
+  ranks: "va/ranks.json",
 };
 
-const DEF = { simbrief: "", cid: "", unit: "kg", theme: "dark", wall: "night", wallDim: 0.3, lock: 10, demo: "" };
+const DEF = { simbrief: "", cid: "", unit: "kg", theme: "dark", wall: "night", wallDim: 0.3, homeHide: [], lock: 10, demo: "" };
 export let settings = { ...DEF, ...store.get("asl.settings", {}) };
 // The demo flight is only for the automated test on the developer's own computer (localhost).
 // On the real site it can never be switched on, and a demo saved earlier is switched off.
@@ -33,6 +35,7 @@ export const S = {
   st: null, pr: null, events: [],
   // the airline's notices and tips, and the coming VATSIM events (kept for offline use)
   notices: store.get("asl.notices", null), vatEvents: store.get("asl.vatevents", []),
+  downloads: store.get("asl.downloads", null), ranks: store.get("asl.ranks", null),
 };
 const listeners = new Set();
 export const onChange = (fn) => listeners.add(fn);
@@ -216,7 +219,10 @@ async function loadStandsFor(a) {
 }
 // notices and tips of the airline (va/notices.json) and the coming VATSIM events
 export async function pollNotices() {
-  try { const n = await getJSON(API.notices); if (n) { S.notices = n; store.set("asl.notices", n); emit(); } } catch {}
+  await Promise.all(["notices", "downloads", "ranks"].map(async (k) => {
+    try { const n = await getJSON(API[k]); if (n) { S[k] = n; store.set("asl." + k, n); } } catch {}
+  }));
+  emit();
 }
 export async function pollEvents() {
   if (settings.demo) { S.vatEvents = demoEvents(); emit(); return; }

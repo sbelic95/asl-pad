@@ -29,12 +29,22 @@ export const WALLS = {
 export const getPhoto = () => store.get(PHOTO, null);
 export function delPhoto() { store.del(PHOTO); }
 
-// set the CSS of the wallpaper on <html>; s = settings
-export function applyWall(s) {
+// "auto": the sky where you are – local hour at the airport (departure until take-off, then destination)
+// and its weather; without a flight the time of the device. Returns one of the WALLS ids.
+export function autoSky(hour, w) {
+  const day = hour >= 7 && hour < 17, twilight = (hour >= 5 && hour < 7) || (hour >= 17 && hour < 20);
+  const grey = w && ((w.ceil != null && w.ceil < 2500) || /RA|SN|DZ|FG|TS/.test(w.wx || ""));
+  if (day) return grey ? "graphite" : "strato";
+  if (twilight) return grey ? "graphite" : "dusk";
+  return "night";
+}
+
+// set the CSS of the wallpaper on <html>; s = settings, auto = the id for "auto" (autoSky)
+export function applyWall(s, auto = "night") {
   const root = document.documentElement, light = s.theme === "light";
   const photo = getPhoto();
   root.style.setProperty("--wall-img", photo ? `url("${photo}")` : "none");
-  const id = s.wall === "photo" && photo ? "photo" : WALLS[s.wall] ? s.wall : "night";
+  const id = s.wall === "photo" && photo ? "photo" : s.wall === "auto" ? (WALLS[auto] ? auto : "night") : WALLS[s.wall] ? s.wall : "night";
   root.dataset.wall = id;
   if (id === "photo") {
     const a = Math.max(0, Math.min(0.8, Number(s.wallDim) || 0)), c = light ? "244, 248, 253" : "2, 10, 30";

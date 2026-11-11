@@ -1,5 +1,5 @@
 {
-  "_help": "Obaveštenja i saveti za ASL Pad. Izmeni na GitHubu (olovka gore desno) i sačuvaj: svi piloti ih vide za nekoliko minuta. notices: id (jedinstven), date, until (posle toga se ne prikazuje), title i text na sr/en/de. tips: jedan savet dnevno.",
+  "_help": "Obaveštenja i saveti za ASL Pad. Izmeni na GitHubu (olovka gore desno) i sačuvaj: svi piloti ih vide za nekoliko minuta. notices: id (jedinstven), date, until (posle toga se ne prikazuje), title i text na sr/en/de. tips: jedan savet dnevno; sa \"phase\" (preflight, taxiout, climb, cruise, descent, approach, taxiin, onblock) savet se prikazuje kao „Crew info“ u toj fazi leta.",
   "notices": [
     {
       "id": "pad-1-3",
@@ -14,6 +14,10 @@
     }
   ],
   "tips": [
+    { "phase": ["preflight"], "sr": "Pre polaska proveri TOBT i TSAT u ASL Ops – start-up traži u prozoru od 5 minuta oko TSAT-a.", "en": "Before departure, check TOBT and TSAT in ASL Ops – request start-up within 5 minutes of your TSAT.", "de": "Vor dem Abflug TOBT und TSAT in ASL Ops prüfen – Start-up innerhalb von 5 Minuten um die TSAT anfragen." },
+    { "phase": ["cruise"], "sr": "Krstarenje: otprilike svakog sata dodirni „Provera goriva“ i upiši FOB.", "en": "Cruise: about every hour, tap “Fuel check” and enter your FOB.", "de": "Reiseflug: etwa jede Stunde auf „Fuel Check“ tippen und den FOB eintragen." },
+    { "phase": ["descent", "approach"], "sr": "Pre spuštanja: ATIS i pista za sletanje su u ASL Ops, VREF i VAPP u „Performanse“.", "en": "Before descent: ATIS and landing runway are in ASL Ops, VREF and VAPP in “Performance”.", "de": "Vor dem Sinkflug: ATIS und Landepiste stehen in ASL Ops, VREF und VAPP unter „Performance“." },
+    { "phase": ["taxiin", "onblock"], "sr": "Kad staneš na poziciju (on-block), let se sam upisuje u dnevnik.", "en": "When you reach your stand (on-block), the flight is logged by itself.", "de": "Sobald du am Stand stehst (On-Block), wird der Flug von selbst ins Logbuch eingetragen." },
     { "sr": "U krstarenju otprilike svakog sata dodirni „Provera goriva“ i upiši FOB – pad ga poredi sa planom.", "en": "In cruise, tap “Fuel check” about every hour and enter your FOB – the pad compares it with the plan.", "de": "Im Reiseflug etwa jede Stunde auf „Fuel Check“ tippen und den FOB eintragen – das Pad vergleicht ihn mit dem Plan." },
     { "sr": "Prozor za start-up je od 5 minuta pre do 5 minuta posle TSAT-a. Prati ga u ASL Ops.", "en": "The start-up window runs from 5 minutes before to 5 minutes after your TSAT. Watch it in ASL Ops.", "de": "Das Start-up-Fenster geht von 5 Minuten vor bis 5 Minuten nach der TSAT. Du siehst es in ASL Ops." },
     { "sr": "Novi OFP u SimBrief-u pad preuzima sam za nekoliko minuta – ili odmah dugmetom za osvežavanje gore desno.", "en": "The pad picks up a new SimBrief OFP by itself within a few minutes – or at once with the refresh button at the top right.", "de": "Einen neuen SimBrief-OFP holt das Pad nach wenigen Minuten selbst – oder sofort mit dem Aktualisieren-Knopf oben rechts." },

@@ -27,6 +27,9 @@ export const APP_ICONS = {
   settings: `<svg viewBox="0 0 100 100">${grad("gG", "#8d96a6", "#555e6e")}<rect width="100" height="100" fill="url(#gG)"/>
     <g transform="translate(50 50)" fill="#eef1f6">${Array.from({ length: 8 }, (_, i) => `<rect x="-5" y="-31" width="10" height="14" rx="2" transform="rotate(${i * 45})"/>`).join("")}<circle r="22"/></g>
     <circle cx="50" cy="50" r="10" fill="#6f7888"/></svg>`,
+  downloads: `<svg viewBox="0 0 100 100">${grad("gD", "#e3001f", "#8c0013")}<rect width="100" height="100" fill="url(#gD)"/>
+    <path d="M50 20 v38 M34 44 l16 16 l16 -16" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M24 62 v12 a6 6 0 0 0 6 6 h40 a6 6 0 0 0 6 -6 v-12" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="6" stroke-linecap="round"/></svg>`,
 };
 export const I = {
   lock: `<svg viewBox="0 0 18 22" fill="none" stroke="currentColor" stroke-width="2"><rect x="1.5" y="9" width="15" height="11.5" rx="2.5"/><path d="M4.5 9V6a4.5 4.5 0 0 1 9 0v3"/></svg>`,

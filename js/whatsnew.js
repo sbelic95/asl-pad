@@ -7,6 +7,23 @@ import { esc } from "./util.js";
 import { APP_ICONS } from "./icons.js";
 
 export const releases = () => [
+  { v: "1.4", date: "2026-11-11", groups: [
+    { icon: "pad", name: "ASL Pad", items: [
+      t("Career: your rank and progress to the next one, with a letter when you are promoted"),
+      t("Crew info: tips that match the phase of your flight"),
+      t("Choose which cards the home screen shows"),
+      t("Wallpaper “Sky where you are”: follows the time of day and the weather"),
+      t("Your stand next to the departure countdown"),
+    ] },
+    { icon: "downloads", name: "Downloads", items: [
+      t("New app: ACARS, Crew Lounge, liveries, SimBrief and VATSIM in one place"),
+      t("Every update of the pad, with all changes"),
+      t("The airline keeps the links up to date itself"),
+    ] },
+    { icon: "log", name: "Logbook", items: [
+      t("Your career with block time and flights"),
+    ] },
+  ] },
   { v: "1.3", date: "2026-11-11", groups: [
     { icon: "pad", name: "ASL Pad", items: [
       t("Notices from the Air Serbia Virtual staff on the home screen"),

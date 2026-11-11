@@ -43,7 +43,9 @@ jobs:
                   continue
               if end < now or start > now + datetime.timedelta(days=21):
                   continue
-              text = re.sub(r"<[^>]+>", " ", html.unescape(e.get("short_description") or ""))
+              if "exam" in (e.get("type") or "").lower() or re.search(r"\bexam\b|\bCPT\b", e.get("name") or "", re.I):
+                  continue  # controller examinations are no events to fly to
+              text = html.unescape(re.sub(r"<[^>]+>", " ", html.unescape(e.get("short_description") or "")))
               out.append({
                   "id": e.get("id"), "name": (e.get("name") or "").strip(), "link": e.get("link") or "",
                   "start": start.strftime("%Y-%m-%dT%H:%M:%SZ"), "end": end.strftime("%Y-%m-%dT%H:%M:%SZ"),

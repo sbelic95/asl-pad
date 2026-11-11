@@ -22,3 +22,5 @@ export function dateLong(t, tz) {
 export function dateShort(t, tz) {
   try { return new Intl.DateTimeFormat(LOCALE(), { day: "2-digit", month: "short", year: "numeric", timeZone: tz || "UTC" }).format(t); } catch { return new Date(t).toISOString().slice(0, 10); }
 }
+// text in the pilot's language from {sr, en, de} (files the airline writes, e.g. va/notices.json)
+export const loc = (x) => (x == null ? "" : typeof x === "string" ? x : x[lang] || x.en || x.sr || Object.values(x)[0] || "");
