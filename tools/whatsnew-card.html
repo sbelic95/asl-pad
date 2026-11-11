@@ -1,0 +1,71 @@
+<!doctype html>
+<!-- Update graphic for Discord (1920x1080), built from js/whatsnew.js. Render it with: node tools/whatsnew-card.mjs sr out.png
+     The two previews show the pad itself with the test flight (works only on localhost, as in the smoke test). -->
+<html lang="sr">
+<head>
+<meta charset="utf-8">
+<title>ASL Pad – What's new</title>
+<link rel="stylesheet" href="../vendor/fonts.css">
+<style>
+  :root { --strato: #002e5d; --sky: #0059c2; --beacon: #e3001f; --line: rgba(160, 190, 235, .16); --dim: #a9bad6; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #020d22; color: #eaf1fb; font: 400 20px/1.35 "Roboto", sans-serif; }
+  .bg { position: absolute; inset: 0; background: radial-gradient(70% 60% at 85% 0%, rgba(0, 89, 194, .45) 0%, rgba(0, 89, 194, 0) 60%),
+    radial-gradient(50% 50% at 0% 100%, rgba(227, 0, 31, .18) 0%, rgba(227, 0, 31, 0) 60%), linear-gradient(160deg, #031029 0%, #04163a 55%, #020b1f 100%); }
+  .hero { position: absolute; left: 40px; top: 40px; width: 430px; height: 520px; border-radius: 30px; padding: 40px 38px;
+    background: linear-gradient(150deg, #f0102c 0%, #e3001f 45%, #a8001a 100%); box-shadow: 0 24px 60px rgba(0, 0, 0, .45); display: flex; flex-direction: column; overflow: hidden; }
+  .hero::after { content: ""; position: absolute; right: -90px; bottom: -110px; width: 330px; height: 330px; border-radius: 50%; border: 34px solid rgba(255, 255, 255, .08); }
+  .brand { display: flex; align-items: center; gap: 14px; font: 700 22px "Roboto Condensed", sans-serif; letter-spacing: .14em; }
+  .brand img { width: 52px; height: 52px; border-radius: 13px; }
+  .brand small { display: block; font: 500 15px "Roboto", sans-serif; letter-spacing: .02em; opacity: .85; }
+  .hero h1 { font: 700 104px/.92 "Roboto Condensed", sans-serif; margin: 46px 0 0; letter-spacing: -.01em; }
+  .date { font: 700 32px "Roboto Condensed", sans-serif; margin-top: auto; }
+  .live { font-size: 23px; margin-top: 4px; }
+  .open { font-size: 17px; margin-top: 18px; opacity: .9; } .open b { display: block; font-weight: 700; }
+  .shots { position: absolute; left: 500px; top: 40px; width: 1380px; height: 520px; border-radius: 30px; background: rgba(8, 28, 64, .6);
+    border: 1px solid var(--line); padding: 26px 28px; display: flex; gap: 28px; }
+  .shot { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+  .shot .cap { font: 700 15px "Roboto Condensed", sans-serif; letter-spacing: .16em; text-transform: uppercase; color: var(--dim); display: flex; justify-content: space-between; }
+  .shot .cap b { color: #fff; letter-spacing: .04em; font-size: 22px; text-transform: none; }
+  .frame { width: 649px; height: 451px; border-radius: 18px; overflow: hidden; border: 2px solid rgba(160, 190, 235, .25); box-shadow: 0 18px 40px rgba(0, 0, 0, .4); position: relative; }
+  .frame iframe { width: 1180px; height: 820px; border: 0; transform: scale(.55); transform-origin: 0 0; position: absolute; left: 0; top: 0; }
+  .cards { position: absolute; left: 40px; right: 40px; top: 590px; bottom: 40px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .wn-card { border-radius: 26px; background: rgba(8, 28, 64, .72); border: 1px solid var(--line); padding: 26px 26px 20px; }
+  .wn-h { display: flex; align-items: center; gap: 16px; font: 700 34px "Roboto Condensed", sans-serif; }
+  .wn-ic { width: 58px; height: 58px; border-radius: 15px; overflow: hidden; flex: none; box-shadow: 0 6px 16px rgba(0, 0, 0, .35); }
+  .wn-ic svg, .wn-ic img { width: 100%; height: 100%; display: block; }
+  .wn-card ul { margin: 18px 0 0; padding-left: 20px; } .wn-card li { margin: 0 0 9px; font-size: 19px; line-height: 1.3; } .wn-card li::marker { color: #ff3347; }
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="hero">
+  <div class="brand"><img src="../icons/icon.svg" alt=""><div>AIR SERBIA VIRTUAL<small id="sub"></small></div></div>
+  <h1 id="title"></h1>
+  <div class="date" id="date"></div>
+  <div class="live" id="live"></div>
+  <div class="open"><span id="open"></span><b>sbelic95.github.io/asl-pad</b></div>
+</div>
+<div class="shots">
+  <div class="shot"><div class="cap"><b id="c1"></b><span>ASL Pad</span></div><div class="frame"><iframe id="f1"></iframe></div></div>
+  <div class="shot"><div class="cap"><b>ASL Fly</b><span id="ver"></span></div><div class="frame"><iframe id="f2"></iframe></div></div>
+</div>
+<div class="cards" id="cards"></div>
+<script type="module">
+  import { setLang, t } from "../js/i18n.js";
+  import { latest, relDate, groupsHtml, cardTexts } from "../js/whatsnew.js";
+  const lang = new URLSearchParams(location.search).get("lang") || "sr";
+  setLang(lang);
+  const r = latest(), c = cardTexts(), $ = (id) => document.getElementById(id);
+  $("title").textContent = c.title; $("sub").textContent = c.sub; $("date").textContent = relDate(r); $("live").textContent = c.live;
+  $("open").textContent = c.open; $("c1").textContent = t("Home"); $("ver").textContent = "ASL Pad " + r.v;
+  $("cards").innerHTML = groupsHtml(r, "../");
+  // the pad itself, with the test flight; the status bar (it says DEMO) is hidden in the previews
+  const pad = (q) => `../index.html?demo&lang=${lang}&${q}`;
+  for (const [id, q] of [["f1", "unlock"], ["f2", "app=fly&tab=overview"]]) {
+    const f = $(id); f.src = pad(q);
+    f.addEventListener("load", () => { const s = f.contentDocument.createElement("style"); s.textContent = "#status{visibility:hidden}"; f.contentDocument.head.appendChild(s); });
+  }
+</script>
+</body>
+</html>

@@ -25,6 +25,12 @@ Der Nutzer (sbelic95) schreibt Deutsch; antworte auf Deutsch. Die Oberfläche is
   `pics.avs.io` geladen und nie ins Repo gelegt. Keine Namen aus LH Virtual übernehmen (flySmart, padOS, Contrail); unsere heißen ASL Pad, ASL Fly, ASL Ops, Logbook.
 - Performance (V1/VR/V2, Landestrecke) wird **nicht selbst gerechnet**, sondern aus SimBriefs Runway Analysis (`tlr` im OFP) gelesen (`normTlr` in `js/ofp.js`, Anzeige `js/apps/perf.js`).
 
+## Updates
+
+Jede sichtbare Neuerung als neuer Eintrag oben in `js/whatsnew.js` (nur, was das Pad wirklich kann). Das Pad zeigt ihn einmal
+nach dem Update („What's new“, `asl.seen`); `node tools/whatsnew-card.mjs sr out.png` macht daraus die Discord-Grafik.
+Eigener Stil in Air-Serbia-Farben, nicht das Layout oder die Texte von LH Virtual nachbauen.
+
 ## Testen
 
 ```

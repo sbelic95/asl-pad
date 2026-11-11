@@ -7,6 +7,8 @@ import { renderLock, noteHtml } from "./lock.js";
 import { renderHome, HOME_APPS } from "./home.js";
 import { loadAirports, cityOf } from "./tz.js";
 import { applyWall } from "./wall.js";
+import { sheet } from "./sheet.js";
+import { latest, relDate, groupsHtml } from "./whatsnew.js";
 import * as Fly from "./apps/fly.js";
 import * as Ops from "./apps/ops.js";
 import * as Log from "./apps/log.js";
@@ -100,7 +102,19 @@ export function goHome() {
   renderHome($("home")); renderStatus();
 }
 function lockPad() { hideSwitcher(); ui.view = "lock"; renderLock($("lock")); $("lock").classList.remove("gone"); renderStatus(); }
-function unlock() { $("lock").classList.add("gone"); if (ui.app) { ui.view = "app"; renderApp(ui.app); } else goHome(); renderStatus(); }
+function unlock() { $("lock").classList.add("gone"); if (ui.app) { ui.view = "app"; renderApp(ui.app); } else goHome(); renderStatus(); whatsNewOnce(); }
+
+// ---------- what's new: once after every update, and from Settings ----------
+export function showWhatsNew() {
+  const r = latest();
+  store.set("asl.seen", r.v);
+  sheet(`<div class="wn-top"><div><div class="lbl">ASL Pad ${esc(r.v)} · ${esc(relDate(r))}</div><h2>${t("What's new")}</h2></div>
+    <button class="btn pri" data-close>${t("Let's fly")}</button></div><div class="wn-grid">${groupsHtml(r)}</div>`).el.classList.add("wn");
+}
+function whatsNewOnce() {
+  if (navigator.webdriver && !q.has("whatsnew")) return; // automated tests click through the pad
+  if (store.get("asl.seen") !== latest().v) setTimeout(showWhatsNew, 450);
+}
 
 // ---------- app switcher ----------
 // iPad-style multitasking: a live miniature of every recent app (the web apps in frames get a summary card)
@@ -236,10 +250,11 @@ loadAirports().then(() => renderAll());
 renderLock($("lock")); renderHome($("home")); renderStatus();
 if (q.has("unlock") || q.get("app")) { $("lock").classList.add("gone"); ui.view = "home"; }
 if (q.get("app")) openApp(q.get("app"), q.get("tab") || undefined);
+if (ui.view !== "lock") whatsNewOnce();
 startPolling();
 if ("serviceWorker" in navigator && location.protocol === "https:") {
   // a new version took over (sw.js changed): load it once, so a fix shows up without opening the pad twice
   if (navigator.serviceWorker.controller) navigator.serviceWorker.addEventListener("controllerchange", () => location.reload(), { once: true });
   navigator.serviceWorker.register("sw.js", { updateViaCache: "none" }).catch(() => {});
 }
-window.ASL = { S, settings, openApp, goHome, emit }; // for the console and tests
+window.ASL = { S, settings, openApp, goHome, emit, showWhatsNew }; // for the console and tests
