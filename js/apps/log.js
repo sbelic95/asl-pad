@@ -13,7 +13,7 @@ export function render(body, ctx) {
   C = ctx;
   if (!body._log) { body._log = true; body.addEventListener("click", onClick); }
   const list = logbook();
-  body.innerHTML = hero(list) + toolbar() + (list.length ? months(list) : `<div class="empty">${t("No flights yet. Flights are added when you reach the gate.")}</div>`);
+  body.innerHTML = hero(list) + (list.length ? year(list) : "") + toolbar() + (list.length ? months(list) : `<div class="empty">${t("No flights yet. Flights are added when you reach the gate.")}</div>`);
 }
 export function summary() {
   const l = logbook();
@@ -32,6 +32,21 @@ function hero(list) {
   return `<div class="log-hero"><div><div class="ttl">${t("Logbook")}</div><div class="dim" style="font-size:13px">${t("Your flights with ASL Pad")}</div></div>
     ${c(t("Flights"), nf(list.length))}${c(t("Block time"), dur(block))}${c(t("Distance"), nf(dist) + '<small style="font-size:14px" class="dim"> NM</small>')}
     ${c(t("Airports"), nf(apts.size), top ? t("mostly {type}", { type: top[0] }) : "")}</div>`;
+}
+// the last twelve months: block hours (bar) and flights per month
+function year(list, now = Date.now()) {
+  const d = new Date(now), months = [];
+  for (let i = 11; i >= 0; i--) { const m = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() - i, 1)); months.push({ y: m.getUTCFullYear(), m: m.getUTCMonth(), ms: 0, n: 0 }); }
+  for (const e of list) {
+    const x = new Date(e.date), b = months.find((k) => k.y === x.getUTCFullYear() && k.m === x.getUTCMonth());
+    if (b) { b.ms += blockOf(e); b.n++; }
+  }
+  const max = Math.max(...months.map((k) => k.ms), 1), sum = months.reduce((s, k) => s + k.ms, 0), cnt = months.reduce((s, k) => s + k.n, 0);
+  const fmt = new Intl.DateTimeFormat(LOCALE(), { month: "short", timeZone: "UTC" });
+  return `<div class="card log-year"><div style="display:flex;align-items:baseline;gap:12px"><div class="lbl">${t("Your flying · last 12 months")}</div><span style="flex:1"></span>
+    <span class="dim" style="font-size:13px">${t(cnt === 1 ? "{n} flight" : "{n} flights", { n: cnt })} · ${t("{t} block time", { t: dur(sum) })}</span></div>
+    <div class="bars">${months.map((k) => `<div class="b${k.n ? "" : " zero"}"><span class="v">${k.ms ? dur(k.ms) : ""}</span><i style="height:${Math.round((k.ms / max) * 100)}%"></i>
+      <span class="m">${esc(fmt.format(Date.UTC(k.y, k.m, 1)))}</span><span class="c">${k.n || ""}</span></div>`).join("")}</div></div>`;
 }
 const toolbar = () => `<div style="display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 4px"><button class="btn small pri" data-do="add">${t("Add flight")}</button>
   <span style="flex:1"></span><button class="btn small" data-do="csv">CSV</button><button class="btn small" data-do="json">${t("Backup")}</button><button class="btn small" data-do="import">${t("Import")}</button></div>`;

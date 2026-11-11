@@ -60,6 +60,7 @@
   $("title").textContent = c.title; $("sub").textContent = c.sub; $("date").textContent = relDate(r); $("live").textContent = c.live;
   $("open").textContent = c.open; $("c1").textContent = t("Home"); $("ver").textContent = "ASL Pad " + r.v;
   $("cards").innerHTML = groupsHtml(r, "../");
+  $("cards").style.gridTemplateColumns = `repeat(${Math.max(2, r.groups.length)}, 1fr)`;
   // the pad itself, with the test flight; the status bar (it says DEMO) is hidden in the previews
   const pad = (q) => `../index.html?demo&lang=${lang}&${q}`;
   for (const [id, q] of [["f1", "unlock"], ["f2", "app=fly&tab=overview"]]) {

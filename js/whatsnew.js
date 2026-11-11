@@ -7,6 +7,19 @@ import { esc } from "./util.js";
 import { APP_ICONS } from "./icons.js";
 
 export const releases = () => [
+  { v: "1.3", date: "2026-11-11", groups: [
+    { icon: "pad", name: "ASL Pad", items: [
+      t("Notices from the Air Serbia Virtual staff on the home screen"),
+      t("Tip of the day for the crew"),
+      t("Coming VATSIM events – ours in Serbia and on your route first"),
+      t("Weather where you are: at departure until take-off, then at destination"),
+      t("Countdown to your departure"),
+    ] },
+    { icon: "log", name: "Logbook", items: [
+      t("Your flying: the last twelve months at a glance"),
+      t("Block time and flights for every month"),
+    ] },
+  ] },
   { v: "1.2", date: "2026-11-11", groups: [
     { icon: "pad", name: "ASL Pad", items: [
       t("Lock screen with your flight live: route, next fix, flight level, fuel and miles to go"),

@@ -1,0 +1,23 @@
+{
+  "_help": "Obaveštenja i saveti za ASL Pad. Izmeni na GitHubu (olovka gore desno) i sačuvaj: svi piloti ih vide za nekoliko minuta. notices: id (jedinstven), date, until (posle toga se ne prikazuje), title i text na sr/en/de. tips: jedan savet dnevno.",
+  "notices": [
+    {
+      "id": "pad-1-3",
+      "date": "2026-11-11",
+      "until": "2026-12-31",
+      "title": { "sr": "ASL Pad 1.3: obaveštenja i VATSIM događaji", "en": "ASL Pad 1.3: notices and VATSIM events", "de": "ASL Pad 1.3: Mitteilungen und VATSIM-Events" },
+      "text": {
+        "sr": "Na početnom ekranu sada vidiš obaveštenja za posadu Air Serbia Virtual, savet dana i predstojeće VATSIM događaje. Obaveštenja objavljuje vođstvo kompanije.",
+        "en": "The home screen now shows notices for the Air Serbia Virtual crew, a tip of the day and the coming VATSIM events. Notices are posted by the airline's staff.",
+        "de": "Der Home-Bildschirm zeigt jetzt Mitteilungen für die Crew von Air Serbia Virtual, einen Tipp des Tages und die nächsten VATSIM-Events. Die Mitteilungen kommen von der Leitung der Airline."
+      }
+    }
+  ],
+  "tips": [
+    { "sr": "U krstarenju otprilike svakog sata dodirni „Provera goriva“ i upiši FOB – pad ga poredi sa planom.", "en": "In cruise, tap “Fuel check” about every hour and enter your FOB – the pad compares it with the plan.", "de": "Im Reiseflug etwa jede Stunde auf „Fuel Check“ tippen und den FOB eintragen – das Pad vergleicht ihn mit dem Plan." },
+    { "sr": "Prozor za start-up je od 5 minuta pre do 5 minuta posle TSAT-a. Prati ga u ASL Ops.", "en": "The start-up window runs from 5 minutes before to 5 minutes after your TSAT. Watch it in ASL Ops.", "de": "Das Start-up-Fenster geht von 5 Minuten vor bis 5 Minuten nach der TSAT. Du siehst es in ASL Ops." },
+    { "sr": "Novi OFP u SimBrief-u pad preuzima sam za nekoliko minuta – ili odmah dugmetom za osvežavanje gore desno.", "en": "The pad picks up a new SimBrief OFP by itself within a few minutes – or at once with the refresh button at the top right.", "de": "Einen neuen SimBrief-OFP holt das Pad nach wenigen Minuten selbst – oder sofort mit dem Aktualisieren-Knopf oben rechts." },
+    { "sr": "Na VATSIM-u pre prvog poziva poslušaj ATIS i javi slovo informacije.", "en": "On VATSIM, listen to the ATIS before your first call and report the information letter.", "de": "Auf VATSIM vor dem ersten Funkspruch die ATIS hören und den Buchstaben melden." },
+    { "sr": "V-brzine u „Performanse“ dolaze iz SimBrief analize piste – uvek ih proveri u EFB-u svog aviona.", "en": "The V-speeds in “Performance” come from the SimBrief runway analysis – always check them in your aircraft's EFB.", "de": "Die V-Speeds unter „Performance“ kommen aus der SimBrief Runway Analysis – prüf sie immer im EFB deines Flugzeugs." }
+  ]
+}

@@ -1,0 +1,68 @@
+# Every 30 minutes: the coming VATSIM events (my.vatsim.net), made compact for the pad.
+# Published as events.json on the "data" branch; the pad reads it via raw.githubusercontent.com
+# (the VATSIM events API itself cannot be read from every browser).
+name: VATSIM events
+
+on:
+  schedule:
+    - cron: "7,37 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: events
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch and publish events.json
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -e
+          curl -sSf --max-time 60 -H "Accept: application/json" https://my.vatsim.net/api/v2/events/latest -o latest.json
+          mkdir pub
+          python3 - <<'PY'
+          import datetime, html, json, re
+          now = datetime.datetime.now(datetime.timezone.utc)
+          def when(s):
+              return datetime.datetime.fromisoformat(s.replace("Z", "+00:00"))
+          raw = json.load(open("latest.json"))
+          events = raw.get("data", raw) if isinstance(raw, dict) else raw
+          out = []
+          for e in events:
+              try:
+                  start, end = when(e["start_time"]), when(e["end_time"])
+              except (KeyError, ValueError, TypeError):
+                  continue
+              if end < now or start > now + datetime.timedelta(days=21):
+                  continue
+              text = re.sub(r"<[^>]+>", " ", html.unescape(e.get("short_description") or ""))
+              out.append({
+                  "id": e.get("id"), "name": (e.get("name") or "").strip(), "link": e.get("link") or "",
+                  "start": start.strftime("%Y-%m-%dT%H:%M:%SZ"), "end": end.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                  "airports": [a.get("icao", "") for a in (e.get("airports") or []) if a.get("icao")],
+                  "text": re.sub(r"\s+", " ", text).strip()[:200],
+              })
+          out.sort(key=lambda x: x["start"])
+          json.dump({"updated": now.strftime("%Y-%m-%dT%H:%M:%SZ"), "events": out[:120]}, open("pub/events.json", "w"), separators=(",", ":"))
+          print(len(out), "events")
+          PY
+          cd pub
+          git init -q -b data
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add events.json
+          git commit -qm "VATSIM events"
+          # one orphan commit, force-pushed: the data branch never grows
+          for i in 1 2 3 4; do
+            git push -qf "https://x-access-token:${TOKEN}@github.com/${REPO}.git" data && exit 0
+            echo "push failed, next try in $((i * 15)) s"; sleep $((i * 15))
+          done
+          exit 1

@@ -60,6 +60,13 @@ Neue Texte: englisch im Code mit `t("…")` schreiben und in `js/i18n-dict.js` f
 
 Lizenzen der verwendeten Bibliotheken und Daten: [LIZENZEN.md](LIZENZEN.md).
 
+## Mitteilungen, Tipps und VATSIM-Events (Home-Bildschirm)
+
+- **Mitteilungen und Tipp des Tages** stehen in [`va/notices.json`](va/notices.json). Die Leitung der VA bearbeitet die Datei direkt auf GitHub
+  (Stift-Symbol, Texte auf `sr`/`en`/`de`, `until` = bis wann sichtbar). Das Pad lädt sie alle 15 Minuten; ungelesene haben einen roten Punkt.
+- **VATSIM-Events** holt der Ablauf [`.github/workflows/vatsim-events.yml`](.github/workflows/vatsim-events.yml) alle 30 Minuten von my.vatsim.net
+  in den Branch `data` (`events.json`). Events in Serbien und an den Flughäfen des eigenen Flugs stehen zuerst.
+
 ## Ein Update machen
 
 1. Änderung bauen und testen (`node tests/smoke.mjs`).
