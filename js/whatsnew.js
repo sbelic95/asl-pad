@@ -7,6 +7,12 @@ import { esc } from "./util.js";
 import { APP_ICONS } from "./icons.js";
 
 export const releases = () => [
+  { v: "1.6.2", date: "2026-11-11", groups: [
+    { icon: "airport", name: "Airport", items: [
+      t("Ground map: each stand once, names when you zoom in, your stand highlighted"),
+      t("On small screens the route panel folds away with one tap"),
+    ] },
+  ] },
   { v: "1.6.1", date: "2026-11-11", groups: [
     { icon: "airport", name: "Airport", items: [
       t("LYBE: docking guidance system per stand, RNAV arrivals, transponder and TCAS, lost communication after departure and in a missed approach"),

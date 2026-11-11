@@ -76,6 +76,27 @@ function closestOnSegment(p, a, b) {
   return [a[0] + u * dy, (ax + u * dx) / k];
 }
 
+// Stands: OSM often maps one stand three times – the stop point (node), the lead-in line and the stand box.
+// One entry per ref: the stop point (else the end of the lead-in line, else the middle of the box), the box and the line.
+export function standGeo(G) {
+  if (G._stands) return G._stands;
+  const out = new Map();
+  for (const p of G.points || []) {
+    if ((p.k !== "parking_position" && p.k !== "stand") || !p.ref) continue;
+    const e = out.get(p.ref) || { ref: p.ref };
+    const closed = p.g && p.g.length > 3 && p.g[0][0] === p.g[p.g.length - 1][0] && p.g[0][1] === p.g[p.g.length - 1][1];
+    if (!p.g) e.node = [p.lat, p.lon];
+    else if (closed) e.box = p.g;
+    else e.line = p.g;
+    out.set(p.ref, e);
+  }
+  for (const e of out.values()) {
+    const mid = e.box && [e.box.slice(1).reduce((a, q) => a + q[0], 0) / (e.box.length - 1), e.box.slice(1).reduce((a, q) => a + q[1], 0) / (e.box.length - 1)];
+    e.pos = e.node || (e.line && e.line[e.line.length - 1]) || mid;
+  }
+  return (G._stands = out);
+}
+
 // nodes of the taxi network (not on a runway) near a point
 export function nearestTaxiNode(G, p, refs) {
   let best = null, bd = Infinity;

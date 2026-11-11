@@ -398,6 +398,18 @@ a.btn { text-decoration: none; color: inherit; } a.btn.pri { color: #fff; }
 .twy-lbl { font: 700 11px/16px var(--f-cond); color: #ffd200; background: #111 !important; border-radius: 3px; text-align: center; width: auto !important; min-width: 18px; padding: 0 3px; box-shadow: 0 0 0 1px #ffd200; }
 .rwy-lbl { font: 700 13px/22px var(--f-cond); color: #fff; background: #000 !important; border: 1.5px solid #fff !important; border-radius: 4px; text-align: center; }
 .std-lbl { font: 700 10px var(--f-cond); color: #ffd27a; text-shadow: 0 1px 2px #000, 0 0 2px #000; white-space: nowrap; cursor: pointer; }
+.std-pin { background: none; border: 0; cursor: pointer; }
+.std-pin i { display: block; width: 8px; height: 8px; margin: 2px; border-radius: 50%; background: #ffd27a; box-shadow: 0 0 0 1.5px #071733; }
+.std-pin span { position: absolute; left: 13px; top: -3px; font: 700 11px var(--f-cond); letter-spacing: .02em; color: #ffd27a; white-space: nowrap;
+  padding: 0 4px; border-radius: 4px; background: rgba(7, 23, 51, .78); }
+.gmap:not(.std-names) .std-pin:not(.on) span { display: none; }
+.std-pin.on i { width: 12px; height: 12px; margin: 0; background: #ffb21f; box-shadow: 0 0 0 3px rgba(255, 178, 31, .35); }
+.std-pin.on span { color: #071733; background: #ffb21f; font-size: 12.5px; }
+:root[data-theme="light"] .std-pin i { background: #b07a00; box-shadow: 0 0 0 1.5px #fff; }
+:root[data-theme="light"] .std-pin span { color: #6b4a00; background: rgba(255, 255, 255, .85); }
+.gp-head { display: none; align-items: center; justify-content: space-between; gap: 8px; width: 100%; padding: 0; border: 0; background: none; color: var(--text);
+  font: 600 14px var(--f-cond); letter-spacing: .03em; text-align: left; cursor: pointer; } .gp-head i { font-style: normal; color: var(--faint); font-size: 16px; }
+.gp-head .gp-len { color: #ffb21f; }
 .hold-lbl { font: 600 11px var(--f-cond); color: #fff; white-space: nowrap; } .hold-lbl b { background: var(--red); padding: 1px 4px; border-radius: 3px; letter-spacing: .06em; }
 .hs-lbl { font: 700 12px var(--f-cond); color: #e38dff; text-shadow: 0 1px 2px #000; text-align: center; }
 .ac-ic.tr span { position: absolute; left: 26px; top: 6px; font: 700 10.5px var(--f-cond); color: #cfe0ff; text-shadow: 0 1px 2px #000; white-space: nowrap; }
@@ -412,7 +424,7 @@ a.btn { text-decoration: none; color: inherit; } a.btn.pri { color: #fff; }
 .bf-ex > b { font: 700 15px/20px var(--f-cond); background: #111; color: #ffd200; border-radius: 4px; text-align: center; height: 22px; box-shadow: 0 0 0 1px #ffd200; }
 .bf-ex > b.hs { background: transparent; color: #d64dff; box-shadow: 0 0 0 1.5px #d64dff; }
 .bf-ul { margin: 0; padding-left: 18px; } .bf-ul li { margin: 6px 0; font-size: 14.5px; line-height: 1.45; }
-@media (max-width: 760px) { .bf-2, .bf-tos { grid-template-columns: 1fr; } .gpanel { width: calc(100% - 28px); top: auto; bottom: 14px; max-height: 45%; } }
+@media (max-width: 760px) { .bf-2, .bf-tos { grid-template-columns: 1fr; } .gpanel { width: calc(100% - 28px); top: auto; bottom: 14px; max-height: 52%; gap: 10px; } .gp-head { display: flex; } .gpanel.min > :not(.gp-head) { display: none; } }
 
 /* ---------- 1.6: map tools, SIGMETs, cold temperature ---------- */
 .measure-info { position: absolute; z-index: 600; bottom: 205px; left: 50%; transform: translateX(-50%); background: var(--glass); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
