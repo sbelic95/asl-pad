@@ -83,7 +83,15 @@ Lizenzen der verwendeten Bibliotheken und Daten: [LIZENZEN.md](LIZENZEN.md).
   (`ground/<ICAO>.json`); weitere Flughäfen in `AIRPORTS` im Workflow und in `GROUND_AIRPORTS` in `js/ground.js` eintragen.
 - `js/ground.js` baut daraus ein Rollweg-Netz und sucht den kürzesten Weg; Pisten nur zum Kreuzen (bzw. als Notlösung), die eigene Start-/Landepiste nie.
   Lose Rollweg-Enden bis 120 m vor einer Piste werden mit ihr verbunden (in OSM enden bei LYBE z. B. R1–R4 und D5–D7 knapp davor).
-- Das Briefing steht in `va/airports/<ICAO>.json` (sr/en), nur Fakten von den aktuellen Karten in eigenen Worten.
+- Das Briefing steht in `va/airports/<ICAO>.json` (sr/en), nur Fakten in eigenen Worten. LYBE folgt der VFR AIP von SMATSA (smatsa.rs, AD 2 LYBE, AIRAC AMDT 10/26) – bei neuen AIRAC-Ständen dort nachsehen.
+
+## Flugkarte, SIGMETs und Kälte-Korrektur (1.6)
+
+- Flugkarte: **MESSEN** (zwei Punkte: NM, Kurs, Zeit bei aktueller GS), **RINGE** (25/50/100/200 NM ums Flugzeug), **Direct to** im Wegpunkt-Fenster
+  (Kurs, Entfernung, Zeit, Ersparnis gegenüber der Route), **SIGMET**-Ebene. Unter Wetter: SIGMETs auf der Route.
+- SIGMETs holt [`.github/workflows/sigmets.yml`](.github/workflows/sigmets.yml) alle 30 Minuten von aviationweather.gov in den Branch `wx`.
+- Performance: **Temperaturkorrektur** nach ICAO (PANS-OPS) bei 0 °C und darunter, am Abflug- und Zielflughafen (`js/cold.js`).
+- Abflugverfahren der Airline (NADP, EOSID) kann die VA-Leitung in `va/airports/<ICAO>.json` unter `procedures` eintragen.
 
 ## Flugkarte, SIGMETs und Kälte-Korrektur (1.6)
 

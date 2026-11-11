@@ -107,16 +107,17 @@ function briefHtml(icao) {
   if (!b) return `<div class="empty">${t("No briefing for this airport yet. LYBE has a full one.")}</div>`;
   const rw = b.runways.map((r) => `<tr><td><b>${esc(r.id)}</b></td><td>${r.mag}°</td><td>${r.len} × ${r.wid} m</td><td>${r.tora} m</td><td>${r.lda} m</td><td>${esc(r.lights)}</td><td>${esc(r.cat)}</td></tr>`).join("");
   const to = Object.entries(b.takeoff).map(([r, l]) => `<div class="bf-to"><b>${esc(r)}</b>${l.map(([j, d]) => `<span>${j === "head" ? t("full length") : "TWY " + esc(j)} <b>${d} m</b></span>`).join("")}</div>`).join("");
-  const ex = Object.entries(b.exits || {}).map(([r, l]) => `<div class="card"><div class="lbl" style="margin-bottom:6px">${t("Vacating RWY {r}", { r })}</div>${l.map((x) => `<div class="bf-ex"><b>${esc(x.twy)}</b><span>${esc(loc(x))}</span></div>`).join("")}</div>`).join("");
+  const ex = Object.entries(b.exits || {}).map(([r, l]) => `<div class="card"><div class="lbl" style="margin-bottom:6px">${t("Vacating RWY {r}", { r })}</div>${l.map((x) => `<div class="bf-ex"><b>${esc(x.twy)}</b><span>${x.dist ? `<b>${t("{d} m from the threshold", { d: x.dist })}</b> · ` : ""}${esc(loc(x))}${x.limit ? `<br><span class="dim">${esc(loc(x.limit))}</span>` : ""}</span></div>`).join("")}</div>`).join("");
   const sec = b.sections.map((s) => `<div class="card"><div class="lbl" style="margin-bottom:8px">${esc(loc(s.title))}</div><ul class="bf-ul">${s.items.map((i) => `<li>${esc(loc(i))}</li>`).join("")}</ul></div>`).join("");
   const hs = b.hotspots.map((h) => `<div class="bf-ex"><b class="hs">${esc(h.id)}</b><span>${esc(loc(h))} <span class="dim">(${h.twys.map(esc).join(" / ")})</span></span></div>`).join("");
   return `<div class="bf">
-    <div class="card bf-head"><div><div class="lbl">${t("Airport briefing")}</div><h3>${esc(b.icao)} · ${esc(b.name)}</h3><div class="dim">${t("Elevation {e} ft", { e: b.elev })}</div></div>
+    <div class="card bf-head"><div><div class="lbl">${t("Airport briefing")}</div><h3>${esc(b.icao)} · ${esc(b.name)}</h3><div class="dim">${t("Elevation {e} ft", { e: b.elev })}</div>${b.facts ? `<div class="dim" style="font-size:12.5px;margin-top:4px;max-width:520px">${esc(loc(b.facts))}</div>` : ""}</div>
       <div class="bf-freq">${b.freq.map(([n, f]) => `<div><span class="lbl">${esc(n)}</span><b class="num">${esc(f)}</b></div>`).join("")}</div></div>
     <div class="card"><div class="lbl" style="margin-bottom:6px">${t("Runways")}</div><table class="t"><thead><tr><th>RWY</th><th>MAG</th><th>${t("Size")}</th><th>TORA</th><th>LDA</th><th>${t("Lights")}</th><th></th></tr></thead><tbody>${rw}</tbody></table></div>
-    <div class="card"><div class="lbl" style="margin-bottom:8px">${t("Take-off run available from intersections")}</div><div class="bf-tos">${to}</div></div>
+    <div class="card"><div class="lbl" style="margin-bottom:8px">${t("Take-off run available from intersections")}</div><div class="bf-tos">${to}</div>
+      ${(b.takeoffNotes || []).map((n) => `<p class="dim" style="font-size:13px;margin:8px 0 0">${esc(loc(n))}</p>`).join("")}</div>
     <div class="bf-2">${ex}</div>
-    ${b.procedures && Object.keys(b.procedures).length ? `<div class="card"><div class="lbl" style="margin-bottom:8px">${t("Departure procedures of the airline")}</div>${Object.entries(b.procedures).map(([r, p]) =>
+    ${b.procedures && Object.keys(b.procedures).length ? `<div class="card"><div class="lbl" style="margin-bottom:8px">${t("Departure procedures")}</div>${Object.entries(b.procedures).map(([r, p]) =>
       `<div class="bf-ex"><b>${esc(r)}</b><span>${p.nadp ? `<b>${t("Noise abatement (NADP)")}:</b> ${esc(loc(p.nadp))}<br>` : ""}${p.eosid ? `<b>${t("Engine failure (EOSID)")}:</b> ${esc(loc(p.eosid))}` : ""}</span></div>`).join("")}</div>` : ""}
     <div class="card"><div class="lbl" style="margin-bottom:8px">${t("Hot spots")}</div>${hs}</div>
     ${sec}
@@ -239,7 +240,7 @@ function update(G, icao, mode) {
     ${R ? `<div class="gp-route"><div class="lbl">${t("Taxi route")} · ${len.toLocaleString()} m · ~${Math.max(1, Math.round(len / 1000 / 25 * 60))} min</div><b>${R.names.map(esc).join(" → ") || "—"}</b>
       ${holds.length ? `<div class="gp-hold">${t("Hold short")}: ${holds.map((h) => esc(h.ref || "●")).join(" → ")}</div>` : ""}</div>`
       : `<div class="gp-route dim">${mode === "dep" ? t("Pick your stand, or connect to VATSIM, for a taxi route.") : t("Pick a stand for a taxi route from your exit.")}</div>`}
-    ${mode === "arr" && b?.exits?.[P.rwy] ? (() => { const x = b.exits[P.rwy].find((e) => e.twy === P.join); return x ? `<div class="gp-exit"><span class="lbl">${t("Vacating RWY {r}", { r: P.rwy })} · ${esc(x.twy)}</span>${esc(loc(x))}</div>` : ""; })() : ""}
+    ${mode === "arr" && b?.exits?.[P.rwy] ? (() => { const x = b.exits[P.rwy].find((e) => e.twy === P.join); return x ? `<div class="gp-exit"><span class="lbl">${t("Vacating RWY {r}", { r: P.rwy })} · ${esc(x.twy)}${x.dist ? " · " + t("{d} m from the threshold", { d: x.dist }) : ""}</span>${esc(loc(x))}${x.limit ? `<br><span class="dim">${esc(loc(x.limit))}</span>` : ""}</div>` : ""; })() : ""}
     <p class="gp-note">${t("Suggested route along the taxiways – always follow the instructions of ATC.")}</p>`;
 }
 
