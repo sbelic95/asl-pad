@@ -59,3 +59,12 @@ sw.js                 Offline-Hülle (die App selbst, keine Live-Daten)
 Neue Texte: englisch im Code mit `t("…")` schreiben und in `js/i18n-dict.js` für `SR` und `DE` ergänzen.
 
 Lizenzen der verwendeten Bibliotheken und Daten: [LIZENZEN.md](LIZENZEN.md).
+
+## Ein Update machen
+
+1. Änderung bauen und testen (`node tests/smoke.mjs`).
+2. In `js/whatsnew.js` oben einen neuen Eintrag anlegen (Version, Datum, Neuerungen je App, englisch in `t()`),
+   die Texte in `js/i18n-dict.js` bei `SR` und `DE` ergänzen und in `sw.js` den `CACHE` hochzählen.
+3. Nach `main` bringen. Beim nächsten Öffnen zeigt das Pad allen einmal **„Šta je novo“**
+   (später wieder unter Einstellungen → Über die App).
+4. Grafik für Discord (1920×1080) erzeugen: `node tools/whatsnew-card.mjs sr whatsnew-sr.png` (oder `de`, `en`). Die PNG nicht committen.

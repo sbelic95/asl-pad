@@ -323,3 +323,16 @@ a.btn { text-decoration: none; color: inherit; } a.btn.pri { color: #fff; }
 .wtile.on { color: var(--fg); } .wtile.on i { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59, 140, 255, .3); }
 .wall-row { padding: 10px 0 12px; border-bottom: 1px solid var(--line); }
 .wall-btns { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
+
+/* ---------- what's new (js/whatsnew.js) ---------- */
+.sheet.wn .box { width: min(1060px, 100%); padding: 0; overflow: auto; }
+.wn-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 24px 18px; border-radius: 22px 22px 0 0;
+  background: linear-gradient(120deg, var(--beacon) 0%, #b30018 100%); color: #fff; }
+.wn-top .lbl { color: rgba(255, 255, 255, .85); } .wn-top h2 { font: 700 34px/1.1 var(--f-cond); margin-top: 4px; }
+.wn-top .btn.pri { background: #fff; border-color: #fff; color: var(--strato); }
+.wn-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; padding: 18px 20px 22px; }
+.wn-card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; }
+.wn-h { display: flex; align-items: center; gap: 10px; font: 700 20px var(--f-cond); }
+.wn-ic { width: 34px; height: 34px; border-radius: 9px; overflow: hidden; flex: none; } .wn-ic svg, .wn-ic img { width: 100%; height: 100%; display: block; }
+.wn-card ul { margin: 10px 0 0; padding-left: 18px; } .wn-card li { margin: 5px 0; font-size: 14.5px; } .wn-card li::marker { color: var(--accent); }
+@media (max-width: 760px) { .wn-grid { grid-template-columns: 1fr; } }

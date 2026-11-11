@@ -1,0 +1,53 @@
+// "What's new": release notes, newest first. Shown once in the pad after an update (main.js) and used for the
+// update graphic for Discord (tools/whatsnew-card.html → node tools/whatsnew-card.mjs).
+// New release: add an entry at the top, write the texts in English inside t() and add SR and DE in i18n-dict.js.
+// Only list what the pad really does.
+import { t, LOCALE } from "./i18n.js";
+import { esc } from "./util.js";
+import { APP_ICONS } from "./icons.js";
+
+export const releases = () => [
+  { v: "1.2", date: "2026-11-11", groups: [
+    { icon: "pad", name: "ASL Pad", items: [
+      t("Lock screen with your flight live: route, next fix, flight level, fuel and miles to go"),
+      t("Your own wallpaper: six skies or a photo from your iPad"),
+      t("The app logo at the top left takes you back home"),
+      t("In Serbian, English and German"),
+      t("Updates are there the moment you open the pad"),
+    ] },
+    { icon: "fly", name: "ASL Fly", items: [
+      t("Overview with weather, runway, phase, next fix and ETA"),
+      t("Flight plan with ETA and ATA for every fix"),
+      t("METAR, TAF and ATIS for all airports of your flight"),
+      t("Fuel checks against the plan, about every hour"),
+      t("V-speeds and landing distances from the SimBrief runway analysis"),
+    ] },
+    { icon: "ops", name: "ASL Ops", items: [
+      t("Duty strip with report time, STD, STA and block time"),
+      t("vIFF CDM: TOBT, TSAT, TTOT and CTOT"),
+      t("Stand forecast for departure and arrival"),
+      t("Frequencies of the controllers online"),
+      t("Fleet: SimBrief airframes YU-APA to YU-APE and your own aircraft"),
+    ] },
+    { icon: "log", name: "Logbook", items: [
+      t("Every flight is logged by itself at on-block"),
+      t("Statistics and a route map for every flight"),
+      t("Add flights by hand"),
+      t("CSV export, backup and import"),
+    ] },
+  ] },
+];
+export const latest = () => releases()[0];
+// texts of the update graphic
+export const cardTexts = () => ({ title: t("What's new"), live: t("All live now."), open: t("Open the pad on your iPad and fly."), sub: t("Crew pad for Air Serbia Virtual") });
+
+export function relDate(r) {
+  try { return new Intl.DateTimeFormat(LOCALE(), { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(r.date)); } catch { return r.date; }
+}
+export const groupIcon = (g, base = "") => g.icon === "pad" ? `<img src="${base}icons/icon.svg" alt="">` : APP_ICONS[g.icon] || "";
+
+// the cards of one release (used in the pad and in the graphic)
+export function groupsHtml(r, base = "") {
+  return r.groups.map((g) => `<div class="wn-card"><div class="wn-h"><span class="wn-ic">${groupIcon(g, base)}</span><b>${esc(t(g.name))}</b></div>
+    <ul>${g.items.map((i) => `<li>${esc(i)}</li>`).join("")}</ul></div>`).join("");
+}
