@@ -15,15 +15,15 @@ export const API = {
 
 const DEF = { simbrief: "", cid: "", unit: "kg", theme: "dark", wall: "night", wallDim: 0.3, lock: 10, demo: "" };
 export let settings = { ...DEF, ...store.get("asl.settings", {}) };
-let urlDemo = false; // demo opened with ?demo: only for this visit, never saved
-export function setUrlDemo(v) { settings.demo = v; urlDemo = true; }
+// The demo flight is only for the automated test on the developer's own computer (localhost).
+// On the real site it can never be switched on, and a demo saved earlier is switched off.
+export const DEV = typeof location !== "undefined" && ["localhost", "127.0.0.1"].includes(location.hostname);
 export function saveSettings(patch) {
-  if ("demo" in patch) urlDemo = false;
   settings = { ...settings, ...patch };
-  store.set("asl.settings", urlDemo ? { ...settings, demo: store.get("asl.settings", {}).demo || "" } : settings);
+  store.set("asl.settings", { ...settings, demo: "" });
 }
-// once: a demo that the ?demo link saved by mistake (11.11.2026) is switched off
-if (!store.get("asl.fix.demo")) { store.set("asl.fix.demo", 1); if (settings.demo) saveSettings({ demo: "" }); }
+if (settings.demo) saveSettings({ demo: "" });
+export function setTestDemo(v) { if (DEV) settings.demo = v; }
 
 export const S = {
   ofp: null, ofpErr: "", ofpAt: 0, pilot: null, prefile: null, feedOk: null, feedAt: 0,

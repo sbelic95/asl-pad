@@ -3,8 +3,10 @@
 Crew-Pad (iPad-Web-App) für **virtuelle Air-Serbia-Flüge** im MSFS 2024 mit SimBrief und VATSIM. Inoffizielles Fanprojekt.
 Der Nutzer (sbelic95) schreibt Deutsch; antworte auf Deutsch. Die Oberfläche ist Englisch und umschaltbar auf Srpski und Deutsch.
 
-- Repo: `sbelic95/asl-pad`, Branch `main`. Seite: `https://sbelic95.github.io/asl-pad/` (GitHub Pages aus `main`, Ordner `/`)
-- Ausprobieren: `?demo` (JU500 LYBE–KJFK im Flug), `?demo=ground` (am Gate; beides nur für diesen Aufruf, `?demo=off` löscht eine gespeicherte Demo), dazu `&lang=sr|de`, `&app=fly&tab=perf`, `&unlock`
+- Repo: `sbelic95/asl-pad`, Branch `main`. Seite: `https://sbelic95.github.io/asl-pad/` (GitHub Pages aus `main`, Ordner `/`, seit 11.11.2026 an)
+- **Keinen Demo-Modus für Nutzer** (Wunsch des Nutzers, dauerhaft): kein Schalter in den Einstellungen, auf der echten Seite wird `settings.demo` immer gelöscht.
+  `?demo` / `?demo=ground` (JU500 LYBE–KJFK) wirkt nur auf `localhost` für Tests (`DEV` in `js/data.js`); dazu `&lang=sr|de`, `&app=fly&tab=perf`, `&unlock`
+- Zurück zum Home-Bildschirm: das App-Logo oben links (`.app-name` in `js/main.js`) – so gewünscht, keinen extra Home-Knopf einbauen.
 - Schwesterprojekt: `sbelic95/vdgs-slot-board` (VDGS, Kabinenanzeige `/airserbia/`). Von dort kommen Standdaten
   (Branch `stands`), Pisten (Branch `atc`) und VATSIM-UK-Stände (Branch `data`); `js/stands.js` ist aus dessen `index.html` übernommen.
 - Was die Apps können und wie der Code aufgebaut ist: [README.md](README.md). Lizenzen: [LIZENZEN.md](LIZENZEN.md).
@@ -30,7 +32,7 @@ node tests/smoke.mjs                 # Fluglogik, Übersetzungen, alle Apps und 
 node tests/smoke.mjs --shots shots/  # dazu Screenshots (iPad 1180x820) – Ordner nicht committen
 ```
 Braucht Playwright mit Chromium für den Browser-Teil. SimBrief, VATSIM, Kartenkacheln und das Logo sind in Testumgebungen
-meist nicht erreichbar; darum läuft der Test mit dem Demoflug. Screenshots vor dem Zeigen selbst ansehen.
+meist nicht erreichbar; darum läuft der Test mit dem Demoflug (nur auf localhost möglich). Screenshots vor dem Zeigen selbst ansehen.
 
 ## Commits
 
@@ -39,6 +41,5 @@ Autor `sbelic95 <119758002+sbelic95@users.noreply.github.com>`. Nach dem Push pr
 
 ## Offen
 
-- **GitHub Pages einschalten** (Settings → Pages → Deploy from a branch → `main` / root). Stand 11.11.2026 noch aus; per API vom Agenten aus gesperrt, das muss der Nutzer tun.
 - Feldnamen der SimBrief-Runway-Analysis (`tlr.takeoff.runway[].speeds_v1` usw.) stammen aus einem Forenbeispiel; mit einem echten OFP des Nutzers gegenprüfen (Einheiten: Längen in m?).
 - Ideen: Live-FOB und Position aus dem Simulator über die Bridge des VDGS (`bridge/vdgs_bridge.py`), weitere SimBrief-Airframes (A320, A330, ATR) in `FLEET` in `js/apps/ops.js`, Push-Hinweise.
