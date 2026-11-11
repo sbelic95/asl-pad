@@ -3,7 +3,7 @@
 import { S, settings, departureStand, arrivalStand, loadStandsFor } from "../data.js";
 import { t, loc } from "../i18n.js";
 import { esc, store, getJSON, distKm } from "../util.js";
-import { loadGround, groundOf, GROUND_AIRPORTS, nearestTaxiNode, runwayEnd, routeVia, holdsOn, meetPoint } from "../ground.js";
+import { loadGround, groundOf, GROUND_AIRPORTS, nearestTaxiNode, runwayEnd, routeVia, holdsOn, meetPoint, standGeo } from "../ground.js";
 
 export const name = "Airport";
 export const tabs = [["map", "Ground map"], ["brief", "Briefing"], ["stands", "Stands"]];
@@ -13,7 +13,7 @@ const HOME = "LYBE";
 const SPAN = { A319: 35.8, A320: 35.8, A20N: 35.8, A321: 35.8, A21N: 35.8, A332: 60.3, A333: 60.3, A339: 64, AT75: 27.1, AT76: 27.1, E190: 28.7, E195: 28.7,
   B737: 35.8, B738: 35.8, B38M: 35.9, B739: 35.8, B788: 60.1, B789: 60.1, B77W: 64.8, CRJ9: 24.9, DH8D: 28.4 };
 const ui = { icao: null, mode: null, rwy: null, join: null, stand: null, ...store.get("asl.apt", {}) };
-const saveUi = () => store.set("asl.apt", { icao: ui.icao, mode: ui.mode, rwy: ui.rwy, join: ui.join, stand: ui.stand });
+const saveUi = () => store.set("asl.apt", { icao: ui.icao, mode: ui.mode, rwy: ui.rwy, join: ui.join, stand: ui.stand, min: ui.min });
 const briefs = {};
 let C = null, M = null, loading = {};
 
@@ -65,11 +65,14 @@ function bar(icao, mode, tab) {
 
 // ---------- stands ----------
 function standList(icao) {
-  const osm = (S.stands[icao] || groundOf(icao)?.points?.filter((p) => p.k === "parking_position" || p.k === "stand").map((p) => ({ ref: p.ref, lat: p.lat, lon: p.lon })) || []);
+  const G = groundOf(icao), geo = G ? [...standGeo(G).values()].map((e) => ({ ref: e.ref, lat: e.pos[0], lon: e.pos[1] })) : [];
   const seen = new Map();
-  for (const s of osm) if (s.ref && !seen.has(s.ref)) seen.set(s.ref, s);
+  for (const s of [...(S.stands[icao] || []), ...geo]) if (s.ref && !seen.has(s.ref)) seen.set(s.ref, s);
   const b = briefs[icao];
-  if (b?.stands) for (const ref of Object.keys(b.stands)) if (!seen.has(ref)) seen.set(ref, { ref, lat: null, lon: null });
+  if (b?.stands) {
+    for (const ref of seen.keys()) if (!(ref in b.stands)) seen.delete(ref); // only the stands of the briefing (OSM also has a few unnamed ones)
+    for (const ref of Object.keys(b.stands)) if (!seen.has(ref)) seen.set(ref, { ref, lat: null, lon: null });
+  }
   const order = (r) => r.replace(/(\d+)/g, (x) => x.padStart(3, "0"));
   return [...seen.values()].sort((a, b2) => order(a.ref).localeCompare(order(b2.ref)));
 }
@@ -143,9 +146,9 @@ function build(body, G, key) {
   const el = body.querySelector(".gmap");
   const map = L.map(el, { zoomControl: false, attributionControl: true, minZoom: 12, maxZoom: 19, zoomSnap: 0.25 });
   map.attributionControl.addAttribution('&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>');
-  L.control.zoom({ position: "bottomright" }).addTo(map);
+  L.control.zoom({ position: "topright" }).addTo(map);
   const light = settings.theme === "light";
-  const col = light ? { apron: "#dfe6f0", twy: "#8b98ab", rwy: "#26303e", lbl: "#0a2447" } : { apron: "#14284a", twy: "#5d6f8c", rwy: "#05070c", lbl: "#cfe0ff" };
+  const col = light ? { apron: "#dfe6f0", twy: "#8b98ab", rwy: "#26303e", lbl: "#0a2447", std: "#7a6a3a" } : { apron: "#14284a", twy: "#5d6f8c", rwy: "#05070c", lbl: "#cfe0ff", std: "#ffd27a" };
   for (const a of G.areas) if (a.k === "apron") L.polygon(a.g, { color: col.apron, weight: 1, fillColor: col.apron, fillOpacity: 1, interactive: false }).addTo(map);
   for (const w of G.ways) if (w.k === "taxiway" || w.k === "taxilane") L.polyline(w.g, { color: col.twy, weight: w.k === "taxilane" ? 2 : 5, opacity: 0.9, interactive: false }).addTo(map);
   const rwys = L.layerGroup().addTo(map);
@@ -161,11 +164,7 @@ function build(body, G, key) {
   const labels = L.layerGroup(), best = {};
   for (const w of G.ways) if ((w.k === "taxiway") && w.ref) { const len = w.g.length; if (!best[w.ref] || len > best[w.ref].g.length) best[w.ref] = w; }
   for (const [ref, w] of Object.entries(best)) L.marker(w.g[Math.floor(w.g.length / 2)], { icon: L.divIcon({ className: "twy-lbl", html: esc(ref), iconSize: [40, 16], iconAnchor: [20, 8] }), interactive: false }).addTo(labels);
-  const stands = L.layerGroup();
-  for (const p of G.points) if ((p.k === "parking_position" || p.k === "stand") && p.ref) {
-    L.circleMarker([p.lat, p.lon], { radius: 3, color: "#ffd27a", weight: 1, fillColor: "#ffd27a", fillOpacity: 0.8 }).on("click", () => pickStand(p.ref)).addTo(stands);
-    L.marker([p.lat, p.lon], { icon: L.divIcon({ className: "std-lbl", html: esc(p.ref), iconSize: [44, 14], iconAnchor: [-4, 7] }) }).on("click", () => pickStand(p.ref)).addTo(stands);
-  }
+  const stands = L.layerGroup(), standMarks = {};
   const holds = L.layerGroup().addTo(map);
   for (const p of G.points) if (p.k === "holding_position" || p.k === "stopbar") (p.g ? L.polyline(p.g, { color: "#ff3347", weight: 3, interactive: false }) : L.circleMarker([p.lat, p.lon], { radius: 2, color: "#ff3347", weight: 2, interactive: false })).addTo(holds);
   const hot = L.layerGroup();
@@ -174,10 +173,25 @@ function build(body, G, key) {
   const ac = L.marker([0, 0], { icon: L.divIcon({ className: "ac-ic me", html: plane(0, "#ffffff"), iconSize: [28, 28], iconAnchor: [14, 14] }), zIndexOffset: 1000 });
   const all = L.featureGroup(G.runways.map((w) => L.polyline(w.g)));
   map.fitBounds(all.getBounds(), { padding: [30, 30] });
-  const zoomed = () => { const z = map.getZoom(); z >= 15 ? labels.addTo(map) : labels.remove(); z >= 16 ? stands.addTo(map) : stands.remove(); };
+  const zoomed = () => { const z = map.getZoom(); z >= 15 ? labels.addTo(map) : labels.remove(); z >= 15.5 ? stands.addTo(map) : stands.remove(); el.classList.toggle("std-names", z >= 16.75); };
   map.on("zoomend", zoomed); zoomed();
-  M = { key, el, body, map, route, holdMarks, traffic, ac, hot, acOn: false, last: "" };
+  const sel = L.marker([0, 0], { interactive: false, zIndexOffset: 900 });
+  M = { key, el, body, map, route, holdMarks, traffic, ac, hot, stands, standMarks, col, sel, acOn: false, last: "" };
+  drawStands(G);
   setTimeout(() => map.invalidateSize(), 60); setTimeout(() => map.invalidateSize(), 450);
+}
+// stands: the box and lead-in line faint, one dot and name at the stop point (again once the briefing is there:
+// then only its stands)
+function drawStands(G) {
+  const brief = briefs[G.icao], { stands, standMarks, col } = M;
+  stands.clearLayers(); for (const k in standMarks) delete standMarks[k];
+  M.standsBrief = !!brief;
+  for (const e of standGeo(G).values()) {
+    if (brief?.stands && !(e.ref in brief.stands)) continue;
+    if (e.box) L.polygon(e.box, { color: col.std, weight: 1, fillColor: col.std, fillOpacity: 0.06, interactive: false }).addTo(stands);
+    if (e.line) L.polyline(e.line, { color: col.std, weight: 1.2, opacity: 0.55, interactive: false }).addTo(stands);
+    standMarks[e.ref] = L.marker(e.pos, { icon: L.divIcon({ className: "std-pin", html: `<i></i><span>${esc(e.ref)}</span>`, iconSize: [12, 12], iconAnchor: [6, 6] }) }).on("click", () => pickStand(e.ref)).addTo(stands);
+  }
 }
 const plane = (hdg, color) => `<svg viewBox="0 0 24 24" width="28" height="28" style="transform:rotate(${hdg || 0}deg);color:${color}"><path fill="currentColor" stroke="#002e5d" stroke-width=".8" d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>`;
 
@@ -209,6 +223,10 @@ function update(G, icao, mode) {
   const stands = standList(icao), byRef = (r) => stands.find((s) => s.ref === r && s.lat != null);
   const auto = mode === "dep" ? departureStand()?.ref : arrivalStand()?.ref;
   const stand = byRef(ui.stand) || byRef(auto) || null;
+  if (!M.standsBrief && briefs[icao]) drawStands(G);
+  // the chosen stand: always shown, highlighted
+  if (stand) { M.sel.setLatLng(M.standMarks[stand.ref]?.getLatLng() || [stand.lat, stand.lon]).setIcon(L.divIcon({ className: "std-pin on", html: `<i></i><span>${esc(stand.ref)}</span>`, iconSize: [12, 12], iconAnchor: [6, 6] })); M.sel.addTo(map); }
+  else M.sel.remove();
   // route
   let R = null;
   const b = briefs[icao], free = b?.taxiRunways?.[P.rwy] || [];
@@ -233,7 +251,10 @@ function update(G, icao, mode) {
   // the panel
   const pick = (k, list, cur, lbl) => `<div class="gp-row"><span class="lbl">${lbl}</span><div class="seg">${list.map((v) => `<button data-${k}="${esc(v)}" class="${v === cur ? "on" : ""}">${v === "head" ? t("full") : esc(v)}</button>`).join("")}</div></div>`;
   const len = R ? Math.round(R.len) : 0;
-  M.body.querySelector(".gpanel").innerHTML = `
+  const panel = M.body.querySelector(".gpanel");
+  panel.classList.toggle("min", !!ui.min);
+  panel.innerHTML = `
+    <button class="gp-head" data-min="1"><span><b>RWY ${esc(P.rwy)}</b>${P.join && P.join !== "head" ? " · " + esc(P.join) : ""}${stand ? " · " + t("Stand") + " " + esc(stand.ref) : ""}${R ? ` · <b class="gp-len">${len.toLocaleString()} m</b>` : ""}</span><i>${ui.min ? "▴" : "▾"}</i></button>
     ${pick("rwy", P.rwyIds, P.rwy, "RWY")}
     ${P.joins.length ? pick("join", P.joins, P.join, mode === "dep" ? t("Entry") : t("Exit")) : ""}
     <div class="gp-row"><span class="lbl">${t("Stand")}</span><select data-k="stand"><option value="">${mode === "dep" && me ? t("where you are") : "—"}</option>${stands.filter((s) => s.lat != null).map((s) => `<option ${s.ref === stand?.ref ? "selected" : ""}>${esc(s.ref)}</option>`).join("")}</select></div>
@@ -247,7 +268,8 @@ function update(G, icao, mode) {
 function pickStand(ref) { ui.stand = ref; saveUi(); C?.changed("view"); }
 
 function onClick(e) {
-  const b = e.target.closest("[data-apt],[data-mode],[data-rwy],[data-join],[data-stand]"); if (!b) return;
+  const b = e.target.closest("[data-apt],[data-mode],[data-rwy],[data-join],[data-stand],[data-min]"); if (!b) return;
+  if (b.dataset.min) { ui.min = !ui.min; saveUi(); C.changed("view"); return; }
   if (b.dataset.apt) { ui.icao = b.dataset.apt; ui.rwy = ui.join = ui.stand = null; }
   if (b.dataset.mode) { ui.mode = b.dataset.mode; ui.join = null; }
   if (b.dataset.rwy) { ui.rwy = b.dataset.rwy; ui.join = null; }
