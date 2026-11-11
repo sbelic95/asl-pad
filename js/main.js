@@ -15,6 +15,7 @@ import * as Ops from "./apps/ops.js";
 import * as Log from "./apps/log.js";
 import * as Settings from "./apps/settings.js";
 import * as Downloads from "./apps/downloads.js";
+import * as Airport from "./apps/airport.js";
 
 const frameApp = (id, name, url) => ({ id, name, frame: true, url, render(body) {
   if (!body.querySelector("iframe")) body.innerHTML = `<iframe src="${esc(url())}" style="border:0;width:100%;height:100%;display:block;background:#fff" allow="fullscreen; autoplay"></iframe>`;
@@ -22,7 +23,7 @@ const frameApp = (id, name, url) => ({ id, name, frame: true, url, render(body) 
 const VDGS = "https://sbelic95.github.io/vdgs-slot-board/";
 const cs = () => S.ofp?.callsign || "";
 const APPS = {
-  fly: Fly, ops: Ops, log: Log, settings: Settings, downloads: Downloads,
+  fly: Fly, ops: Ops, log: Log, settings: Settings, downloads: Downloads, apt: Airport,
   cabin: frameApp("cabin", "Cabin", () => VDGS + "airserbia/" + (cs() ? "?cs=" + cs() : "")),
   vdgs: frameApp("vdgs", "VDGS", () => VDGS + (cs() ? "?cs=" + cs() : "")),
 };

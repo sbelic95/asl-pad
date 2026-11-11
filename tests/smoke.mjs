@@ -67,7 +67,7 @@ if (chromium) {
   if (shotsAt) fs.mkdirSync(shotsAt, { recursive: true });
   const b = await chromium.launch();
   const runs = [["air", "?demo"], ["ground", "?demo=ground"], ["sr", "?demo&lang=sr"], ["de", "?demo=ground&lang=de"]];
-  const views = [["fly", "overview"], ["fly", "times"], ["fly", "plan"], ["fly", "map"], ["fly", "wx"], ["fly", "fuel"], ["fly", "perf"], ["ops", "ops"], ["ops", "fleet"], ["log"], ["downloads", "dl"], ["downloads", "changes"], ["settings"]];
+  const views = [["fly", "overview"], ["fly", "times"], ["fly", "plan"], ["fly", "map"], ["fly", "wx"], ["fly", "fuel"], ["fly", "perf"], ["ops", "ops"], ["ops", "fleet"], ["log"], ["downloads", "dl"], ["downloads", "changes"], ["apt", "brief"], ["apt", "stands"], ["settings"]];
   for (const [name, q] of runs) {
     const ctx = await b.newContext({ viewport: { width: 1180, height: 820 }, serviceWorkers: "block" });
     const page = await ctx.newPage(), errs = [];

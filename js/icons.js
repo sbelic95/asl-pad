@@ -27,6 +27,10 @@ export const APP_ICONS = {
   settings: `<svg viewBox="0 0 100 100">${grad("gG", "#8d96a6", "#555e6e")}<rect width="100" height="100" fill="url(#gG)"/>
     <g transform="translate(50 50)" fill="#eef1f6">${Array.from({ length: 8 }, (_, i) => `<rect x="-5" y="-31" width="10" height="14" rx="2" transform="rotate(${i * 45})"/>`).join("")}<circle r="22"/></g>
     <circle cx="50" cy="50" r="10" fill="#6f7888"/></svg>`,
+  airport: `<svg viewBox="0 0 100 100">${grad("gA", "#0b4a3a", "#03261d")}<rect width="100" height="100" fill="url(#gA)"/>
+    <path d="M18 76 L70 18" stroke="#0a0e14" stroke-width="16" stroke-linecap="butt"/><path d="M18 76 L70 18" stroke="#fff" stroke-width="1.6" stroke-dasharray="5 5"/>
+    <path d="M30 84 C40 64 52 60 60 52 S78 40 86 44" fill="none" stroke="#ffd200" stroke-width="5" stroke-linecap="round"/>
+    <path d="M36 56 h12" stroke="#e3001f" stroke-width="4" stroke-linecap="round"/><circle cx="86" cy="44" r="5" fill="#e3001f"/></svg>`,
   downloads: `<svg viewBox="0 0 100 100">${grad("gD", "#e3001f", "#8c0013")}<rect width="100" height="100" fill="url(#gD)"/>
     <path d="M50 20 v38 M34 44 l16 16 l16 -16" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M24 62 v12 a6 6 0 0 0 6 6 h40 a6 6 0 0 0 6 -6 v-12" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="6" stroke-linecap="round"/></svg>`,

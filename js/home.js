@@ -10,7 +10,7 @@ import { flightWidget, timesWidget, todayWidget, liveHtml } from "./lock.js";
 import { cityOf } from "./tz.js";
 
 export const HOME_APPS = [
-  { id: "fly", name: "ASL Fly", icon: "fly" }, { id: "ops", name: "ASL Ops", icon: "ops" }, { id: "log", name: "Logbook", icon: "log" },
+  { id: "fly", name: "ASL Fly", icon: "fly" }, { id: "ops", name: "ASL Ops", icon: "ops" }, { id: "apt", name: "Airport", icon: "airport" }, { id: "log", name: "Logbook", icon: "log" },
   { id: "cabin", name: "Cabin", icon: "cabin" }, { id: "vdgs", name: "VDGS", icon: "vdgs" }, { id: "simbrief", name: "SimBrief", icon: "simbrief" },
   { id: "downloads", name: "Downloads", icon: "downloads" }, { id: "settings", name: "Settings", icon: "settings" },
 ];
