@@ -1,17 +1,20 @@
-/* ASL Pad: crew pad for Air Serbia flights in the flight simulator (unofficial). Colours after the Air Serbia palette:
-   Stratosphere Blue #002E5D, Sky Blue #0059C2, Beacon Red #E3001F, Airstream Silver #75787B, Lunar Silver #A7A8AA. */
+/* ASL Pad: crew pad for Air Serbia flights in the flight simulator (unofficial). Colours after the Air Serbia brand guidelines 2025:
+   primary  Stratosphere blue #002E5D, Cloudline white #FFFFFF, Beacon red #E3001F, Airstream silver #75787B, Lunar silver #A7A8AA, Sky blue #0059C2;
+   secondary, vibrant  #B60019 #F47920 #FDB913 #337A4C #22AED1 #885DAC; muted  #F49E90 #FAC496 #FEF5C3 #8ED28E #C7E3FF #F2CFEF.
+   Typeface: Roboto and Roboto Condensed (vendor/fonts.css). On dark backgrounds texts use the muted tones, fills the vibrant ones. */
 :root {
   --bg: #04122b; --bg2: #071c3f; --panel: #0b2348; --panel2: #0f2c59; --line: rgba(160, 190, 235, .14); --line2: rgba(160, 190, 235, .26);
   --fg: #eaf1fb; --dim: #9cb0cf; --faint: #6c82a6; --accent: #3b8cff; --accent2: #0059c2; --strato: #002e5d; --red: #ff3347; --beacon: #e3001f;
-  --ok: #2fd27f; --warn: #ffb21f; --mvfr: #3b8cff; --ifr: #ff3347; --lifr: #d64dff; --glass: rgba(10, 30, 66, .62); --shadow: 0 18px 50px rgba(0, 8, 30, .45);
+  --ok: #8ed28e; --warn: #fdb913; --mvfr: #3b8cff; --ifr: #ff3347; --lifr: #d64dff; --glass: rgba(10, 30, 66, .62); --shadow: 0 18px 50px rgba(0, 8, 30, .45);
   --route: #4da3ff; --flown: #ffffff;
+  --silver: #75787b; --lunar: #a7a8aa; --b-red: #b60019; --b-orange: #f47920; --b-yellow: #fdb913; --b-green: #337a4c; --b-cyan: #22aed1; --b-purple: #885dac;
   --f-ui: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif; --f-cond: "Roboto Condensed", "Roboto", sans-serif; --f-num: "Roboto", system-ui, -apple-system, sans-serif; --f-mono: "B612 Mono", ui-monospace, monospace;
   --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%237fb0ff' stroke-opacity='.07' stroke-width='1.1'%3E%3Cpath d='M32 6l11 11-11 11-11-11z'/%3E%3Cpath d='M32 13l4 4-4 4-4-4z'/%3E%3Cpath d='M0 38l7 7-7 7M64 38l-7 7 7 7M32 34v26M19 47h26'/%3E%3Ccircle cx='32' cy='47' r='3.5'/%3E%3C/g%3E%3C/svg%3E");
   color-scheme: dark;
 }
 :root[data-theme="light"] {
   --bg: #eef3fa; --bg2: #e3ebf6; --panel: #ffffff; --panel2: #f3f6fb; --line: rgba(0, 46, 93, .12); --line2: rgba(0, 46, 93, .22);
-  --fg: #0a2447; --dim: #4f6584; --faint: #8193ad; --accent: #0059c2; --glass: rgba(255, 255, 255, .72); --shadow: 0 14px 40px rgba(0, 30, 80, .14);
+  --fg: #0a2447; --dim: #4f6584; --faint: #8193ad; --accent: #0059c2; --ok: #337a4c; --warn: #b77e00; --glass: rgba(255, 255, 255, .72); --shadow: 0 14px 40px rgba(0, 30, 80, .14);
   --route: #0059c2; --flown: #002e5d; color-scheme: light;
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -197,7 +200,7 @@ input, select { font: inherit; color: var(--fg); background: var(--panel2); bord
 .fbar-mk.exp { border-color: var(--warn); } .fbar-mk.exp .top { color: var(--warn); }
 .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font: 500 11.5px var(--f-num); color: var(--dim); margin-top: 10px; }
 .legend i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
-.c-taxi { background: #9fb4d6; } .c-trip { background: #2f7cf0; } .c-used { background: #284a7d; } .c-cont { background: #22b573; } .c-extra { background: #f2a516; } .c-altn { background: #9d78ff; } .c-final { background: #ff3347; } .c-etops { background: #2ad2d2; }
+.c-taxi { background: var(--lunar); } .c-trip { background: #0059c2; } .c-used { background: #284a7d; } .c-cont { background: var(--b-green); } .c-extra { background: var(--b-orange); } .c-altn { background: var(--b-purple); } .c-final { background: #e3001f; } .c-etops { background: var(--b-cyan); }
 
 /* tables */
 table.t { width: 100%; border-collapse: collapse; font: 500 13.5px var(--f-num); }
