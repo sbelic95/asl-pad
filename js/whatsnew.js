@@ -7,6 +7,12 @@ import { esc } from "./util.js";
 import { APP_ICONS } from "./icons.js";
 
 export const releases = () => [
+  { v: "1.6.1", date: "2026-11-11", groups: [
+    { icon: "airport", name: "Airport", items: [
+      t("LYBE: docking guidance system per stand, RNAV arrivals, transponder and TCAS, lost communication after departure and in a missed approach"),
+      t("LYBE: early morning full-length rule for TISAK 4Z and landing distance beyond the glide slope"),
+    ] },
+  ] },
   { v: "1.6", date: "2026-11-11", groups: [
     { icon: "fly", name: "ASL Fly", items: [
       t("Map: measure distance and course between two points"),

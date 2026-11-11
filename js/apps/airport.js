@@ -87,7 +87,7 @@ function standsHtml(icao, mode) {
   const mine = mode === "dep" ? departureStand() : arrivalStand();
   const myRef = icao === (mode === "dep" ? S.ofp?.dep?.icao : S.ofp?.dest?.icao) ? mine?.ref : null;
   if (!list.length) return `<div class="empty">${t("No stand data for this airport yet.")}</div>`;
-  const how = (ref) => !b?.stands?.[ref] ? "" : b.vdgs?.includes(ref) ? `<span class="pill ok">VDGS</span>` : b.selfManoeuvring?.includes(ref) ? `<span class="pill">${t("Self-manoeuvring")}</span>` : `<span class="pill">${t("Push-back")}</span>`;
+  const how = (ref) => !b?.stands?.[ref] ? "" : b.vdgs?.includes(ref) ? `<span class="pill ok">VDGS${(([k]) => k ? " · " + esc(k) : "")(Object.entries(b.vdgsType || {}).find(([, l]) => l.includes(ref)) || [])}</span>` : b.selfManoeuvring?.includes(ref) ? `<span class="pill">${t("Self-manoeuvring")}</span>` : `<span class="pill">${t("Push-back")}</span>`;
   const rows = list.map((s) => {
     const w = b?.stands?.[s.ref], fits = span && w ? span <= w : null, occ = taken(icao, s);
     return `<tr class="${s.ref === myRef ? "next" : ""}${fits === false ? " past" : ""}"><td><b>${esc(s.ref)}</b>${s.ref === myRef ? ` <span class="pill warn">${mode === "dep" ? t("You") : t("Forecast")}</span>` : ""}</td>
@@ -105,7 +105,7 @@ function briefHtml(icao) {
   const b = briefs[icao];
   if (b == null) return `<div class="empty">${t("Loading…")}</div>`;
   if (!b) return `<div class="empty">${t("No briefing for this airport yet. LYBE has a full one.")}</div>`;
-  const rw = b.runways.map((r) => `<tr><td><b>${esc(r.id)}</b></td><td>${r.mag}°</td><td>${r.len} × ${r.wid} m</td><td>${r.tora} m</td><td>${r.lda} m</td><td>${esc(r.lights)}</td><td>${esc(r.cat)}</td></tr>`).join("");
+  const rw = b.runways.map((r) => `<tr><td><b>${esc(r.id)}</b></td><td>${r.mag}°</td><td>${r.len} × ${r.wid} m</td><td>${r.tora} m</td><td>${r.lda} m${r.ldaGs ? `<br><span class="dim">${t("beyond GS")} ${r.ldaGs} m</span>` : ""}</td><td>${esc(r.lights)}</td><td>${esc(r.cat)}</td></tr>`).join("");
   const to = Object.entries(b.takeoff).map(([r, l]) => `<div class="bf-to"><b>${esc(r)}</b>${l.map(([j, d]) => `<span>${j === "head" ? t("full length") : "TWY " + esc(j)} <b>${d} m</b></span>`).join("")}</div>`).join("");
   const ex = Object.entries(b.exits || {}).map(([r, l]) => `<div class="card"><div class="lbl" style="margin-bottom:6px">${t("Vacating RWY {r}", { r })}</div>${l.map((x) => `<div class="bf-ex"><b>${esc(x.twy)}</b><span>${x.dist ? `<b>${t("{d} m from the threshold", { d: x.dist })}</b> · ` : ""}${esc(loc(x))}${x.limit ? `<br><span class="dim">${esc(loc(x.limit))}</span>` : ""}</span></div>`).join("")}</div>`).join("");
   const sec = b.sections.map((s) => `<div class="card"><div class="lbl" style="margin-bottom:8px">${esc(loc(s.title))}</div><ul class="bf-ul">${s.items.map((i) => `<li>${esc(loc(i))}</li>`).join("")}</ul></div>`).join("");
@@ -211,16 +211,16 @@ function update(G, icao, mode) {
   const stand = byRef(ui.stand) || byRef(auto) || null;
   // route
   let R = null;
+  const b = briefs[icao], free = b?.taxiRunways?.[P.rwy] || [];
   if (mode === "dep") {
     const from = me && me.groundspeed < 40 ? nearestTaxiNode(G, [me.latitude, me.longitude]) : stand ? nearestTaxiNode(G, [stand.lat, stand.lon]) : null;
-    if (from != null) R = routeVia(G, P.rwy, P.join, from, true);
-  } else if (stand) R = routeVia(G, P.rwy, P.join, nearestTaxiNode(G, [stand.lat, stand.lon]), false);
+    if (from != null) R = routeVia(G, P.rwy, P.join, from, true, free);
+  } else if (stand) R = routeVia(G, P.rwy, P.join, nearestTaxiNode(G, [stand.lat, stand.lon]), false, free);
   route.setLatLngs(R ? R.pts : []);
   holdMarks.clearLayers();
   const holds = holdsOn(G, R);
   for (const h of holds) L.marker([h.lat, h.lon], { icon: L.divIcon({ className: "hold-lbl", html: `<b>${t("HOLD")}</b>${h.ref ? " " + esc(h.ref) : ""}`, iconSize: [80, 18], iconAnchor: [-6, 9] }), interactive: false }).addTo(holdMarks);
   // hot spots from the briefing
-  const b = briefs[icao];
   if (b?.hotspots && !M.hotDone) {
     for (const h of b.hotspots) { const p = meetPoint(G, h.twys[0], h.twys[1]); if (!p) continue;
       L.circle(p, { radius: 70, color: "#d64dff", weight: 2, fill: false, interactive: false }).addTo(M.hot);

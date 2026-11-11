@@ -112,18 +112,20 @@ export function runwayJoins(G, rwyId, twy) {
 export const runwayJoin = (G, rwyId, twy) => runwayJoins(G, rwyId, twy)[0] ?? null;
 
 // route to the runway (dep) or from it to a stand (arr), trying the joins in order until one is reachable
-export function routeVia(G, rwyId, twy, other, dep) {
+// free: runway refs that are a taxi route while rwyId is in use (at LYBE 12R/30L while 12L/30R is active)
+export function routeVia(G, rwyId, twy, other, dep, free = []) {
   const avoid = [runwayRef(G, rwyId)];
   for (const j of runwayJoins(G, rwyId, twy).slice(0, 8)) {
-    const R = dep ? taxiRoute(G, other, j, avoid) : taxiRoute(G, j, other, avoid);
+    const R = dep ? taxiRoute(G, other, j, avoid, free) : taxiRoute(G, j, other, avoid, free);
     if (R) return R;
   }
   return null;
 }
 
 // shortest route (Dijkstra); returns the points, the length in m and the taxiways in order.
-// avoid: runway refs that must not be taxied along (the landing runway after the exit, the runway of departure)
-export function taxiRoute(G, from, to, avoid = []) {
+// avoid: runway refs that must not be taxied along (the landing runway after the exit, the runway of departure);
+// free: runway refs that cost the same as a taxiway
+export function taxiRoute(G, from, to, avoid = [], free = []) {
   if (from == null || to == null || !G.adj.has(from) || !G.adj.has(to)) return null;
   const dist = new Map([[from, 0]]), prev = new Map(), done = new Set();
   const open = [[0, from]];
@@ -134,7 +136,7 @@ export function taxiRoute(G, from, to, avoid = []) {
     if (u === to) break;
     for (const e of G.adj.get(u) || []) {
       if (e.kind === "runway" && avoid.includes(e.ref)) continue;
-      const nd = d + e.w;
+      const nd = d + (e.kind === "runway" && free.includes(e.ref) ? e.w / 6 : e.w);
       if (nd < (dist.get(e.to) ?? Infinity)) { dist.set(e.to, nd); prev.set(e.to, { u, e }); open.push([nd, e.to]); }
     }
   }
