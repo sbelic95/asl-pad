@@ -46,7 +46,8 @@
       "thrElev": 317,
       "lights": "ALS CAT II/III 900 m · TDZ · CL · PAPI 3°",
       "cat": "CAT I/II/III",
-      "ldaGs": 3122
+      "ldaGs": 3122,
+      "pcn": "PCN 88/F/C/W/T"
     },
     {
       "id": "30R",
@@ -59,7 +60,8 @@
       "thrElev": 333,
       "lights": "ALS CAT I 900 m · CL · PAPI 3° · THR displaced 400 m",
       "cat": "CAT I",
-      "ldaGs": 2704
+      "ldaGs": 2704,
+      "pcn": "PCN 88/F/C/W/T"
     },
     {
       "id": "12R",
@@ -72,7 +74,8 @@
       "thrElev": 322,
       "lights": "ALS CAT II/III 900 m · TDZ · CL · PAPI 3° · THR displaced 690 m",
       "cat": "CAT I/II/III",
-      "ldaGs": 2499
+      "ldaGs": 2499,
+      "pcn": "PCN 96/F/D/X/T"
     },
     {
       "id": "30L",
@@ -84,7 +87,8 @@
       "lda": 2983,
       "thrElev": 331,
       "lights": "SALS 420 m · CL · PAPI 3° · THR displaced 515 m",
-      "cat": "NPA"
+      "cat": "NPA",
+      "pcn": "PCN 96/F/D/X/T"
     }
   ],
   "takeoff": {
@@ -512,6 +516,14 @@
         {
           "en": "Birds in the vicinity of the airport.",
           "sr": "Ptice u blizini aerodroma."
+        },
+        {
+          "en": "Non-scheduled, private and other general aviation flights coordinate their take-off and landing with the airport's flight coordinator.",
+          "sr": "Vanredni, privatni i ostali letovi opšte avijacije usklađuju poletanje i sletanje sa koordinatorom letenja aerodroma."
+        },
+        {
+          "en": "Helicopters: the heliport is for domestic operators with the owner's permission only; foreign operators use the runway.",
+          "sr": "Helikopteri: heliodrom samo za domaće operatere uz dozvolu vlasnika; strani operateri koriste pistu."
         }
       ]
     }
@@ -675,8 +687,8 @@
     "E4"
   ],
   "facts": {
-    "en": "ARP 1500 m from THR 12L · transition altitude 10 000 ft · CTR class D, GND–3000 ft · MAG VAR 6° E · VOLMET 126.400 · Approach also 119.100 / 124.425, Tower alternate 118.750",
-    "sr": "ARP 1500 m od praga 12L · prelazna visina 10 000 ft · CTR klasa D, GND–3000 ft · MAG VAR 6° E · VOLMET 126.400 · Prilazna i 119.100 / 124.425, toranj rezervna 118.750"
+    "en": "ARP N44 49.2 E020 18.4 · ARP 1500 m from THR 12L · transition altitude 10 000 ft · CTR class D, GND–3000 ft · MAG VAR 6° E · VOLMET 126.400 · Approach also 119.100 / 124.425, Tower alternate 118.750 · 12L/30R: the 400 m end sections are concrete, PCN 74/R/B/W/T",
+    "sr": "ARP N44 49.2 E020 18.4 · ARP 1500 m od praga 12L · prelazna visina 10 000 ft · CTR klasa D, GND–3000 ft · MAG VAR 6° E · VOLMET 126.400 · Prilazna i 119.100 / 124.425, toranj rezervna 118.750 · 12L/30R: krajnji delovi od 400 m su beton, PCN 74/R/B/W/T"
   },
   "takeoffNotes": [
     {
