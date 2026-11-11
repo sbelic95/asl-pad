@@ -1,4 +1,4 @@
-// Settings: SimBrief and VATSIM, units, language, look, auto-lock, demo, data and the about box.
+// Settings: SimBrief and VATSIM, units, language, look, auto-lock, data and the about box.
 import { S, settings, saveSettings } from "../data.js";
 import { t, LANGS, getLang, setLang } from "../i18n.js";
 import { esc, store } from "../util.js";
@@ -42,9 +42,6 @@ function page() {
       ${row(t("Look"), "", seg("theme", [["dark", t("Dark")], ["light", t("Light")]], settings.theme))}
       ${wallRow()}
       ${row(t("Auto-lock"), t("Locks the pad after this time without a touch."), seg("lock", [[0, t("Never")], [5, "5 min"], [10, "10 min"], [30, "30 min"]], settings.lock))}
-    </div>
-    <div class="card"><div class="lbl" style="margin-bottom:4px">${t("Demo")}</div>
-      ${row(t("Demo flight"), t("JU500 Belgrade – New York with live position, without SimBrief or VATSIM."), seg("demo", [["", t("Off")], ["air", t("In flight")], ["ground", t("At the gate")]], settings.demo))}
     </div>
     <div class="card"><div class="lbl" style="margin-bottom:4px">${t("Data")}</div>
       ${row(t("Flight data"), t("Times, track and fuel checks of your flights on this device."), `<button class="btn small" data-do="clearflights">${t("Delete flight data")}</button>`)}
@@ -100,7 +97,7 @@ function onClick(e) {
     if (k === "lang") { setLang(v); C.changed("lang"); return; }
     if (k === "lock" || k === "wallDim") saveSettings({ [k]: +v });
     else saveSettings({ [k]: v });
-    C.changed(k === "demo" ? "data" : k === "theme" || k === "wallDim" ? "theme" : "view");
+    C.changed(k === "theme" || k === "wallDim" ? "theme" : "view");
     return;
   }
   const b = e.target.closest("[data-do]"); if (!b) return;

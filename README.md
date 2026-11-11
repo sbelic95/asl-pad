@@ -5,7 +5,7 @@ am besten als App auf dem Home-Bildschirm (Safari → Teilen → Zum Home-Bildsc
 
 > Inoffizielles Fanprojekt. Nicht mit Air Serbia verbunden. Nur für die Flugsimulation, nicht für die echte Navigation.
 
-**Ausprobieren ohne Flug:** `…/asl-pad/?demo` (JU500 Belgrad – New York im Flug) oder `…/asl-pad/?demo=ground` (am Gate in Belgrad). Das gilt nur für diesen Aufruf; `?demo=off` schaltet eine gespeicherte Demo aus.
+Es gibt keinen Demo-Modus: Das Pad zeigt immer den eigenen Flug aus SimBrief und VATSIM. Den Demoflug JU500 (`js/demo.js`) gibt es nur für den automatischen Test auf dem eigenen Rechner (`localhost`).
 
 ## Was drin ist
 
@@ -17,8 +17,8 @@ am besten als App auf dem Home-Bildschirm (Safari → Teilen → Zum Home-Bildsc
 | **ASL Ops** | Dienst-Leiste, To-do, Abflug (Stand, Piste, SID, vIFF-CDM: EOBT/TOBT/TSAT/TTOT/CTOT, Frequenzen) und Ankunft (Stand-Prognose, Piste, STAR, ATIS, Frequenzen). Reiter **Flotte** mit den SimBrief-Airframes der A319 YU-APA bis YU-APE und eigenen Flugzeugen. |
 | **Logbuch** | Jeder Flug wird beim On-Block eingetragen. Statistik, Details mit Streckenkarte, Flug von Hand eintragen, CSV-Export, Sicherung und Import (JSON). |
 | **Cabin / VDGS** | Öffnet die Air-Serbia-Kabinenanzeige und das VDGS aus `vdgs-slot-board` mit dem Rufzeichen des Flugs. |
-| **Home-Knopf** | Oben links in jeder App; führt zurück zum Home-Bildschirm (wie ein Tipp auf den Home-Balken unten). |
-| **Einstellungen** | SimBrief-Name oder Pilot-ID, VATSIM-CID, Sprache (Englisch, Srpski, Deutsch), kg / t / lb, hell / dunkel, **Hintergrund** für Sperr- und Home-Bildschirm (sechs Vorlagen oder ein eigenes Foto vom Gerät, abdunkelbar), Auto-Sperre, Demo. |
+| **Zurück** | Das App-Logo oben links (z. B. „‹ ASL Ops“) führt in jeder App zurück zum Home-Bildschirm, wie ein Tipp auf den Home-Balken unten. |
+| **Einstellungen** | SimBrief-Name oder Pilot-ID, VATSIM-CID, Sprache (Englisch, Srpski, Deutsch), kg / t / lb, hell / dunkel, **Hintergrund** für Sperr- und Home-Bildschirm (sechs Vorlagen oder ein eigenes Foto vom Gerät, abdunkelbar), Auto-Sperre. |
 
 Doppeltipp auf den Home-Balken unten öffnet den **App-Umschalter** mit Miniaturen der offenen Apps (Karte nach oben wischen oder × schließt sie).
 Einfacher Tipp führt zum Home-Bildschirm.
@@ -52,7 +52,7 @@ js/lock.js, home.js   Sperrbildschirm und Home
 js/wall.js            Hintergrund: Vorlagen und eigenes Foto (verkleinert, in localStorage "asl.wall.photo")
 js/apps/*.js          ASL Fly (+ Karte), ASL Ops, Logbuch, Einstellungen
 js/i18n*.js           Übersetzungen (Schlüssel ist der englische Text)
-js/demo.js            Demoflug JU500
+js/demo.js            Demoflug JU500, nur für den Test (localhost)
 sw.js                 Offline-Hülle (die App selbst, keine Live-Daten)
 ```
 

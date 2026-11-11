@@ -1,6 +1,6 @@
 // ASL Pad shell: lock screen, home screen, apps, app switcher (double-tap the home bar), status bar.
 import { $, esc, hhmmz, store } from "./util.js";
-import { S, settings, saveSettings, setUrlDemo, onChange, startPolling, refreshAll, restart, emit } from "./data.js";
+import { S, settings, saveSettings, setTestDemo, onChange, startPolling, refreshAll, restart, emit } from "./data.js";
 import { t, setLang, getLang, dateLong } from "./i18n.js";
 import { APP_ICONS, I } from "./icons.js";
 import { renderLock, noteHtml } from "./lock.js";
@@ -26,9 +26,9 @@ const NAMES = Object.fromEntries(HOME_APPS.map((a) => [a.id, a]));
 
 const ui = { view: "lock", app: null, recent: store.get("asl.recent", []), tab: {}, lastInput: Date.now(), switcher: false };
 
-// ---------- URL options: ?demo, ?demo=ground (only for this visit), ?demo=off, ?app=fly&tab=map, ?unlock ----------
+// ---------- URL options: ?app=fly&tab=map, ?unlock, ?lang=de; ?demo / ?demo=ground only on localhost (test) ----------
 const q = new URLSearchParams(location.search);
-if (q.has("demo")) { const v = q.get("demo"); if (v === "off") saveSettings({ demo: "" }); else setUrlDemo(v === "ground" ? "ground" : "air"); }
+if (q.has("demo")) setTestDemo(q.get("demo") === "ground" ? "ground" : "air");
 if (q.get("lang")) setLang(q.get("lang"));
 setLang(getLang());
 
@@ -51,14 +51,14 @@ function frameOf(id) {
   const [first, ...rest] = (meta?.name || A.name).split(" ");
   el = document.createElement("div");
   el.className = "app"; el.id = "app-" + id;
-  el.innerHTML = `<div class="app-head"><button class="home-btn" data-act="home" aria-label="${t("Home")}">${I.home}<span>${t("Home")}</span></button><div class="app-name"><span class="mini">${APP_ICONS[meta?.icon || id] || ""}</span>${rest.length ? `${esc(first)} <em>${esc(rest.join(" "))}</em>` : esc(t(first))}</div>
+  el.innerHTML = `<div class="app-head"><button class="app-name" aria-label="${t("Home")}"><span class="back">${I.back}</span><span class="mini">${APP_ICONS[meta?.icon || id] || ""}</span>${rest.length ? `${esc(first)} <em>${esc(rest.join(" "))}</em>` : esc(t(first))}</button>
     <div class="tabs">${(A.tabs || []).map(([k, l]) => `<button data-tab="${k}">${esc(t(l))}</button>`).join("")}</div>
     <div class="head-r"><span class="zclock num"></span><button class="rbtn" data-act="theme" title="${t("Light / dark")}">${I.sun}</button><button class="rbtn" data-act="refresh" title="${t("Refresh")}">${I.refresh}</button></div></div>
     <div class="app-body"></div>`;
   if (!A.tabs?.length) el.querySelector(".tabs").classList.add("none");
   if (A.frame) el.querySelector(".app-body").style.padding = "0";
   el.querySelector(".tabs").addEventListener("click", (e) => { const b = e.target.closest("[data-tab]"); if (b) { ui.tab[id] = b.dataset.tab; renderApp(id); } });
-  el.querySelector(".home-btn").addEventListener("click", () => goHome());
+  el.querySelector(".app-name").addEventListener("click", () => goHome()); // the app's own logo leads back home
   el.querySelector(".head-r").addEventListener("click", async (e) => {
     const b = e.target.closest("[data-act]"); if (!b) return;
     if (b.dataset.act === "theme") { saveSettings({ theme: settings.theme === "light" ? "dark" : "light" }); applyTheme(); renderAll(); }
