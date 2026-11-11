@@ -366,3 +366,15 @@ a.btn { text-decoration: none; color: inherit; } a.btn.pri { color: #fff; }
 .wn-ic { width: 34px; height: 34px; border-radius: 9px; overflow: hidden; flex: none; } .wn-ic svg, .wn-ic img { width: 100%; height: 100%; display: block; }
 .wn-card ul { margin: 10px 0 0; padding-left: 18px; } .wn-card li { margin: 5px 0; font-size: 14.5px; } .wn-card li::marker { color: var(--accent); }
 @media (max-width: 760px) { .wn-grid { grid-template-columns: 1fr; } }
+
+/* ---------- 1.4: career, downloads ---------- */
+.career { margin-top: 10px; font-size: 13px; max-width: 340px; }
+.career .row { display: flex; align-items: baseline; gap: 6px; } .career .arr { color: var(--dim); } .career .sp { flex: 1; }
+.career .bar { height: 5px; border-radius: 3px; background: var(--line2); margin-top: 5px; overflow: hidden; }
+.career .bar i { display: block; height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--beacon), #ff5a6e); }
+.career.big { max-width: none; font-size: 15px; } .career.big .bar { height: 8px; }
+.dl-wrap { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+.dl-row { display: flex; align-items: center; gap: 14px; padding: 11px 0; border-bottom: 1px solid var(--line); color: var(--fg); text-decoration: none; }
+.dl-row:last-child { border-bottom: 0; }
+.dl-row .tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; } .dl-row .tx b { font-size: 15.5px; } .dl-row .tx span { font-size: 13px; }
+.dl-row .host { font: 600 12px var(--f-num); color: var(--accent); white-space: nowrap; }

@@ -1,18 +1,20 @@
 // ASL Pad shell: lock screen, home screen, apps, app switcher (double-tap the home bar), status bar.
 import { $, esc, hhmmz, store } from "./util.js";
-import { S, settings, saveSettings, setTestDemo, onChange, startPolling, refreshAll, restart, emit } from "./data.js";
+import { S, settings, saveSettings, setTestDemo, onChange, wxOf, startPolling, refreshAll, restart, emit } from "./data.js";
 import { t, setLang, getLang, dateLong } from "./i18n.js";
 import { APP_ICONS, I } from "./icons.js";
 import { renderLock, noteHtml } from "./lock.js";
 import { renderHome, HOME_APPS, openNotice } from "./home.js";
-import { loadAirports, cityOf } from "./tz.js";
-import { applyWall } from "./wall.js";
+import { loadAirports, cityOf, tzOf } from "./tz.js";
+import { applyWall, autoSky } from "./wall.js";
+import { career, careerHtml, promoted } from "./career.js";
 import { sheet } from "./sheet.js";
 import { latest, relDate, groupsHtml } from "./whatsnew.js";
 import * as Fly from "./apps/fly.js";
 import * as Ops from "./apps/ops.js";
 import * as Log from "./apps/log.js";
 import * as Settings from "./apps/settings.js";
+import * as Downloads from "./apps/downloads.js";
 
 const frameApp = (id, name, url) => ({ id, name, frame: true, url, render(body) {
   if (!body.querySelector("iframe")) body.innerHTML = `<iframe src="${esc(url())}" style="border:0;width:100%;height:100%;display:block;background:#fff" allow="fullscreen; autoplay"></iframe>`;
@@ -20,7 +22,7 @@ const frameApp = (id, name, url) => ({ id, name, frame: true, url, render(body) 
 const VDGS = "https://sbelic95.github.io/vdgs-slot-board/";
 const cs = () => S.ofp?.callsign || "";
 const APPS = {
-  fly: Fly, ops: Ops, log: Log, settings: Settings,
+  fly: Fly, ops: Ops, log: Log, settings: Settings, downloads: Downloads,
   cabin: frameApp("cabin", "Cabin", () => VDGS + "airserbia/" + (cs() ? "?cs=" + cs() : "")),
   vdgs: frameApp("vdgs", "VDGS", () => VDGS + (cs() ? "?cs=" + cs() : "")),
 };
@@ -35,7 +37,14 @@ if (q.get("lang")) setLang(q.get("lang"));
 setLang(getLang());
 
 // ---------- theme ----------
-export function applyTheme() { document.documentElement.dataset.theme = settings.theme === "light" ? "light" : "dark"; applyWall(settings); }
+export function applyTheme() { document.documentElement.dataset.theme = settings.theme === "light" ? "light" : "dark"; applyWall(settings, skyNow()); }
+// the sky for the "auto" wallpaper: local hour and weather at the airport where you are
+export function skyNow(now = Date.now()) {
+  const o = S.ofp, apt = o ? (S.st?.takeoff ? o.dest : o.dep) : null;
+  let hour = new Date(now).getHours();
+  if (apt) { try { hour = +new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hour12: false, timeZone: tzOf(apt) || undefined }).format(now) % 24; } catch {} }
+  return autoSky(hour, apt ? wxOf(apt.icao) : null);
+}
 applyTheme();
 
 // ---------- status bar ----------
@@ -103,6 +112,15 @@ export function goHome() {
 }
 function lockPad() { hideSwitcher(); ui.view = "lock"; renderLock($("lock")); $("lock").classList.remove("gone"); renderStatus(); }
 function unlock() { $("lock").classList.add("gone"); if (ui.app) { ui.view = "app"; renderApp(ui.app); } else goHome(); renderStatus(); whatsNewOnce(); }
+
+// ---------- a new rank: a letter, once ----------
+function checkPromotion() {
+  if (ui.view === "lock") return; // the letter waits until the pad is unlocked
+  const c = career();
+  if (!promoted(c)) return;
+  sheet(`<div class="wn-top"><div><div class="lbl">Air Serbia Virtual · ${t("Career")}</div><h2>${t("Congratulations!")}</h2></div><button class="btn pri" data-close>${t("Thank you")}</button></div>
+    <div style="padding:20px 24px 24px"><p style="font-size:17px;margin:0 0 14px">${t("With your flights in the logbook you are now {rank}.", { rank: "<b>" + esc(c.rank) + "</b>" })}</p>${careerHtml(c, true)}</div>`).el.classList.add("wn");
+}
 
 // ---------- what's new: once after every update, and from Settings ----------
 export function showWhatsNew() {
@@ -221,6 +239,8 @@ const EVENT_NOTE = {
 let lastRender = 0;
 function renderAll() {
   const now = Date.now(); lastRender = now;
+  if (settings.wall === "auto") applyWall(settings, skyNow(now));
+  checkPromotion();
   renderStatus(now);
   if (ui.view === "lock") renderLock($("lock"), now);
   if (ui.view === "home") renderHome($("home"), now);

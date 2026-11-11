@@ -16,6 +16,7 @@ Es gibt keinen Demo-Modus: Das Pad zeigt immer den eigenen Flug aus SimBrief und
 | **ASL Fly** | Übersicht (Flughäfen mit Wetter und Piste, Phase, nächster Wegpunkt, ETA, OUT/OFF/ON/IN, Treibstoff), Zeiten, Flugplan mit ETA/ATA je Wegpunkt, Karte mit Route, geflogenem Weg und Vertikalprofil, Wetter (METAR, TAF, ATIS), Treibstoff mit Fuel Checks. |
 | **ASL Ops** | Dienst-Leiste, To-do, Abflug (Stand, Piste, SID, vIFF-CDM: EOBT/TOBT/TSAT/TTOT/CTOT, Frequenzen) und Ankunft (Stand-Prognose, Piste, STAR, ATIS, Frequenzen). Reiter **Flotte** mit den SimBrief-Airframes der A319 YU-APA bis YU-APE und eigenen Flugzeugen. |
 | **Logbuch** | Jeder Flug wird beim On-Block eingetragen. Statistik, Details mit Streckenkarte, Flug von Hand eintragen, CSV-Export, Sicherung und Import (JSON). |
+| **Preuzimanja (Downloads)** | Links der VA aus [`va/downloads.json`](va/downloads.json): ACARS (Pflicht), Crew Lounge, Liveries, SimBrief, VATSIM, SCG vACC. Reiter **Promene** mit allen Updates. |
 | **Cabin / VDGS** | Öffnet die Air-Serbia-Kabinenanzeige und das VDGS aus `vdgs-slot-board` mit dem Rufzeichen des Flugs. |
 | **Zurück** | Das App-Logo oben links (z. B. „‹ ASL Ops“) führt in jeder App zurück zum Home-Bildschirm, wie ein Tipp auf den Home-Balken unten. |
 | **Einstellungen** | SimBrief-Name oder Pilot-ID, VATSIM-CID, Sprache (Englisch, Srpski, Deutsch), kg / t / lb, hell / dunkel, **Hintergrund** für Sperr- und Home-Bildschirm (sechs Vorlagen oder ein eigenes Foto vom Gerät, abdunkelbar), Auto-Sperre. |
@@ -66,6 +67,14 @@ Lizenzen der verwendeten Bibliotheken und Daten: [LIZENZEN.md](LIZENZEN.md).
   (Stift-Symbol, Texte auf `sr`/`en`/`de`, `until` = bis wann sichtbar). Das Pad lädt sie alle 15 Minuten; ungelesene haben einen roten Punkt.
 - **VATSIM-Events** holt der Ablauf [`.github/workflows/vatsim-events.yml`](.github/workflows/vatsim-events.yml) alle 30 Minuten von my.vatsim.net
   in den Branch `data` (`events.json`). Events in Serbien und an den Flughäfen des eigenen Flugs stehen zuerst.
+
+## Karriere, Crew-Info, Hintergrund „Nebo gde si“ (1.4)
+
+- **Karriere:** Rang nach Blockzeit im Logbuch dieses Geräts, mit den Rängen aus [`va/ranks.json`](va/ranks.json). Die Ränge dort sind ein
+  **Vorschlag** – die Leitung der VA soll sie bestätigen oder ändern. Bei einem neuen Rang kommt einmal ein Glückwunsch-Brief.
+- **Crew-Info:** Tipps in `va/notices.json` mit `"phase"` erscheinen in dieser Flugphase statt des Tipps des Tages.
+- **Home-Bildschirm anpassen:** Einstellungen → Početni ekran (Wetter, Karriere, Mitteilungen, Events ein/aus).
+- **Hintergrund „Nebo gde si“:** folgt Ortszeit und Wetter am Abflugort (bis zum Start), dann am Ziel.
 
 ## Ein Update machen
 

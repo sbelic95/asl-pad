@@ -30,6 +30,12 @@ Der Nutzer (sbelic95) schreibt Deutsch; antworte auf Deutsch. Die Oberfläche is
 Mitteilungen/Tipps aus `va/notices.json` (pflegt die VA-Leitung selbst; keine erfundenen VA-Mitteilungen eintragen), VATSIM-Events aus
 Branch `data` (`events.json`, Workflow `vatsim-events.yml`). `S.events` sind die Flugereignisse – die VATSIM-Events heißen `S.vatEvents`.
 
+## VA-Dateien (`va/`)
+
+`notices.json` (Mitteilungen, Tipps, Crew-Info je Phase), `downloads.json` (App Preuzimanja), `ranks.json` (Karriere; Ränge sind ein
+Vorschlag, bis die VA-Leitung sie bestätigt). Nur echte, geprüfte Links und keine erfundenen VA-Inhalte. Karriere ist lokal je Gerät –
+offizielle Ränge/Stunden gäbe es erst mit einer Anbindung an die Crew Lounge der VA (airserbiavirtual.online).
+
 ## Updates
 
 Jede sichtbare Neuerung als neuer Eintrag oben in `js/whatsnew.js` (nur, was das Pad wirklich kann). Das Pad zeigt ihn einmal

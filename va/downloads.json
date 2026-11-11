@@ -1,0 +1,41 @@
+{
+  "_help": "Preuzimanja za ASL Pad (aplikacija „Preuzimanja“). Izmeni na GitHubu i sačuvaj. Svaka stavka: title i text na sr/en/de, url, tag (npr. obavezno). Samo prave, proverene veze.",
+  "sections": [
+    {
+      "title": { "sr": "Air Serbia Virtual", "en": "Air Serbia Virtual", "de": "Air Serbia Virtual" },
+      "items": [
+        { "title": { "sr": "ACARS za Air Serbia Virtual", "en": "ACARS for Air Serbia Virtual", "de": "ACARS für Air Serbia Virtual" },
+          "text": { "sr": "Beleži svaki tvoj let. Preuzima se posle prijave i prijema u kompaniju.", "en": "Records every flight. Download it after signing up and joining the airline.", "de": "Zeichnet jeden Flug auf. Download nach Anmeldung und Aufnahme in die Airline." },
+          "tag": { "sr": "Obavezno", "en": "Required", "de": "Pflicht" }, "url": "https://www.airserbiavirtual.org/download" },
+        { "title": { "sr": "Crew Lounge", "en": "Crew Lounge", "de": "Crew Lounge" },
+          "text": { "sr": "Tvoj profil, letovi i statistika u kompaniji.", "en": "Your profile, flights and statistics at the airline.", "de": "Dein Profil, deine Flüge und Statistik bei der Airline." },
+          "url": "https://airserbiavirtual.online/" }
+      ]
+    },
+    {
+      "title": { "sr": "Boje aviona (liveries)", "en": "Liveries", "de": "Liveries" },
+      "items": [
+        { "title": { "sr": "Air Serbia paket za Fenix A319", "en": "Air Serbia pack for the Fenix A319", "de": "Air-Serbia-Paket für den Fenix A319" },
+          "text": { "sr": "YU-APA do YU-APE, odgovaraju SimBrief avionima u ASL Ops.", "en": "YU-APA to YU-APE, matching the SimBrief airframes in ASL Ops.", "de": "YU-APA bis YU-APE, passend zu den SimBrief-Airframes in ASL Ops." },
+          "url": "https://flightsim.to/file/91140/air-serbia-pack-fenix-a319" },
+        { "title": { "sr": "Sve Air Serbia boje na flightsim.to", "en": "All Air Serbia liveries on flightsim.to", "de": "Alle Air-Serbia-Liveries auf flightsim.to" },
+          "text": { "sr": "A320, A330, ATR i drugi avioni za MSFS.", "en": "A320, A330, ATR and more for MSFS.", "de": "A320, A330, ATR und weitere für den MSFS." },
+          "url": "https://flightsim.to/liveries/airline/Air%20Serbia" }
+      ]
+    },
+    {
+      "title": { "sr": "Planiranje i mreža", "en": "Planning and network", "de": "Planung und Netzwerk" },
+      "items": [
+        { "title": { "sr": "SimBrief", "en": "SimBrief", "de": "SimBrief" },
+          "text": { "sr": "Napravi OFP – ASL Pad ga sam preuzima.", "en": "Create your OFP – ASL Pad picks it up by itself.", "de": "OFP erstellen – ASL Pad holt ihn selbst." },
+          "url": "https://dispatch.simbrief.com/" },
+        { "title": { "sr": "VATSIM događaji", "en": "VATSIM events", "de": "VATSIM-Events" },
+          "text": { "sr": "Svi događaji na mreži.", "en": "All events on the network.", "de": "Alle Events im Netzwerk." },
+          "url": "https://my.vatsim.net/events" },
+        { "title": { "sr": "SCG vACC", "en": "SCG vACC", "de": "SCG vACC" },
+          "text": { "sr": "VATSIM kontrola letenja za Srbiju i Crnu Goru.", "en": "VATSIM air traffic control for Serbia and Montenegro.", "de": "VATSIM-Flugsicherung für Serbien und Montenegro." },
+          "url": "http://www.scgvacc.org/" }
+      ]
+    }
+  ]
+}

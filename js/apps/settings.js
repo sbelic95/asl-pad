@@ -4,6 +4,7 @@ import { t, LANGS, getLang, setLang } from "../i18n.js";
 import { esc, store } from "../util.js";
 import { WALLS, getPhoto, delPhoto, savePhoto } from "../wall.js";
 import { latest } from "../whatsnew.js";
+import { HOME_CARDS } from "../home.js";
 
 export const name = "Settings";
 export const tabs = [];
@@ -42,6 +43,7 @@ function page() {
       ${row(t("Weights"), t("Fuel and weights in"), seg("unit", [["kg", "kg"], ["t", t("tonnes")], ["lb", "lb"]], settings.unit))}
       ${row(t("Look"), "", seg("theme", [["dark", t("Dark")], ["light", t("Light")]], settings.theme))}
       ${wallRow()}
+      ${row(t("Home screen"), t("Cards on the home screen. Tap to show or hide."), `<div class="seg">${HOME_CARDS.map(([k, l]) => `<button data-hc="${k}" class="${(settings.homeHide || []).includes(k) ? "" : "on"}">${esc(t(l))}</button>`).join("")}</div>`)}
       ${row(t("Auto-lock"), t("Locks the pad after this time without a touch."), seg("lock", [[0, t("Never")], [5, "5 min"], [10, "10 min"], [30, "30 min"]], settings.lock))}
     </div>
     <div class="card"><div class="lbl" style="margin-bottom:4px">${t("Data")}</div>
@@ -58,9 +60,10 @@ function page() {
 
 // wallpaper of the lock and home screen: built-in skies and a photo from the device
 function wallRow() {
-  const photo = !!getPhoto(), cur = settings.wall === "photo" && photo ? "photo" : WALLS[settings.wall] ? settings.wall : "night";
+  const photo = !!getPhoto(), cur = settings.wall === "photo" && photo ? "photo" : settings.wall === "auto" || WALLS[settings.wall] ? settings.wall : "night";
   const tile = (id, name, bg) => `<button class="wtile${cur === id ? " on" : ""}" data-wp="${id}"><i style="${bg}"></i><span>${esc(name)}</span></button>`;
-  const tiles = Object.entries(WALLS).map(([id, w]) => tile(id, t(w.name), "background:" + esc(w[settings.theme === "light" ? "light" : "dark"])));
+  const tiles = [tile("auto", t("Sky where you are"), "background:linear-gradient(180deg,#04163a 0%,#3a2160 42%,#c85a3e 60%,#0b4fa8 100%)")]
+    .concat(Object.entries(WALLS).map(([id, w]) => tile(id, t(w.name), "background:" + esc(w[settings.theme === "light" ? "light" : "dark"]))));
   tiles.push(photo ? tile("photo", t("My photo"), "background-image:var(--wall-img)")
     : `<label class="wtile"><i class="add">+</i><span>${t("My photo")}</span><input type="file" accept="image/*" data-file="wall" hidden></label>`);
   const btns = photo ? `<div class="wall-btns"><label class="btn small">${t("Choose another photo")}<input type="file" accept="image/*" data-file="wall" hidden></label>
@@ -90,6 +93,8 @@ function onInput(e) {
 }
 let sure = null;
 function onClick(e) {
+  const hc = e.target.closest("[data-hc]");
+  if (hc) { const k = hc.dataset.hc, h = new Set(settings.homeHide || []); h.has(k) ? h.delete(k) : h.add(k); saveSettings({ homeHide: [...h] }); C.changed("view"); return; }
   const w = e.target.closest("[data-wp]"); // not [data-wall]: <html> carries data-wall
   if (w) { saveSettings({ wall: w.dataset.wp }); C.changed("theme"); return; }
   const s = e.target.closest("[data-seg]");

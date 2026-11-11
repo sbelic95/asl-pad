@@ -1,0 +1,10 @@
+{
+  "_help": "PREDLOG – neka ga vođstvo Air Serbia Virtual potvrdi ili promeni. Činovi po blok satima iz dnevnika na ovom uređaju. hours = od koliko sati važi čin.",
+  "ranks": [
+    { "hours": 0,   "name": { "sr": "Drugi oficir",        "en": "Second Officer",       "de": "Second Officer" } },
+    { "hours": 25,  "name": { "sr": "Prvi oficir",         "en": "First Officer",        "de": "First Officer" } },
+    { "hours": 100, "name": { "sr": "Stariji prvi oficir", "en": "Senior First Officer", "de": "Senior First Officer" } },
+    { "hours": 250, "name": { "sr": "Kapetan",             "en": "Captain",              "de": "Kapitän" } },
+    { "hours": 500, "name": { "sr": "Stariji kapetan",     "en": "Senior Captain",       "de": "Senior Captain" } }
+  ]
+}

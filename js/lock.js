@@ -1,5 +1,5 @@
 // Lock screen: clock, flight widgets, notification cards and the live activity of the flight.
-import { S, settings, derived, wxOf, logbook } from "./data.js";
+import { S, settings, derived, wxOf, logbook, departureStand } from "./data.js";
 import { actions } from "./actions.js";
 import { t, dateLong, getLang } from "./i18n.js";
 import { esc, hhmmz, localHM, dur } from "./util.js";
@@ -33,8 +33,9 @@ function countdown(o, now) {
   const std = o.times?.out;
   if (!std || S.st?.offBlock || std - now > 24 * 36e5) return "";
   const late = now > std, ms = Math.abs(std - now), h = Math.floor(ms / 36e5), m = Math.floor((ms % 36e5) / 6e4);
-  const txt = (h ? h + " h " : "") + m + " min";
-  return `<div class="cd${late ? " late" : ""}"><span>${late ? t("STD passed") : t("Departure in")}</span><b>${late ? "+" : ""}${txt}</b><span class="dim">STD ${hhmmz(std)}</span></div>`;
+  const txt = (h ? h + " h " : "") + m + " min", ds = departureStand();
+  const where = ds?.state === "parked" ? `${ds.gate ? t("Gate") : t("Stand")} ${esc(ds.ref)} · ` : "";
+  return `<div class="cd${late ? " late" : ""}"><span>${late ? t("STD passed") : t("Departure in")}</span><b>${late ? "+" : ""}${txt}</b><span class="dim">${where}STD ${hhmmz(std)}</span></div>`;
 }
 
 export function timesWidget(o, now) {
