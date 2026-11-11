@@ -164,3 +164,12 @@ export function demoEvents(now = Date.now()) {
     { id: 5, name: "Vienna Overload", link: "https://my.vatsim.net/events", start: at(6, 15), end: at(6, 19), airports: ["LOWW"], text: "" },
   ];
 }
+
+// aircraft on the ground at Belgrade for the test: two parked, one of ours taxiing
+export function demoTraffic() {
+  return [
+    { callsign: "WZZ4471", lat: 44.81904, lon: 20.292184, gs: 0, hdg: 210, type: "A21N" },
+    { callsign: "THY5LV", lat: 44.821158, lon: 20.291823, gs: 0, hdg: 210, type: "A321" },
+    { callsign: "ASL218", lat: 44.8196, lon: 20.2995, gs: 14, hdg: 300, type: "A319" },
+  ];
+}

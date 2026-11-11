@@ -1,0 +1,93 @@
+{
+  "_help": "Brifing za aerodrom u aplikaciji „Aerodrom“. Tekstovi na en/sr (de koristi en). Samo činjenice sa važećih karata, sopstvenim rečima; za simulaciju letenja. Izmeni na GitHubu kad se karte promene.",
+  "icao": "LYBE",
+  "name": "Belgrade Nikola Tesla",
+  "elev": 336,
+  "asOf": "2026-07-09",
+  "source": {
+    "en": "From the aerodrome charts and airport briefing of LYBE, effective 9 July 2026. For flight simulation only – always check your current charts.",
+    "sr": "Prema kartama aerodroma i brifingu za LYBE, važe od 9. jula 2026. Samo za simulaciju letenja – uvek proveri važeće karte."
+  },
+  "freq": [["ATIS", "125.025"], ["Beograd Ground", "118.300"], ["Beograd Tower", "118.100"]],
+  "runways": [
+    { "id": "12L", "opp": "30R", "mag": 116, "len": 3400, "wid": 45, "tora": 3400, "lda": 3400, "thrElev": 317, "lights": "HIRL · TDZ · CL · ALSF-II · PAPI 3.0°", "cat": "CAT II/III" },
+    { "id": "30R", "opp": "12L", "mag": 296, "len": 3400, "wid": 45, "tora": 3400, "lda": 3000, "thrElev": 333, "lights": "HIRL · CL · HIALS · PAPI 3.0°", "cat": "" },
+    { "id": "12R", "opp": "30L", "mag": 116, "len": 3500, "wid": 45, "tora": 3500, "lda": 2814, "thrElev": null, "lights": "HIRL · TDZ · CL · ALSF-I · PAPI 3.0°", "cat": "CAT II/III" },
+    { "id": "30L", "opp": "12R", "mag": 296, "len": 3500, "wid": 45, "tora": 3500, "lda": 2983, "thrElev": 331, "lights": "HIRL · CL · HIALS 420 m · PAPI 3.0°", "cat": "" }
+  ],
+  "takeoff": {
+    "12L": [["head", 3400], ["C", 2800]],
+    "30R": [["head", 3400], ["E", 3045]],
+    "12R": [["D1", 3500], ["D2", 3293], ["D3", 2927], ["D4", 2848], ["D5", 2266]],
+    "30L": [["head", 3500], ["D7", 3086], ["D6", 2349], ["D5", 1273]]
+  },
+  "exits": {
+    "12L": [
+      { "twy": "R1", "en": "Turn right onto RWY 30L without stopping, hold on 12R/30L before D5.", "sr": "Skreni desno na RWY 30L bez zaustavljanja, čekaj na 12R/30L pre D5." },
+      { "twy": "R2", "en": "Cross RWY 12R/30L without stopping, join D6, then A; hold at intermediate holding position A3.", "sr": "Pređi RWY 12R/30L bez zaustavljanja, D6 pa A; čekaj na međuposlu A3." },
+      { "twy": "E", "en": "Cross RWY 12R/30L without stopping, join D7 and hold.", "sr": "Pređi RWY 12R/30L bez zaustavljanja, uđi na D7 i čekaj." }
+    ],
+    "30R": [
+      { "twy": "R3", "en": "Turn right onto RWY 30L without stopping, hold on 12R/30L before D5.", "sr": "Skreni desno na RWY 30L bez zaustavljanja, čekaj na 12R/30L pre D5." },
+      { "twy": "R4", "en": "Turn right onto RWY 30L without stopping, hold on 12R/30L before D3. Mind D3 and D4 (hot spot HS1).", "sr": "Skreni desno na RWY 30L bez zaustavljanja, čekaj na 12R/30L pre D3. Pazi na D3 i D4 (HS1)." },
+      { "twy": "C", "en": "Enter RWY 12R/30L and hold on it before D3.", "sr": "Uđi na RWY 12R/30L i čekaj na njoj pre D3." },
+      { "twy": "B", "en": "Cross RWY 12R/30L without stopping, join D1 and hold.", "sr": "Pređi RWY 12R/30L bez zaustavljanja, uđi na D1 i čekaj." }
+    ]
+  },
+  "sections": [
+    { "id": "rwyuse", "title": { "en": "Use of runways", "sr": "Upotreba pista" }, "items": [
+      { "en": "RWY 12L/30R is the runway in use. 12R/30L is used only when 12L/30R is closed (maintenance or incident, by NOTAM) – it cannot be requested.", "sr": "U upotrebi je RWY 12L/30R. 12R/30L se koristi samo kad je 12L/30R zatvorena (radovi ili incident, NOTAM) – ne može se tražiti." },
+      { "en": "The two runways are never used at the same time: they are too close to each other.", "sr": "Dve piste se nikad ne koriste istovremeno – previše su blizu." },
+      { "en": "While 12L/30R is in use, 12R/30L is a taxi route. Arrivals taxi beyond the CAT III holding position and may enter or cross 12R/30L without a clearance; departures need no clearance to enter or cross it for take-off from 12L/30R.", "sr": "Dok je 12L/30R u upotrebi, 12R/30L je rulna staza. Dolasci rule iza CAT III mesta čekanja i ulaze ili prelaze 12R/30L bez odobrenja; polasci ne trebaju odobrenje za ulazak ili prelazak radi poletanja sa 12L/30R." },
+      { "en": "CAT II/III approaches: RWY 12L and 12R (approved crew and aircraft only).", "sr": "CAT II/III prilazi: RWY 12L i 12R (samo sertifikovana posada i avion)." }
+    ] },
+    { "id": "lvp", "title": { "en": "Low visibility", "sr": "Smanjena vidljivost (LVP)" }, "items": [
+      { "en": "LVP when the RVR at touchdown or mid-point is below 550 m and/or the cloud base or vertical visibility is below 200 ft. ATC says “LVP in force”.", "sr": "LVP kad je RVR u TDZ ili sredini ispod 550 m i/ili baza oblaka ili vertikalna vidljivost ispod 200 ft. Kontrola javlja „LVP in force“." },
+      { "en": "Guided low visibility take-off: RWY 12L, 12R and 30R.", "sr": "Vođeno poletanje pri smanjenoj vidljivosti: RWY 12L, 12R i 30R." },
+      { "en": "After an LVP approach vacate 12L via E or 12R via D7. Report landed, and “runway vacated” at the end of the yellow-green taxiway centreline lights.", "sr": "Posle LVP prilaza napusti 12L preko E ili 12R preko D7. Javi sletanje i „runway vacated“ na kraju žuto-zelenih svetala ose rulne staze." },
+      { "en": "RVR below 350 m: taxi only where there are taxiway lights. No left turn from H onto K or J, no right turn from J or K onto H.", "sr": "RVR ispod 350 m: rulaj samo gde ima svetala. Zabranjeno levo sa H na K ili J i desno sa J ili K na H." },
+      { "en": "Take-off minima: 125 m (with LVP, centreline lights 15 m or less), 150 m (with LVP), 300 m (with LVP, edge lights); without LVP 400 m by day with edge or centreline lights, 500 m by day with adequate visual reference – not at night.", "sr": "Minimumi za poletanje: 125 m (LVP, svetla ose na 15 m ili manje), 150 m (LVP), 300 m (LVP, ivična svetla); bez LVP 400 m danju sa ivičnim ili svetlima ose, 500 m danju uz dovoljnu vizuelnu referencu – noću ne." }
+    ] },
+    { "id": "taxi", "title": { "en": "Taxiing", "sr": "Rulanje" }, "items": [
+      { "en": "TWY E: no left turn from RWY 30R for aircraft with an outer main gear wheel span above 9 m.", "sr": "TWY E: zabranjeno levo sa RWY 30R za avione sa rasponom glavnog stajnog trapa većim od 9 m." },
+      { "en": "TWY G between stands A11 and A15 (stands included): wingspan up to 36 m. Abeam E1–E4 and A11–A15 use minimum power.", "sr": "TWY G između pozicija A11 i A15 (i same pozicije): raspon krila do 36 m. Pored E1–E4 i A11–A15 minimalna snaga." },
+      { "en": "With an A346, A351, B773 or B77W on C3A, C5A, C7A, C9A or C11A, TWY F behind that stand is limited to a wingspan of 52 m.", "sr": "Kad A346, A351, B773 ili B77W stoji na C3A, C5A, C7A, C9A ili C11A, TWY F iza te pozicije je za raspon do 52 m." },
+      { "en": "TWY L between the service road on apron B and the maintenance ramp: wingspan up to 60.3 m.", "sr": "TWY L od servisnog puta na platformi B do platforme za održavanje: raspon do 60,3 m." },
+      { "en": "Stand N1 occupied: TWY T between stop bar F4 and stand C14 is for wingspans up to 36 m; with N1A occupied it is closed.", "sr": "Kad je N1 zauzeta: TWY T između stop bara F4 i pozicije C14 za raspon do 36 m; kad je N1A zauzeta – zatvorena." },
+      { "en": "A follow-me car helps when you are not sure of your position, after a failure on the manoeuvring area, or with lost communication.", "sr": "Follow-me vozilo pomaže kad nisi siguran gde si, posle kvara na manevarskim površinama ili bez veze." }
+    ] },
+    { "id": "parking", "title": { "en": "Parking and push-back", "sr": "Parkiranje i push-back" }, "items": [
+      { "en": "Report on stand before engine shut-down. Keep radio contact with ATC whenever you are outside a stand.", "sr": "Javi se na poziciji pre gašenja motora. Van pozicije uvek budi na vezi sa kontrolom." },
+      { "en": "Docking guidance (VDGS): A1–A10 and C1–C14. Marshaller: A11–A15, GA1–GA3, B1–B10, B1A, B9A, C3A, C5A, N1, N1A, N2, E1–E4, E1A, E2A, W1, W1A, W2.", "sr": "Navođenje (VDGS): A1–A10 i C1–C14. Maršaler: A11–A15, GA1–GA3, B1–B10, B1A, B9A, C3A, C5A, N1, N1A, N2, E1–E4, E1A, E2A, W1, W1A, W2." },
+      { "en": "Self-manoeuvring: GA1–GA3; B1 and E1 (turn right), B2–B9 and E2 (left or right) when the next stand is free; E3 and E4 under conditions. All other stands need a push-back.", "sr": "Samostalno manevrisanje: GA1–GA3; B1 i E1 (desno), B2–B9 i E2 (levo ili desno) kad je susedna pozicija slobodna; E3 i E4 uz uslove. Sve ostale pozicije – push-back." },
+      { "en": "C11A: push-back facing west. Wide-bodies from C3A/C5A face stop bar F1. From E1A or B9A: push onto TWY H facing E1, then minimum power via L, J or K to G. From E2A: push onto TWY G facing south, then minimum power via L, J or K to H.", "sr": "C11A: push-back sa nosom na zapad. Široki avioni sa C3A/C5A licem ka stop baru F1. Sa E1A ili B9A: na TWY H licem ka E1, pa minimalnom snagom preko L, J ili K na G. Sa E2A: na TWY G licem na jug, pa preko L, J ili K na H." },
+      { "en": "A11–A15 and GA1–GA3 are not used at the same time. GA1–GA3 with LVP: taxi out only with a marshaller.", "sr": "A11–A15 i GA1–GA3 se ne koriste istovremeno. GA1–GA3 pri LVP: izlazak samo uz maršalera." }
+    ] },
+    { "id": "comfail", "title": { "en": "Communication failure on arrival", "sr": "Gubitak veze u dolasku" }, "items": [
+      { "en": "Squawk 7600. Keep the last assigned level for 7 minutes or until you join the holding, whichever is later.", "sr": "Squawk 7600. Zadrži poslednji dodeljeni nivo 7 minuta ili do ulaska u holding, šta je kasnije." },
+      { "en": "No runway and STAR assigned: fly to the first waypoint of the STAR in your flight plan, hold there and descend to 10 000 ft. Choose the runway by ATIS (else by the last wind; if suitable, the closer one). Then fly to LABUD (12L), LAMBA (12R) or TUPKO (30L and 30R), hold there, descend to the MHA and fly the approach.", "sr": "Bez dodeljene piste i STAR-a: leti do prve tačke STAR-a iz plana leta, uđi u holding i spusti se na 10 000 ft. Pistu biraj po ATIS-u (inače po poslednjem vetru; ako odgovara, bližu). Zatim LABUD (12L), LAMBA (12R) ili TUPKO (30L i 30R), holding, spuštanje na MHA i prilaz." },
+      { "en": "STAR assigned, not yet on it: hold at its first waypoint, descend to the MHA, then fly the whole STAR and the approach.", "sr": "Dodeljen STAR, još nisi na njemu: holding na prvoj tački, spuštanje na MHA, pa ceo STAR i prilaz." },
+      { "en": "Already on the STAR or vectored: keep the last level, follow the STAR (or as cleared), hold at LABUD, LAMBA or TUPKO, descend to the MHA and fly the approach.", "sr": "Već na STAR-u ili pod vektorisanjem: zadrži nivo, prati STAR (ili odobrenje), holding na LABUD, LAMBA ili TUPKO, MHA i prilaz." }
+    ] },
+    { "id": "other", "title": { "en": "Other", "sr": "Ostalo" }, "items": [
+      { "en": "Birds in the vicinity of the airport.", "sr": "Ptice u blizini aerodroma." }
+    ] }
+  ],
+  "hotspots": [
+    { "id": "HS1", "twys": ["D3", "D4"], "en": "High-volume intersection for all traffic to and from both runways; vehicles cross here too. Vacating 12L/30R at R4: do not mix up D3 and D4.", "sr": "Prometna raskrsnica za sav saobraćaj ka i sa obe piste; ovde prelaze i vozila. Napuštanje 12L/30R preko R4: ne mešaj D3 i D4." },
+    { "id": "HS2", "twys": ["F3", "M"], "en": "High-volume intersection for all traffic to and from both runways; vehicles cross here too.", "sr": "Prometna raskrsnica za sav saobraćaj ka i sa obe piste; ovde prelaze i vozila." },
+    { "id": "HS3", "twys": ["L", "H"], "en": "Busy intersection where a service road crosses TWY L – watch for ground vehicles, towed aircraft and aircraft leaving stand B10.", "sr": "Prometna raskrsnica gde servisni put prelazi TWY L – pazi na vozila, vučene avione i avione sa pozicije B10." },
+    { "id": "HS4", "twys": ["FB", "D1"], "en": "Complex taxiway intersection – taxi with care.", "sr": "Složena raskrsnica rulnih staza – oprezno." }
+  ],
+  "stands": {
+    "A1": 42, "A2": 36, "A3": 36, "A4": 36, "A5": 36, "A6": 36, "A7": 36, "A8": 36, "A9": 36, "A10": 36, "A11": 36, "A12": 36, "A13": 36, "A14": 36, "A15": 36,
+    "B1": 30.5, "B1A": 65, "B2": 36, "B3": 36, "B4": 36, "B5": 36, "B6": 36, "B7": 36, "B8": 36, "B9": 36, "B9A": 65, "B10": 36,
+    "C1": 36, "C2": 36, "C3": 36, "C3A": 65, "C4": 36, "C5": 36, "C5A": 65, "C6": 36, "C7": 36, "C7A": 65, "C8": 36, "C9": 36, "C9A": 65, "C10": 36,
+    "C11": 36, "C11A": 65, "C12": 36, "C13": 36, "C14": 36,
+    "E1": 36, "E1A": 65, "E2": 36, "E2A": 65, "E3": 36, "E4": 36,
+    "GA1-1": 24, "GA1-2": 24, "GA2-1": 22, "GA2-2": 18, "GA2-3": 17, "GA3-1": 22, "GA3-2": 18, "GA3-3": 18,
+    "N1": 36, "N1A": 65, "N2": 36, "W1": 36, "W1A": 60.3, "W2": 36
+  },
+  "vdgs": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10", "C11", "C12", "C13", "C14"],
+  "selfManoeuvring": ["GA1-1", "GA1-2", "GA2-1", "GA2-2", "GA2-3", "GA3-1", "GA3-2", "GA3-3", "B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B9", "E1", "E2", "E3", "E4"]
+}

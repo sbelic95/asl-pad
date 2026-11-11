@@ -381,3 +381,34 @@ a.btn { text-decoration: none; color: inherit; } a.btn.pri { color: #fff; }
 .dl-row:last-child { border-bottom: 0; }
 .dl-row .tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; } .dl-row .tx b { font-size: 15.5px; } .dl-row .tx span { font-size: 13px; }
 .dl-row .host { font: 600 12px var(--f-num); color: var(--accent); white-space: nowrap; }
+
+/* ---------- 1.5: airport app (ground map, briefing, stands) ---------- */
+.apt-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+.map-body .apt-bar { position: absolute; z-index: 600; top: 12px; left: 14px; margin: 0; }
+.map-body .apt-bar .seg { background: var(--glass); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.gmap { position: absolute; inset: 0; background: #071733; } :root[data-theme="light"] .gmap { background: #eef3fa; }
+.gpanel { position: absolute; z-index: 600; top: 64px; left: 14px; width: 340px; max-height: calc(100% - 90px); overflow: auto; background: var(--glass); backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px); border: 1px solid var(--line2); border-radius: 16px; padding: 12px 14px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 10px; }
+.gp-row { display: flex; flex-direction: column; gap: 5px; } .gp-row .seg { flex-wrap: wrap; } .gp-row select { width: 100%; }
+.gp-route { border-top: 1px solid var(--line); padding-top: 9px; font-size: 13.5px; } .gp-route b { display: block; font: 700 17px var(--f-cond); letter-spacing: .03em; margin-top: 3px; color: #ffb21f; }
+.gp-hold { margin-top: 6px; color: var(--red); font: 700 12.5px var(--f-cond); letter-spacing: .04em; }
+.gp-note { margin: 0; font-size: 11.5px; color: var(--faint); }
+.twy-lbl, .rwy-lbl, .std-lbl, .hold-lbl, .hs-lbl { background: none; border: 0; }
+.twy-lbl { font: 700 11px/16px var(--f-cond); color: #ffd200; background: #111 !important; border-radius: 3px; text-align: center; width: auto !important; min-width: 18px; padding: 0 3px; box-shadow: 0 0 0 1px #ffd200; }
+.rwy-lbl { font: 700 13px/22px var(--f-cond); color: #fff; background: #000 !important; border: 1.5px solid #fff !important; border-radius: 4px; text-align: center; }
+.std-lbl { font: 700 10px var(--f-cond); color: #ffd27a; text-shadow: 0 1px 2px #000, 0 0 2px #000; white-space: nowrap; cursor: pointer; }
+.hold-lbl { font: 600 11px var(--f-cond); color: #fff; white-space: nowrap; } .hold-lbl b { background: var(--red); padding: 1px 4px; border-radius: 3px; letter-spacing: .06em; }
+.hs-lbl { font: 700 12px var(--f-cond); color: #e38dff; text-shadow: 0 1px 2px #000; text-align: center; }
+.ac-ic.tr span { position: absolute; left: 26px; top: 6px; font: 700 10.5px var(--f-cond); color: #cfe0ff; text-shadow: 0 1px 2px #000; white-space: nowrap; }
+.ac-ic.tr.ours span { color: #ff8a98; }
+.bf { display: flex; flex-direction: column; gap: 14px; max-width: 1100px; margin: 0 auto; }
+.bf-head { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; } .bf-head h3 { margin: 4px 0 2px; font: 700 26px var(--f-cond); }
+.bf-freq { display: flex; gap: 22px; } .bf-freq div { display: flex; flex-direction: column; } .bf-freq b { font-size: 22px; }
+.bf-tos { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 26px; }
+.bf-to { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; font-size: 14px; } .bf-to > b { font: 700 18px var(--f-cond); min-width: 40px; }
+.bf-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.bf-ex { display: grid; grid-template-columns: 52px 1fr; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 14px; } .bf-ex:last-child { border-bottom: 0; }
+.bf-ex > b { font: 700 15px/20px var(--f-cond); background: #111; color: #ffd200; border-radius: 4px; text-align: center; height: 22px; box-shadow: 0 0 0 1px #ffd200; }
+.bf-ex > b.hs { background: transparent; color: #d64dff; box-shadow: 0 0 0 1.5px #d64dff; }
+.bf-ul { margin: 0; padding-left: 18px; } .bf-ul li { margin: 6px 0; font-size: 14.5px; line-height: 1.45; }
+@media (max-width: 760px) { .bf-2, .bf-tos { grid-template-columns: 1fr; } .gpanel { width: calc(100% - 28px); top: auto; bottom: 14px; max-height: 45%; } }

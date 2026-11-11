@@ -7,6 +7,18 @@ import { esc } from "./util.js";
 import { APP_ICONS } from "./icons.js";
 
 export const releases = () => [
+  { v: "1.5", date: "2026-11-11", groups: [
+    { icon: "airport", name: "Airport", items: [
+      t("New app: ground map of Belgrade, Niš and Kraljevo with runways, taxiway names, stands and holding positions"),
+      t("Taxi route from your stand to the runway, or from your exit to the stand, with the points to hold short"),
+      t("Other aircraft on the ground from VATSIM – ours in red"),
+      t("LYBE briefing: frequencies, runways, intersection take-offs, exits, low visibility, taxiing, parking, hot spots, lost communication"),
+      t("Stands with maximum wingspan, docking guidance, and whether your aircraft fits and the stand is free"),
+    ] },
+    { icon: "pad", name: "ASL Pad", items: [
+      t("Countdown to your TOBT as soon as vIFF CDM has one"),
+    ] },
+  ] },
   { v: "1.4", date: "2026-11-11", groups: [
     { icon: "pad", name: "ASL Pad", items: [
       t("Career: your rank and progress to the next one, with a letter when you are promoted"),

@@ -28,14 +28,14 @@ export function flightWidget(o, d, now = Date.now()) {
     <div style="font:700 15px var(--f-num);margin-top:2px">${esc(o.iataNo || o.callsign)} <span class="dim" style="font-weight:500">· ${esc(o.callsign)}</span></div>
     <div class="dim" style="font-size:13px;margin-top:2px">${esc(o.type)}${o.reg ? " · " + esc(o.reg) : ""}${o.pax ? " · " + t("{n} pax", { n: o.pax }) : ""}</div>${countdown(o, now)}</div>`;
 }
-// before off-block: time to the planned departure (STD)
+// before off-block: time to the TOBT from vIFF CDM, else to the planned departure (STD)
 function countdown(o, now) {
-  const std = o.times?.out;
-  if (!std || S.st?.offBlock || std - now > 24 * 36e5) return "";
-  const late = now > std, ms = Math.abs(std - now), h = Math.floor(ms / 36e5), m = Math.floor((ms % 36e5) / 6e4);
+  const tobt = S.cdm?.tobt, std = o.times?.out, target = tobt || std, lbl = tobt ? "TOBT" : "STD";
+  if (!target || S.st?.offBlock || target - now > 24 * 36e5) return "";
+  const late = now > target, ms = Math.abs(target - now), h = Math.floor(ms / 36e5), m = Math.floor((ms % 36e5) / 6e4);
   const txt = (h ? h + " h " : "") + m + " min", ds = departureStand();
   const where = ds?.state === "parked" ? `${ds.gate ? t("Gate") : t("Stand")} ${esc(ds.ref)} · ` : "";
-  return `<div class="cd${late ? " late" : ""}"><span>${late ? t("STD passed") : t("Departure in")}</span><b>${late ? "+" : ""}${txt}</b><span class="dim">${where}STD ${hhmmz(std)}</span></div>`;
+  return `<div class="cd${late ? " late" : ""}"><span>${late ? t("{x} passed", { x: lbl }) : t("{x} in", { x: lbl })}</span><b>${late ? "+" : ""}${txt}</b><span class="dim">${where}${lbl} ${hhmmz(target)}</span></div>`;
 }
 
 export function timesWidget(o, now) {

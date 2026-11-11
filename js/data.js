@@ -4,7 +4,7 @@ import { fetchOfp, normOfp } from "./ofp.js";
 import { decodeMetar, atisInfo, loadRunways, runwayFromWind } from "./wx.js";
 import { loadFlight, saveFlight, updateFlight, project, phaseOf, estimates, fuelState, logEntry, flightKey } from "./flight.js";
 import { standsCached, standsGithub, standsOverpass, predictStand } from "./stands.js";
-import { demoSimbrief, demoPilot, demoMetars, demoAtis, demoControllers, demoLogbook, demoEvents } from "./demo.js";
+import { demoSimbrief, demoPilot, demoMetars, demoAtis, demoControllers, demoLogbook, demoEvents, demoTraffic } from "./demo.js";
 
 export const API = {
   feed: "https://data.vatsim.net/v3/vatsim-data.json",
@@ -29,13 +29,14 @@ export function saveSettings(patch) {
 if (settings.demo) saveSettings({ demo: "" });
 export function setTestDemo(v) { if (DEV) settings.demo = v; }
 
+const HOME_POS = [44.8184, 20.3091]; // Belgrade, the home base
 export const S = {
   ofp: null, ofpErr: "", ofpAt: 0, pilot: null, prefile: null, feedOk: null, feedAt: 0,
   atis: [], ctrl: [], near: { dep: [], arr: [] }, metar: {}, cdm: null, cdmOk: null, stands: {}, ukcp: null,
   st: null, pr: null, events: [],
   // the airline's notices and tips, and the coming VATSIM events (kept for offline use)
   notices: store.get("asl.notices", null), vatEvents: store.get("asl.vatevents", []),
-  downloads: store.get("asl.downloads", null), ranks: store.get("asl.ranks", null),
+  downloads: store.get("asl.downloads", null), ranks: store.get("asl.ranks", null), traffic: [],
 };
 const listeners = new Set();
 export const onChange = (fn) => listeners.add(fn);
@@ -99,7 +100,7 @@ export async function pollFeed() {
     S.feedOk = true; S.feedAt = Date.now();
     S.pilot = o ? demoPilot(o, settings.demo === "ground") : null;
     S.atis = demoAtis(); S.ctrl = demoControllers();
-    S.near = { dep: [], arr: [] };
+    S.near = { dep: [], arr: [] }; S.traffic = demoTraffic();
     afterPosition(); return;
   }
   try {
@@ -115,6 +116,10 @@ export async function pollFeed() {
     // aircraft on the ground near both airports: those stands count as taken
     const near = (pos) => (pos ? d.pilots.filter((p) => p.groundspeed < 5 && distKm([p.latitude, p.longitude], pos) < 6).map((p) => ({ callsign: p.callsign, latitude: p.latitude, longitude: p.longitude, groundspeed: p.groundspeed })) : []);
     S.near = { dep: near(o?.dep?.pos), arr: near(o?.dest?.pos) };
+    // traffic on and near the ground at both airports and at Belgrade (airport map, stand taken?)
+    const centres = [o?.dep?.pos, o?.dest?.pos, HOME_POS].filter(Boolean);
+    S.traffic = d.pilots.filter((p) => p.groundspeed < 60 && centres.some((c) => distKm([p.latitude, p.longitude], c) < 10))
+      .map((p) => ({ callsign: p.callsign, lat: p.latitude, lon: p.longitude, gs: p.groundspeed, hdg: p.heading, type: p.flight_plan?.aircraft_short || "" }));
   } catch (e) { S.feedOk = false; }
   afterPosition();
 }
@@ -211,7 +216,7 @@ export async function pollCdm() {
 }
 
 // ---------- stands ----------
-async function loadStandsFor(a) {
+export async function loadStandsFor(a) {
   if (!a?.icao || S.stands[a.icao]) return;
   let list = standsCached(a.icao) || await standsGithub(a.icao);
   if (!list && a.pos) { try { list = await standsOverpass(a.icao, a.pos); } catch {} }
