@@ -61,7 +61,7 @@ function page() {
 // wallpaper of the lock and home screen: built-in skies and a photo from the device
 function wallRow() {
   const photo = !!getPhoto(), cur = settings.wall === "photo" && photo ? "photo" : WALLS[settings.wall] ? settings.wall : "night";
-  const tile = (id, name, bg) => `<button class="wtile${cur === id ? " on" : ""}" data-wall="${id}"><i style="${bg}"></i><span>${esc(name)}</span></button>`;
+  const tile = (id, name, bg) => `<button class="wtile${cur === id ? " on" : ""}" data-wp="${id}"><i style="${bg}"></i><span>${esc(name)}</span></button>`;
   const tiles = Object.entries(WALLS).map(([id, w]) => tile(id, t(w.name), "background:" + esc(w[settings.theme === "light" ? "light" : "dark"])));
   tiles.push(photo ? tile("photo", t("My photo"), "background-image:var(--wall-img)")
     : `<label class="wtile"><i class="add">+</i><span>${t("My photo")}</span><input type="file" accept="image/*" data-file="wall" hidden></label>`);
@@ -92,8 +92,8 @@ function onInput(e) {
 }
 let sure = null;
 function onClick(e) {
-  const w = e.target.closest("[data-wall]");
-  if (w) { saveSettings({ wall: w.dataset.wall }); C.changed("theme"); return; }
+  const w = e.target.closest("[data-wp]"); // not [data-wall]: <html> carries data-wall
+  if (w) { saveSettings({ wall: w.dataset.wp }); C.changed("theme"); return; }
   const s = e.target.closest("[data-seg]");
   if (s) {
     const k = s.dataset.seg, v = s.dataset.v;

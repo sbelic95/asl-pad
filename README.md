@@ -5,7 +5,7 @@ am besten als App auf dem Home-Bildschirm (Safari → Teilen → Zum Home-Bildsc
 
 > Inoffizielles Fanprojekt. Nicht mit Air Serbia verbunden. Nur für die Flugsimulation, nicht für die echte Navigation.
 
-**Ausprobieren ohne Flug:** `…/asl-pad/?demo` (JU500 Belgrad – New York im Flug) oder `…/asl-pad/?demo=ground` (am Gate in Belgrad).
+**Ausprobieren ohne Flug:** `…/asl-pad/?demo` (JU500 Belgrad – New York im Flug) oder `…/asl-pad/?demo=ground` (am Gate in Belgrad). Das gilt nur für diesen Aufruf; `?demo=off` schaltet eine gespeicherte Demo aus.
 
 ## Was drin ist
 

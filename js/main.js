@@ -1,6 +1,6 @@
 // ASL Pad shell: lock screen, home screen, apps, app switcher (double-tap the home bar), status bar.
 import { $, esc, hhmmz, store } from "./util.js";
-import { S, settings, saveSettings, onChange, startPolling, refreshAll, restart, emit } from "./data.js";
+import { S, settings, saveSettings, setUrlDemo, onChange, startPolling, refreshAll, restart, emit } from "./data.js";
 import { t, setLang, getLang, dateLong } from "./i18n.js";
 import { APP_ICONS, I } from "./icons.js";
 import { renderLock, noteHtml } from "./lock.js";
@@ -26,9 +26,9 @@ const NAMES = Object.fromEntries(HOME_APPS.map((a) => [a.id, a]));
 
 const ui = { view: "lock", app: null, recent: store.get("asl.recent", []), tab: {}, lastInput: Date.now(), switcher: false };
 
-// ---------- URL options: ?demo, ?demo=ground, ?app=fly&tab=map, ?unlock ----------
+// ---------- URL options: ?demo, ?demo=ground (only for this visit), ?demo=off, ?app=fly&tab=map, ?unlock ----------
 const q = new URLSearchParams(location.search);
-if (q.has("demo")) settings.demo = q.get("demo") === "ground" ? "ground" : "air";
+if (q.has("demo")) { const v = q.get("demo"); if (v === "off") saveSettings({ demo: "" }); else setUrlDemo(v === "ground" ? "ground" : "air"); }
 if (q.get("lang")) setLang(q.get("lang"));
 setLang(getLang());
 
