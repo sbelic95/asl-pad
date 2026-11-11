@@ -16,7 +16,7 @@ export const releases = () => [
       t("Cold temperature correction of altitudes at 0 °C and below (ICAO)"),
     ] },
     { icon: "airport", name: "Airport", items: [
-      t("The airline's noise abatement and engine failure procedures can be added to the briefing"),
+      t("LYBE briefing from the official AIP: noise abatement, rapid exits, de-icing, VFR and all frequencies"),
     ] },
   ] },
   { v: "1.5", date: "2026-11-11", groups: [

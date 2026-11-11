@@ -83,7 +83,7 @@ Lizenzen der verwendeten Bibliotheken und Daten: [LIZENZEN.md](LIZENZEN.md).
   (`ground/<ICAO>.json`); weitere Flughäfen in `AIRPORTS` im Workflow und in `GROUND_AIRPORTS` in `js/ground.js` eintragen.
 - `js/ground.js` baut daraus ein Rollweg-Netz und sucht den kürzesten Weg; Pisten nur zum Kreuzen (bzw. als Notlösung), die eigene Start-/Landepiste nie.
   Lose Rollweg-Enden bis 120 m vor einer Piste werden mit ihr verbunden (in OSM enden bei LYBE z. B. R1–R4 und D5–D7 knapp davor).
-- Das Briefing steht in `va/airports/<ICAO>.json` (sr/en), nur Fakten von den aktuellen Karten in eigenen Worten.
+- Das Briefing steht in `va/airports/<ICAO>.json` (sr/en), nur Fakten in eigenen Worten. LYBE folgt der VFR AIP von SMATSA (smatsa.rs, AD 2 LYBE, AIRAC AMDT 10/26) – bei neuen AIRAC-Ständen dort nachsehen.
 
 ## Flugkarte, SIGMETs und Kälte-Korrektur (1.6)
 

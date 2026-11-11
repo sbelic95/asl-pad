@@ -269,6 +269,11 @@ export const SR = {
   "SIGMETs on the map, and those on your route in the weather": "SIGMET-i na mapi, a oni na tvojoj ruti u vremenu",
   "Cold temperature correction of altitudes at 0 °C and below (ICAO)": "Korekcija visina za temperature od 0 °C i niže (ICAO)",
   "The airline's noise abatement and engine failure procedures can be added to the briefing": "Procedure kompanije za smanjenje buke i otkaz motora mogu se dodati u brifing",
+  // AIP LYBE
+  "Departure procedures": "Procedure odlaska",
+  "{d} m from the threshold": "{d} m od praga",
+  // AIP LYBE
+  "LYBE briefing from the official AIP: noise abatement, rapid exits, de-icing, VFR and all frequencies": "LYBE brifing iz zvaničnog AIP-a: smanjenje buke, brzi izlazi, odleđivanje, VFR i sve frekvencije",
 };
 export const DE = {
   "About": "Über", "Actual": "Ist", "Add aircraft": "Flugzeug hinzufügen", "Add flight": "Flug hinzufügen",
@@ -540,4 +545,9 @@ export const DE = {
   "SIGMETs on the map, and those on your route in the weather": "SIGMETs auf der Karte, die auf deiner Route im Wetter",
   "Cold temperature correction of altitudes at 0 °C and below (ICAO)": "Temperaturkorrektur der Höhen bei 0 °C und darunter (ICAO)",
   "The airline's noise abatement and engine failure procedures can be added to the briefing": "Lärmschutz- und Triebwerksausfall-Verfahren der Airline können ins Briefing",
+  // AIP LYBE
+  "Departure procedures": "Abflugverfahren",
+  "{d} m from the threshold": "{d} m ab Schwelle",
+  // AIP LYBE
+  "LYBE briefing from the official AIP: noise abatement, rapid exits, de-icing, VFR and all frequencies": "LYBE-Briefing aus der offiziellen AIP: Lärmschutz, Schnellabrollwege, Enteisung, VFR und alle Frequenzen",
 };
