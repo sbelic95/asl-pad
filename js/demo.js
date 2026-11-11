@@ -152,3 +152,15 @@ export function demoLogbook() {
     mk(330, "LYBE", "LDZA", "Belgrade Nikola Tesla", "Zagreb", "AT76", "YU-ALW", base + 7 * 36e5, 60 * 60e3, 205, [[44.82, 20.31], [45.3, 18.0], [45.74, 16.07]]),
   ];
 }
+
+// VATSIM events for the test (the real ones come from .github/workflows/vatsim-events.yml)
+export function demoEvents(now = Date.now()) {
+  const day = 864e5, at = (d, h) => { const x = new Date(now + d * day); x.setUTCHours(h, 0, 0, 0); return x.toISOString().replace(".000", ""); };
+  return [
+    { id: 1, name: "Belgrade Friday Night Ops", link: "https://my.vatsim.net/events", start: at(1, 18), end: at(1, 21), airports: ["LYBE"], text: "" },
+    { id: 2, name: "Balkan Crossfire", link: "https://my.vatsim.net/events", start: at(2, 17), end: at(2, 21), airports: ["LYBE", "LDZA", "LQSA"], text: "" },
+    { id: 3, name: "Frankfurt Real Ops", link: "https://my.vatsim.net/events", start: at(3, 16), end: at(3, 20), airports: ["EDDF"], text: "" },
+    { id: 4, name: "New York Approach Night", link: "https://my.vatsim.net/events", start: at(4, 23), end: at(5, 2), airports: ["KJFK", "KEWR"], text: "" },
+    { id: 5, name: "Vienna Overload", link: "https://my.vatsim.net/events", start: at(6, 15), end: at(6, 19), airports: ["LOWW"], text: "" },
+  ];
+}

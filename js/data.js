@@ -4,13 +4,15 @@ import { fetchOfp, normOfp } from "./ofp.js";
 import { decodeMetar, atisInfo, loadRunways, runwayFromWind } from "./wx.js";
 import { loadFlight, saveFlight, updateFlight, project, phaseOf, estimates, fuelState, logEntry, flightKey } from "./flight.js";
 import { standsCached, standsGithub, standsOverpass, predictStand } from "./stands.js";
-import { demoSimbrief, demoPilot, demoMetars, demoAtis, demoControllers, demoLogbook } from "./demo.js";
+import { demoSimbrief, demoPilot, demoMetars, demoAtis, demoControllers, demoLogbook, demoEvents } from "./demo.js";
 
 export const API = {
   feed: "https://data.vatsim.net/v3/vatsim-data.json",
   metar: "https://metar.vatsim.net/",
   viff: "https://viff-system.network",
   ukcp: "https://raw.githubusercontent.com/sbelic95/vdgs-slot-board/data/ukcp.json",
+  events: "https://raw.githubusercontent.com/sbelic95/asl-pad/data/events.json", // .github/workflows/vatsim-events.yml
+  notices: "va/notices.json", // written by the airline's staff on GitHub
 };
 
 const DEF = { simbrief: "", cid: "", unit: "kg", theme: "dark", wall: "night", wallDim: 0.3, lock: 10, demo: "" };
@@ -29,6 +31,8 @@ export const S = {
   ofp: null, ofpErr: "", ofpAt: 0, pilot: null, prefile: null, feedOk: null, feedAt: 0,
   atis: [], ctrl: [], near: { dep: [], arr: [] }, metar: {}, cdm: null, cdmOk: null, stands: {}, ukcp: null,
   st: null, pr: null, events: [],
+  // the airline's notices and tips, and the coming VATSIM events (kept for offline use)
+  notices: store.get("asl.notices", null), vatEvents: store.get("asl.vatevents", []),
 };
 const listeners = new Set();
 export const onChange = (fn) => listeners.add(fn);
@@ -210,6 +214,14 @@ async function loadStandsFor(a) {
   if (!list && a.pos) { try { list = await standsOverpass(a.icao, a.pos); } catch {} }
   if (list) { S.stands[a.icao] = list; emit(); }
 }
+// notices and tips of the airline (va/notices.json) and the coming VATSIM events
+export async function pollNotices() {
+  try { const n = await getJSON(API.notices); if (n) { S.notices = n; store.set("asl.notices", n); emit(); } } catch {}
+}
+export async function pollEvents() {
+  if (settings.demo) { S.vatEvents = demoEvents(); emit(); return; }
+  try { const e = await getJSON(API.events); if (e?.events) { S.vatEvents = e.events; store.set("asl.vatevents", e.events); emit(); } } catch {}
+}
 export async function pollUkcp() {
   if (!S.ofp?.dest?.icao?.startsWith("EG") || settings.demo) return;
   try { S.ukcp = await getJSON(API.ukcp); } catch {}
@@ -259,7 +271,8 @@ export function derived(now = Date.now()) {
 }
 
 // ---------- polling ----------
-const JOBS = { simbrief: [pollSimbrief, 300e3], feed: [pollFeed, 20e3], metar: [pollMetars, 300e3], cdm: [pollCdm, 30e3], ukcp: [pollUkcp, 120e3] };
+const JOBS = { simbrief: [pollSimbrief, 300e3], feed: [pollFeed, 20e3], metar: [pollMetars, 300e3], cdm: [pollCdm, 30e3], ukcp: [pollUkcp, 120e3],
+  notices: [pollNotices, 900e3], events: [pollEvents, 1800e3] };
 const busy = {}, next = {};
 export function runJob(name, force) {
   if (busy[name]) return Promise.resolve();
@@ -269,7 +282,7 @@ export function runJob(name, force) {
 export async function refreshAll() {
   await runJob("simbrief", true);
   await runJob("feed");
-  runJob("metar"); runJob("cdm"); runJob("ukcp");
+  runJob("metar"); runJob("cdm"); runJob("ukcp"); runJob("notices"); runJob("events");
 }
 export function startPolling() {
   loadRunways().then(emit);

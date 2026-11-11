@@ -25,6 +25,11 @@ Der Nutzer (sbelic95) schreibt Deutsch; antworte auf Deutsch. Die Oberfläche is
   `pics.avs.io` geladen und nie ins Repo gelegt. Keine Namen aus LH Virtual übernehmen (flySmart, padOS, Contrail); unsere heißen ASL Pad, ASL Fly, ASL Ops, Logbook.
 - Performance (V1/VR/V2, Landestrecke) wird **nicht selbst gerechnet**, sondern aus SimBriefs Runway Analysis (`tlr` im OFP) gelesen (`normTlr` in `js/ofp.js`, Anzeige `js/apps/perf.js`).
 
+## Home-Bildschirm (1.3)
+
+Mitteilungen/Tipps aus `va/notices.json` (pflegt die VA-Leitung selbst; keine erfundenen VA-Mitteilungen eintragen), VATSIM-Events aus
+Branch `data` (`events.json`, Workflow `vatsim-events.yml`). `S.events` sind die Flugereignisse – die VATSIM-Events heißen `S.vatEvents`.
+
 ## Updates
 
 Jede sichtbare Neuerung als neuer Eintrag oben in `js/whatsnew.js` (nur, was das Pad wirklich kann). Das Pad zeigt ihn einmal

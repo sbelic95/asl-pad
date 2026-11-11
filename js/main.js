@@ -4,7 +4,7 @@ import { S, settings, saveSettings, setTestDemo, onChange, startPolling, refresh
 import { t, setLang, getLang, dateLong } from "./i18n.js";
 import { APP_ICONS, I } from "./icons.js";
 import { renderLock, noteHtml } from "./lock.js";
-import { renderHome, HOME_APPS } from "./home.js";
+import { renderHome, HOME_APPS, openNotice } from "./home.js";
 import { loadAirports, cityOf } from "./tz.js";
 import { applyWall } from "./wall.js";
 import { sheet } from "./sheet.js";
@@ -186,6 +186,7 @@ $("lock").addEventListener("pointerup", (e) => {
 });
 $("home").addEventListener("click", (e) => {
   const a = e.target.closest("[data-app]"); if (a) { openApp(a.dataset.app); return; }
+  const n = e.target.closest("[data-notice]"); if (n) { openNotice(n.dataset.notice); renderHome($("home")); return; }
   const o = e.target.closest("[data-open]"); if (o) openApp(o.dataset.open, o.dataset.tab || undefined);
 });
 

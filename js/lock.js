@@ -19,14 +19,22 @@ export function noteHtml(a) {
     <div><b>${esc(a.title)}</b><span>${esc(a.text || "")}</span></div></div>`;
 }
 
-export function flightWidget(o, d) {
+export function flightWidget(o, d, now = Date.now()) {
   if (!o) return `<div class="wdg"><div class="lbl">${t("Flight")}</div><div style="margin-top:6px" class="dim">${t("No flight loaded")}</div></div>`;
   const ph = d?.phase;
   const label = ph === "onblock" ? t("Last flight") : ph && ph !== "preflight" ? t("In flight") : t("Next flight");
   return `<div class="wdg"><div class="lbl">${label}</div>
     <div class="route" style="margin-top:6px">${esc(o.dep?.icao)}<span class="arr">→</span>${esc(o.dest?.icao)}</div>
     <div style="font:700 15px var(--f-num);margin-top:2px">${esc(o.iataNo || o.callsign)} <span class="dim" style="font-weight:500">· ${esc(o.callsign)}</span></div>
-    <div class="dim" style="font-size:13px;margin-top:2px">${esc(o.type)}${o.reg ? " · " + esc(o.reg) : ""}${o.pax ? " · " + t("{n} pax", { n: o.pax }) : ""}</div></div>`;
+    <div class="dim" style="font-size:13px;margin-top:2px">${esc(o.type)}${o.reg ? " · " + esc(o.reg) : ""}${o.pax ? " · " + t("{n} pax", { n: o.pax }) : ""}</div>${countdown(o, now)}</div>`;
+}
+// before off-block: time to the planned departure (STD)
+function countdown(o, now) {
+  const std = o.times?.out;
+  if (!std || S.st?.offBlock || std - now > 24 * 36e5) return "";
+  const late = now > std, ms = Math.abs(std - now), h = Math.floor(ms / 36e5), m = Math.floor((ms % 36e5) / 6e4);
+  const txt = (h ? h + " h " : "") + m + " min";
+  return `<div class="cd${late ? " late" : ""}"><span>${late ? t("STD passed") : t("Departure in")}</span><b>${late ? "+" : ""}${txt}</b><span class="dim">STD ${hhmmz(std)}</span></div>`;
 }
 
 export function timesWidget(o, now) {
@@ -72,7 +80,7 @@ export function renderLock(el, now = Date.now()) {
   const o = S.ofp, d = derived(now);
   const acts = actions(now).slice(0, 4);
   el.innerHTML = `
-    <div class="lk-left">${flightWidget(o, d)}${timesWidget(o, now)}${todayWidget(now)}</div>
+    <div class="lk-left">${flightWidget(o, d, now)}${timesWidget(o, now)}${todayWidget(now)}</div>
     <div class="lk-clock"><div class="lock-ic">${I.lock}</div><div class="lk-date">${esc(dateLong(now))}</div>
       <div class="lk-time">${new Intl.DateTimeFormat(getLang() === "en" ? "en-GB" : getLang() === "sr" ? "sr-Latn-RS" : "de-DE", { hour: "2-digit", minute: "2-digit" }).format(now)}</div>
       <div class="lk-brand">${brand()}</div></div>
