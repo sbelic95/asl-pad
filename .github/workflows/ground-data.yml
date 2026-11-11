@@ -1,0 +1,83 @@
+# Weekly: the ground layout of our airports from OpenStreetMap (runways, taxiways with their names, aprons,
+# holding positions, stands) for the airport map and the taxi routes of the pad (app "Airport").
+# Published as ground/<ICAO>.json on the "ground" branch, read via raw.githubusercontent.com. Data © OpenStreetMap contributors (ODbL).
+name: Ground data
+
+on:
+  schedule:
+    - cron: "23 4 * * 1"   # Mondays 04:23 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ground
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Fetch and publish
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -e
+          mkdir -p pub/ground
+          python3 - <<'PY'
+          import json, time, urllib.parse, urllib.request
+          # ICAO: (lat, lon) of the airport reference point; the box around it is about 5 x 7 km
+          AIRPORTS = {"LYBE": (44.8184, 20.3091), "LYNI": (43.3373, 21.8537), "LYKV": (43.8183, 20.5872)}
+          SERVERS = ["https://overpass-api.de/api/interpreter", "https://overpass.private.coffee/api/interpreter",
+                     "https://overpass.kumi.systems/api/interpreter"]
+          KINDS = "runway|taxiway|taxilane|apron|holding_position|parking_position|stopbar|stand"
+          def fetch(q):
+              for i in range(6):
+                  url = SERVERS[i % len(SERVERS)]
+                  try:
+                      req = urllib.request.Request(url, data=urllib.parse.urlencode({"data": q}).encode(), headers={"User-Agent": "asl-pad-ground-data"})
+                      return json.load(urllib.request.urlopen(req, timeout=120))
+                  except Exception as e:
+                      print("retry", url, e); time.sleep(10 * (i + 1))
+              raise SystemExit("overpass not reachable")
+          r6 = lambda v: round(v, 6)
+          for icao, (lat, lon) in AIRPORTS.items():
+              s, w, n, e = lat - 0.025, lon - 0.045, lat + 0.025, lon + 0.045
+              q = f'[out:json][timeout:90];(way["aeroway"~"^({KINDS})$"]({s},{w},{n},{e});node["aeroway"~"^({KINDS})$"]({s},{w},{n},{e}););out geom;'
+              d = fetch(q)
+              ways, areas, points = [], [], []
+              for el in d["elements"]:
+                  t = el.get("tags", {}); k = t.get("aeroway", "")
+                  ref = t.get("ref") or t.get("name") or ""
+                  if el["type"] == "node":
+                      points.append({"k": k, "ref": ref, "lat": r6(el["lat"]), "lon": r6(el["lon"])})
+                      continue
+                  g = [[r6(p["lat"]), r6(p["lon"])] for p in el.get("geometry", [])]
+                  if len(g) < 2:
+                      continue
+                  closed = el.get("nodes", [None])[0] == el.get("nodes", [None])[-1]
+                  if k == "apron" or (k in ("runway", "stand", "parking_position") and closed and t.get("area") == "yes"):
+                      areas.append({"k": k, "ref": ref, "g": g})
+                  elif k in ("holding_position", "stopbar", "parking_position", "stand"):
+                      points.append({"k": k, "ref": ref, "lat": g[len(g) // 2][0], "lon": g[len(g) // 2][1], "g": g})
+                  else:
+                      ways.append({"k": k, "ref": ref, "n": el.get("nodes", []), "g": g, "w": t.get("width", "")})
+              out = {"icao": icao, "updated": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "ways": ways, "areas": areas, "points": points}
+              json.dump(out, open(f"pub/ground/{icao}.json", "w"), separators=(",", ":"))
+              print(icao, len(ways), "ways", len(areas), "areas", len(points), "points")
+              time.sleep(5)
+          PY
+          cd pub
+          git init -q -b ground
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -qm "Ground data from OpenStreetMap (ODbL)"
+          for i in 1 2 3 4; do
+            git push -qf "https://x-access-token:${TOKEN}@github.com/${REPO}.git" ground && exit 0
+            echo "push failed, next try in $((i * 15)) s"; sleep $((i * 15))
+          done
+          exit 1
