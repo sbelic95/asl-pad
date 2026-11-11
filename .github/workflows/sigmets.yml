@@ -1,0 +1,67 @@
+# Every 30 minutes: the international SIGMETs (thunderstorms, turbulence, icing, volcanic ash …) from
+# aviationweather.gov, made compact for the map of the pad. Published as sigmets.json on the "wx" branch,
+# read via raw.githubusercontent.com.
+name: SIGMETs
+
+on:
+  schedule:
+    - cron: "11,41 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sigmets
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch and publish sigmets.json
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -e
+          curl -sSf --max-time 60 -A "asl-pad-sigmets" "https://aviationweather.gov/api/data/isigmet?format=json" -o isigmet.json
+          mkdir pub
+          python3 - <<'PY'
+          import datetime, json
+          raw = json.load(open("isigmet.json"))
+          items = raw if isinstance(raw, list) else raw.get("data", raw.get("features", []))
+          print(len(items), "items; keys of the first:", sorted(items[0].keys()) if items else "-")
+          def when(v):
+              if v is None: return None
+              if isinstance(v, (int, float)): return datetime.datetime.fromtimestamp(v, datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+              return str(v)
+          out = []
+          for s in items:
+              p = s.get("properties", s)
+              coords = p.get("coords") or []
+              if not coords and s.get("geometry", {}).get("type") == "Polygon":
+                  coords = [{"lon": c[0], "lat": c[1]} for c in s["geometry"]["coordinates"][0]]
+              poly = [[round(float(c["lat"]), 2), round(float(c["lon"]), 2)] for c in coords if c.get("lat") is not None]
+              if len(poly) < 3:
+                  continue
+              out.append({"fir": p.get("firId") or p.get("icaoId") or "", "name": p.get("firName") or "",
+                          "hazard": (p.get("hazard") or "").upper(), "qual": p.get("qualifier") or "",
+                          "from": when(p.get("validTimeFrom")), "to": when(p.get("validTimeTo")),
+                          "base": p.get("base"), "top": p.get("top"), "poly": poly, "raw": (p.get("rawSigmet") or "")[:600]})
+          now = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+          json.dump({"updated": now, "sigmets": out}, open("pub/sigmets.json", "w"), separators=(",", ":"))
+          print(len(out), "SIGMETs with an area")
+          PY
+          cd pub
+          git init -q -b wx
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add sigmets.json
+          git commit -qm "SIGMETs from aviationweather.gov"
+          for i in 1 2 3 4; do
+            git push -qf "https://x-access-token:${TOKEN}@github.com/${REPO}.git" wx && exit 0
+            echo "push failed, next try in $((i * 15)) s"; sleep $((i * 15))
+          done
+          exit 1
