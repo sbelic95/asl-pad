@@ -105,7 +105,7 @@ function briefHtml(icao) {
   const b = briefs[icao];
   if (b == null) return `<div class="empty">${t("Loading…")}</div>`;
   if (!b) return `<div class="empty">${t("No briefing for this airport yet. LYBE has a full one.")}</div>`;
-  const rw = b.runways.map((r) => `<tr><td><b>${esc(r.id)}</b></td><td>${r.mag}°</td><td>${r.len} × ${r.wid} m</td><td>${r.tora} m</td><td>${r.lda} m${r.ldaGs ? `<br><span class="dim">${t("beyond GS")} ${r.ldaGs} m</span>` : ""}</td><td>${esc(r.lights)}</td><td>${esc(r.cat)}</td></tr>`).join("");
+  const rw = b.runways.map((r) => `<tr><td><b>${esc(r.id)}</b></td><td>${r.mag}°</td><td>${r.len} × ${r.wid} m${r.pcn ? `<br><span class="dim">${esc(r.pcn)}</span>` : ""}</td><td>${r.tora} m</td><td>${r.lda} m${r.ldaGs ? `<br><span class="dim">${t("beyond GS")} ${r.ldaGs} m</span>` : ""}</td><td>${esc(r.lights)}</td><td>${esc(r.cat)}</td></tr>`).join("");
   const to = Object.entries(b.takeoff).map(([r, l]) => `<div class="bf-to"><b>${esc(r)}</b>${l.map(([j, d]) => `<span>${j === "head" ? t("full length") : "TWY " + esc(j)} <b>${d} m</b></span>`).join("")}</div>`).join("");
   const ex = Object.entries(b.exits || {}).map(([r, l]) => `<div class="card"><div class="lbl" style="margin-bottom:6px">${t("Vacating RWY {r}", { r })}</div>${l.map((x) => `<div class="bf-ex"><b>${esc(x.twy)}</b><span>${x.dist ? `<b>${t("{d} m from the threshold", { d: x.dist })}</b> · ` : ""}${esc(loc(x))}${x.limit ? `<br><span class="dim">${esc(loc(x.limit))}</span>` : ""}</span></div>`).join("")}</div>`).join("");
   const sec = b.sections.map((s) => `<div class="card"><div class="lbl" style="margin-bottom:8px">${esc(loc(s.title))}</div><ul class="bf-ul">${s.items.map((i) => `<li>${esc(loc(i))}</li>`).join("")}</ul></div>`).join("");
