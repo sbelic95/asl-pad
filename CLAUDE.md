@@ -42,6 +42,11 @@ offizielle Ränge/Stunden gäbe es erst mit einer Anbindung an die Crew Lounge d
 Briefing aus `va/airports/<ICAO>.json`. Keine Karten oder Texte von Jeppesen/Navigraph ins Repo – nur Fakten in eigenen Worten.
 Der Name „flySmart“ wird nicht verwendet (siehe Marke). Getestet mit `ground/LYBE.json`: jede Stand–Pisten-Kombination hat eine Route.
 
+## 1.6
+
+Kartenwerkzeuge in `js/apps/map.js`, SIGMETs aus Branch `wx` (`js/sigmet.js`), Kälte-Korrektur `js/cold.js` (ICAO-Formel; bei 0 °C/1000 ft = +60 ft wie die ICAO-Tabelle).
+EOSID/NADP nur echte Verfahren der Airline in `procedures` – nichts erfinden.
+
 ## Updates
 
 Jede sichtbare Neuerung als neuer Eintrag oben in `js/whatsnew.js` (nur, was das Pad wirklich kann). Das Pad zeigt ihn einmal

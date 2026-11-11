@@ -37,19 +37,29 @@ jobs:
               if v is None: return None
               if isinstance(v, (int, float)): return datetime.datetime.fromtimestamp(v, datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
               return str(v)
+          if items:
+              print("coords of the first:", json.dumps(items[0].get("coords"))[:300])
+          # coords come as points {lat, lon}, as rings (lists of points) or as GeoJSON-like pairs [lon, lat]
+          def rings(c):
+              if not isinstance(c, list) or not c:
+                  return []
+              if all(isinstance(x, dict) for x in c):
+                  return [[[float(x["lat"]), float(x["lon"])] for x in c if x.get("lat") is not None and x.get("lon") is not None]]
+              if all(isinstance(x, (list, tuple)) and len(x) == 2 and all(isinstance(v, (int, float)) for v in x) for x in c):
+                  return [[[float(x[1]), float(x[0])] for x in c]]
+              return [r for x in c for r in rings(x)]
           out = []
           for s in items:
               p = s.get("properties", s)
-              coords = p.get("coords") or []
-              if not coords and s.get("geometry", {}).get("type") == "Polygon":
-                  coords = [{"lon": c[0], "lat": c[1]} for c in s["geometry"]["coordinates"][0]]
-              poly = [[round(float(c["lat"]), 2), round(float(c["lon"]), 2)] for c in coords if c.get("lat") is not None]
-              if len(poly) < 3:
-                  continue
-              out.append({"fir": p.get("firId") or p.get("icaoId") or "", "name": p.get("firName") or "",
-                          "hazard": (p.get("hazard") or "").upper(), "qual": p.get("qualifier") or "",
-                          "from": when(p.get("validTimeFrom")), "to": when(p.get("validTimeTo")),
-                          "base": p.get("base"), "top": p.get("top"), "poly": poly, "raw": (p.get("rawSigmet") or "")[:600]})
+              cs = p.get("coords") or (s.get("geometry") or {}).get("coordinates") or []
+              for ring in rings(cs):
+                  poly = [[round(a, 2), round(b, 2)] for a, b in ring]
+                  if len(poly) < 3:
+                      continue
+                  out.append({"fir": p.get("firId") or p.get("icaoId") or "", "name": p.get("firName") or "",
+                              "hazard": (p.get("hazard") or "").upper(), "qual": p.get("qualifier") or "",
+                              "from": when(p.get("validTimeFrom")), "to": when(p.get("validTimeTo")),
+                              "base": p.get("base"), "top": p.get("top"), "poly": poly, "raw": (p.get("rawSigmet") or "")[:600]})
           now = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
           json.dump({"updated": now, "sigmets": out}, open("pub/sigmets.json", "w"), separators=(",", ":"))
           print(len(out), "SIGMETs with an area")

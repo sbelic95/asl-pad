@@ -7,6 +7,18 @@ import { esc } from "./util.js";
 import { APP_ICONS } from "./icons.js";
 
 export const releases = () => [
+  { v: "1.6", date: "2026-11-11", groups: [
+    { icon: "fly", name: "ASL Fly", items: [
+      t("Map: measure distance and course between two points"),
+      t("Map: range rings of 25, 50, 100 and 200 NM around your aircraft"),
+      t("Direct to any fix ahead: course, distance, time and how much shorter"),
+      t("SIGMETs on the map, and those on your route in the weather"),
+      t("Cold temperature correction of altitudes at 0 °C and below (ICAO)"),
+    ] },
+    { icon: "airport", name: "Airport", items: [
+      t("The airline's noise abatement and engine failure procedures can be added to the briefing"),
+    ] },
+  ] },
   { v: "1.5", date: "2026-11-11", groups: [
     { icon: "airport", name: "Airport", items: [
       t("New app: ground map of Belgrade, Niš and Kraljevo with runways, taxiway names, stands and holding positions"),

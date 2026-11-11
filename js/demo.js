@@ -173,3 +173,14 @@ export function demoTraffic() {
     { callsign: "ASL218", lat: 44.8196, lon: 20.2995, gs: 14, hdg: 300, type: "A319" },
   ];
 }
+
+// SIGMETs for the test: thunderstorms on the route over the Atlantic, turbulence over the Balkans
+export function demoSigmets(now = Date.now()) {
+  const iso = (h) => new Date(now + h * 36e5).toISOString().replace(/\.\d+Z$/, "Z");
+  return [
+    { fir: "EGGX", name: "SHANWICK OCEANIC", hazard: "TS", qual: "EMBD", from: iso(-1), to: iso(3), base: null, top: 39000,
+      poly: [[56, -25], [58, -18], [55, -12], [52, -16], [52, -24]], raw: "EGGX SIGMET 3 VALID ... EMBD TS OBS ... TOP FL390 MOV E 20KT NC=" },
+    { fir: "LYBA", name: "BEOGRAD", hazard: "TURB", qual: "SEV", from: iso(-2), to: iso(2), base: 25000, top: 38000,
+      poly: [[46, 17], [46, 22], [43, 22], [43, 17]], raw: "LYBA SIGMET 1 VALID ... SEV TURB FCST FL250/380 STNR NC=" },
+  ];
+}

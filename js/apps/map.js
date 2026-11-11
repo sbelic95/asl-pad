@@ -1,14 +1,16 @@
 // ASL Fly map: planned route, flown track, the aircraft, airports, fix details and the vertical profile.
 import { S, settings } from "../data.js";
 import { t, nf } from "../i18n.js";
-import { esc, hhmmz, greatCircle, store } from "../util.js";
+import { esc, hhmmz, greatCircle, store, distNm, bearing, dur } from "../util.js";
+import { activeSigmets, hazardOf, levels } from "../sigmet.js";
 import { fmtW } from "../units.js";
 import { tocTod, planAt, project } from "../flight.js";
 
 const L = window.L;
 let M = null;
-const pref = { follow: true, labels: true, ...store.get("asl.map", {}) };
-const savePref = () => store.set("asl.map", { follow: pref.follow, labels: pref.labels });
+const pref = { follow: true, labels: true, rings: false, sigmet: true, ...store.get("asl.map", {}) };
+const savePref = () => store.set("asl.map", { follow: pref.follow, labels: pref.labels, rings: pref.rings, sigmet: pref.sigmet });
+const RINGS = [25, 50, 100, 200]; // NM
 
 window.addEventListener("resize", () => M?.map.invalidateSize());
 export function dropMap() { if (M) { try { M.map.remove(); } catch {} M = null; } }
@@ -48,7 +50,9 @@ function build(body, o, key) {
   dropMap();
   body.innerHTML = `<div class="mapbox"></div>
     <div class="map-ctrl"><div class="grp"><button data-m="follow">${t("FOLLOW")}</button><button data-m="route">${t("ROUTE")}</button></div>
-      <div class="grp"><button data-m="labels">${t("LABELS")}</button></div></div>
+      <div class="grp"><button data-m="labels">${t("LABELS")}</button><button data-m="sigmet">SIGMET</button></div>
+      <div class="grp"><button data-m="measure">${t("MEASURE")}</button><button data-m="rings">${t("RINGS")}</button></div></div>
+    <div class="measure-info" hidden></div>
     <div class="fixpop" hidden></div><div class="profile"></div>`;
   const el = body.querySelector(".mapbox");
   const map = L.map(el, { zoomControl: false, attributionControl: true, worldCopyJump: false, minZoom: 2, zoomSnap: 0.5 });
@@ -61,8 +65,8 @@ function build(body, o, key) {
   const fixPts = unwrap(nl.map((x) => x.pos));
   const line = unwrap(routePoints(nl));
   const routeCol = getComputedStyle(document.documentElement).getPropertyValue("--route").trim() || "#4da3ff";
-  const route = L.polyline(line, { color: routeCol, weight: 3, opacity: 0.9 }).addTo(map);
-  const flown = L.polyline([], { color: settings.theme === "light" ? "#002e5d" : "#ffffff", weight: 3, opacity: 0.95 }).addTo(map);
+  const route = L.polyline(line, { color: routeCol, weight: 3, opacity: 0.9, interactive: false }).addTo(map);
+  const flown = L.polyline([], { color: settings.theme === "light" ? "#002e5d" : "#ffffff", weight: 3, opacity: 0.95, interactive: false }).addTo(map);
   const labels = L.layerGroup(), dots = L.layerGroup().addTo(map);
   nl.forEach((x, k) => {
     if (k === 0 || k === nl.length - 1) return;
@@ -83,7 +87,13 @@ function build(body, o, key) {
   apt(o.dep, ""); apt(o.dest, ""); o.altns.forEach((a) => apt(a, "altn")); (o.edto?.airports || []).forEach((a) => apt(a, "edto"));
 
   const ac = L.marker(fixPts[0], { icon: L.divIcon({ className: "ac-ic", html: planeSvg(0), iconSize: [30, 30], iconAnchor: [15, 15] }), zIndexOffset: 1000 });
-  M = { key, el, body, map, route, flown, labels, ac, fixPts, line, ref, acOn: false, sel: null, prof: { n: -1, pts: [] } };
+  // tools: measure, range rings, direct to, SIGMETs
+  const tools = L.layerGroup().addTo(map), rings = L.layerGroup(), dct = L.layerGroup().addTo(map), sig = L.layerGroup();
+  M = { key, el, body, map, route, flown, labels, ac, fixPts, line, ref, acOn: false, sel: null, prof: { n: -1, pts: [] },
+    tools, rings, dct, sig, measure: false, mpts: [], dctTo: null, sigKey: "" };
+  map.on("click", (e) => { if (M.measure) measureAt(e.latlng); });
+  if (pref.rings) rings.addTo(map);
+  if (pref.sigmet) sig.addTo(map);
   map.fitBounds(route.getBounds(), { padding: [40, 40] });
   map.on("dragstart", () => { if (pref.follow) { pref.follow = false; savePref(); ctrlState(); } });
   body.querySelector(".map-ctrl").addEventListener("click", (e) => {
@@ -91,9 +101,15 @@ function build(body, o, key) {
     if (b.dataset.m === "follow") { pref.follow = !pref.follow; savePref(); if (pref.follow && M.acOn) map.setView(ac.getLatLng(), Math.max(map.getZoom(), 6)); }
     if (b.dataset.m === "route") { pref.follow = false; savePref(); map.fitBounds(route.getBounds(), { padding: [40, 40] }); }
     if (b.dataset.m === "labels") { pref.labels = !pref.labels; savePref(); pref.labels ? labels.addTo(map) : labels.remove(); }
+    if (b.dataset.m === "sigmet") { pref.sigmet = !pref.sigmet; savePref(); pref.sigmet ? M.sig.addTo(map) : M.sig.remove(); }
+    if (b.dataset.m === "rings") { pref.rings = !pref.rings; savePref(); pref.rings ? M.rings.addTo(map) : M.rings.remove(); drawRings(); }
+    if (b.dataset.m === "measure") { M.measure = !M.measure; M.mpts = []; M.tools.clearLayers(); measureInfo(); el.classList.toggle("measuring", M.measure); }
     ctrlState();
   });
-  body.querySelector(".fixpop").addEventListener("click", (e) => { if (e.target.closest(".x")) { M.sel = null; e.currentTarget.hidden = true; } });
+  body.querySelector(".fixpop").addEventListener("click", (e) => {
+    if (e.target.closest(".x")) { M.sel = null; e.currentTarget.hidden = true; return; }
+    const d = e.target.closest("[data-dct]"); if (d) { M.dctTo = M.dctTo === +d.dataset.dct ? null : +d.dataset.dct; drawDct(); showFix(M.sel); }
+  });
   ctrlState();
   setTimeout(() => map.invalidateSize(), 60); setTimeout(() => map.invalidateSize(), 450);
 }
@@ -101,6 +117,72 @@ function ctrlState() {
   if (!M) return;
   M.body.querySelector('[data-m="follow"]').classList.toggle("on", pref.follow);
   M.body.querySelector('[data-m="labels"]').classList.toggle("on", pref.labels);
+  M.body.querySelector('[data-m="sigmet"]').classList.toggle("on", pref.sigmet);
+  M.body.querySelector('[data-m="rings"]').classList.toggle("on", pref.rings);
+  M.body.querySelector('[data-m="measure"]').classList.toggle("on", M.measure);
+}
+
+// ---------- measure: tap two points ----------
+function measureAt(ll) {
+  if (M.mpts.length >= 2) { M.mpts = []; M.tools.clearLayers(); }
+  M.mpts.push([ll.lat, ll.lng]);
+  L.circleMarker(ll, { radius: 4, color: "#fff", weight: 2, fillColor: "#ffb21f", fillOpacity: 1 }).addTo(M.tools);
+  if (M.mpts.length === 2) {
+    const [a, b] = M.mpts;
+    L.polyline(greatCircle(a, b, 24), { color: "#ffb21f", weight: 2.5, dashArray: "6 6" }).addTo(M.tools);
+  }
+  measureInfo();
+}
+function measureInfo() {
+  const box = M.body.querySelector(".measure-info");
+  if (!M.measure) { box.hidden = true; return; }
+  box.hidden = false;
+  if (M.mpts.length < 2) { box.innerHTML = t("Tap two points on the map."); return; }
+  const [a, b] = M.mpts, nm = distNm(a, b), gs = S.pilot?.groundspeed;
+  box.innerHTML = `<b>${nf(nm, nm < 10 ? 1 : 0)} NM</b> · ${String(Math.round(bearing(a, b))).padStart(3, "0")}°T${gs > 50 ? ` · ${t("at {gs} kt", { gs })} ${dur((nm / gs) * 36e5)}` : ""}`;
+}
+
+// ---------- range rings around the aircraft (else the departure airport) ----------
+function drawRings() {
+  if (!M || !pref.rings) return;
+  const pl = S.pilot, o = S.ofp, c = pl ? [pl.latitude, nearLon(pl.longitude, M.ref)] : o?.dep?.pos;
+  if (!c) return;
+  const k = c.map((x) => x.toFixed(2)).join();
+  if (M.ringKey === k) return;
+  M.ringKey = k; M.rings.clearLayers();
+  for (const nm of RINGS) {
+    L.circle(c, { radius: nm * 1852, color: "#9cc4ff", weight: 1, opacity: 0.7, fill: false, dashArray: "4 6", interactive: false }).addTo(M.rings);
+    L.marker([c[0] + nm / 60, c[1]], { icon: L.divIcon({ className: "ring-lbl", html: nm + " NM", iconSize: [60, 14], iconAnchor: [30, 7] }), interactive: false }).addTo(M.rings);
+  }
+}
+
+// ---------- direct to a fix of the route ----------
+function dctInfo(k) {
+  const o = S.ofp, pl = S.pilot, x = o.navlog[k];
+  if (!pl) return null;
+  const from = [pl.latitude, pl.longitude], nm = distNm(from, x.pos);
+  const along = S.pr ? x.cumNm - S.pr.along : null; // via the route
+  return { nm, crs: bearing(from, x.pos), ete: pl.groundspeed > 50 ? (nm / pl.groundspeed) * 36e5 : null, save: along != null && along > nm ? along - nm : null };
+}
+function drawDct() {
+  M.dct.clearLayers();
+  if (M.dctTo == null || !S.pilot) return;
+  const x = S.ofp.navlog[M.dctTo];
+  L.polyline(greatCircle([S.pilot.latitude, S.pilot.longitude], x.pos, 24).map(([a, b]) => [a, nearLon(b, M.ref)]), { color: "#ff4fd8", weight: 3, dashArray: "8 6", interactive: false }).addTo(M.dct);
+}
+
+// ---------- SIGMETs ----------
+function drawSigmets() {
+  const list = activeSigmets(), k = list.length + ":" + (S.sigmets?.[0]?.raw || "").slice(0, 20);
+  if (M.sigKey === k) return;
+  M.sigKey = k; M.sig.clearLayers();
+  for (const s of list) {
+    const [col, name] = hazardOf(s), poly = s.poly.map(([la, lo]) => [la, nearLon(lo, M.ref)]);
+    L.polygon(poly, { color: col, weight: 1.5, fillColor: col, fillOpacity: 0.16 })
+      .on("click", (e) => { if (M.measure) { measureAt(e.latlng); setTimeout(() => M.map.closePopup(), 0); } })
+      .bindPopup(`<b>${esc(t(name))}</b> ${esc(s.qual || "")} ${esc(levels(s))}<br><span style="font-size:11px">${esc(s.fir)} · ${s.to ? t("valid until {t}", { t: hhmmz(Date.parse(s.to)) }) : ""}</span><div class="wx-raw" style="margin-top:6px">${esc(s.raw || "")}</div>`, { maxWidth: 360 })
+      .addTo(M.sig);
+  }
 }
 
 function update(o, d) {
@@ -115,6 +197,7 @@ function update(o, d) {
     else if (pref.follow) M.map.panTo(p, { animate: true, duration: 0.6 });
   } else if (M.acOn) { M.ac.remove(); M.acOn = false; }
   if (M.sel != null) showFix(M.sel);
+  drawRings(); drawDct(); drawSigmets(); measureInfo();
   profile(o, d);
 }
 
@@ -131,7 +214,10 @@ function showFix(k) {
     <div class="kv">${cell(t("Alt"), (x.alt >= 10000 ? "FL" + Math.round(x.alt / 100) : nf(x.alt) + " ft"))}${cell(t("Wind"), x.wind?.[1] != null ? String(x.wind[0]).padStart(3, "0") + "/" + x.wind[1] : "—")}
       ${cell("OAT / ISA", x.oat != null ? `${x.oat}° / ${x.isa > 0 ? "+" : ""}${x.isa ?? 0}` : "—")}${cell("MORA", x.mora != null ? nf(x.mora) + " ft" : "—")}
       ${cell(t("From dep."), nf(x.cumNm) + " NM")}${cell(t("To go"), nf(total - x.cumNm) + " NM")}
-      ${cell(ata ? "ATA" : "ETA", hhmmz(ata || eta))}${cell("FOB", fmtW(x.fob, o) + `<small> ${t("min")} ${fmtW(x.fobMin, o, { bare: true })}</small>`)}</div>`;
+      ${cell(ata ? "ATA" : "ETA", hhmmz(ata || eta))}${cell("FOB", fmtW(x.fob, o) + `<small> ${t("min")} ${fmtW(x.fobMin, o, { bare: true })}</small>`)}</div>
+    ${(() => { const D = air && !ata ? dctInfo(k) : null; if (!D) return "";
+      return `<div class="dct-row"><button class="btn small ${M.dctTo === k ? "pri" : ""}" data-dct="${k}">${t("Direct to")} ${esc(x.ident)}</button>
+        <span><b>${String(Math.round(D.crs)).padStart(3, "0")}°T</b> · ${nf(D.nm)} NM${D.ete ? " · " + dur(D.ete) : ""}${D.save ? ` · <span class="ok">${t("{n} NM shorter", { n: nf(D.save) })}</span>` : ""}</span></div>`; })()}`;
   box.hidden = false;
 }
 
