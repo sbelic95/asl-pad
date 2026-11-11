@@ -236,5 +236,9 @@ renderLock($("lock")); renderHome($("home")); renderStatus();
 if (q.has("unlock") || q.get("app")) { $("lock").classList.add("gone"); ui.view = "home"; }
 if (q.get("app")) openApp(q.get("app"), q.get("tab") || undefined);
 startPolling();
-if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
+if ("serviceWorker" in navigator && location.protocol === "https:") {
+  // a new version took over (sw.js changed): load it once, so a fix shows up without opening the pad twice
+  if (navigator.serviceWorker.controller) navigator.serviceWorker.addEventListener("controllerchange", () => location.reload(), { once: true });
+  navigator.serviceWorker.register("sw.js", { updateViaCache: "none" }).catch(() => {});
+}
 window.ASL = { S, settings, openApp, goHome, emit }; // for the console and tests
