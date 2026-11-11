@@ -2,10 +2,11 @@
 import { S, settings, saveSettings } from "../data.js";
 import { t, LANGS, getLang, setLang } from "../i18n.js";
 import { esc, store } from "../util.js";
+import { WALLS, getPhoto, delPhoto, savePhoto } from "../wall.js";
 
 export const name = "Settings";
 export const tabs = [];
-export const VERSION = "1.0";
+export const VERSION = "1.1";
 
 let C = null;
 export function render(body, ctx) {
@@ -17,7 +18,7 @@ export function render(body, ctx) {
     body.addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.matches("input[data-k]")) e.target.blur(); });
   }
   // keep what the pilot is typing: only rebuild when no field has the focus
-  if (body.contains(document.activeElement) && document.activeElement.matches("input")) return;
+  if (body.contains(document.activeElement) && document.activeElement.matches("input:not([type=file])")) return;
   body.innerHTML = page();
 }
 export function summary() { return [t("Settings"), `SimBrief: ${settings.simbrief || "—"}\nVATSIM: ${settings.cid || "—"}\n${LANGS[getLang()]} · ${settings.unit}`]; }
@@ -39,6 +40,7 @@ function page() {
       ${row(t("Language"), "", seg("lang", Object.entries(LANGS), getLang()))}
       ${row(t("Weights"), t("Fuel and weights in"), seg("unit", [["kg", "kg"], ["t", t("tonnes")], ["lb", "lb"]], settings.unit))}
       ${row(t("Look"), "", seg("theme", [["dark", t("Dark")], ["light", t("Light")]], settings.theme))}
+      ${wallRow()}
       ${row(t("Auto-lock"), t("Locks the pad after this time without a touch."), seg("lock", [[0, t("Never")], [5, "5 min"], [10, "10 min"], [30, "30 min"]], settings.lock))}
     </div>
     <div class="card"><div class="lbl" style="margin-bottom:4px">${t("Demo")}</div>
@@ -56,7 +58,32 @@ function page() {
   </div>`;
 }
 
+// wallpaper of the lock and home screen: built-in skies and a photo from the device
+function wallRow() {
+  const photo = !!getPhoto(), cur = settings.wall === "photo" && photo ? "photo" : WALLS[settings.wall] ? settings.wall : "night";
+  const tile = (id, name, bg) => `<button class="wtile${cur === id ? " on" : ""}" data-wall="${id}"><i style="${bg}"></i><span>${esc(name)}</span></button>`;
+  const tiles = Object.entries(WALLS).map(([id, w]) => tile(id, t(w.name), "background:" + esc(w[settings.theme === "light" ? "light" : "dark"])));
+  tiles.push(photo ? tile("photo", t("My photo"), "background-image:var(--wall-img)")
+    : `<label class="wtile"><i class="add">+</i><span>${t("My photo")}</span><input type="file" accept="image/*" data-file="wall" hidden></label>`);
+  const btns = photo ? `<div class="wall-btns"><label class="btn small">${t("Choose another photo")}<input type="file" accept="image/*" data-file="wall" hidden></label>
+      <button class="btn small" data-do="delphoto">${t("Remove photo")}</button>
+      ${cur === "photo" ? `<span class="dim" style="font-size:13px;margin-left:6px">${t("Dim photo")}</span>${seg("wallDim", [[0, t("Off")], [0.3, t("Low")], [0.55, t("High")]], settings.wallDim)}` : ""}</div>` : "";
+  return `<div class="wall-row"><div class="h" style="font-weight:600">${t("Wallpaper")}<small class="dim" style="display:block;font-weight:400;font-size:12px">${t("Background of the lock and home screen. A photo stays on this device only.")}</small></div>
+    <div class="walls">${tiles.join("")}</div>${btns}</div>`;
+}
+async function onPhoto(input) {
+  const f = input.files?.[0]; if (!f) return;
+  let ok = false;
+  try { ok = await savePhoto(f); } catch {}
+  input.value = "";
+  if (!ok) { C.toast({ lv: "red", ic: "warn", title: t("Photo not saved"), text: t("The photo could not be read or the storage of the browser is full.") }); return; }
+  saveSettings({ wall: "photo" });
+  C.toast({ lv: "ok", ic: "check", title: t("Wallpaper changed"), text: "" });
+  C.changed("theme");
+}
+
 function onInput(e) {
+  if (e.target.matches("input[data-file=wall]")) { onPhoto(e.target); return; }
   const k = e.target.dataset.k; if (!k) return;
   const v = e.target.value.trim();
   if (settings[k] === v) return;
@@ -65,16 +92,19 @@ function onInput(e) {
 }
 let sure = null;
 function onClick(e) {
+  const w = e.target.closest("[data-wall]");
+  if (w) { saveSettings({ wall: w.dataset.wall }); C.changed("theme"); return; }
   const s = e.target.closest("[data-seg]");
   if (s) {
     const k = s.dataset.seg, v = s.dataset.v;
     if (k === "lang") { setLang(v); C.changed("lang"); return; }
-    if (k === "lock") saveSettings({ lock: +v });
+    if (k === "lock" || k === "wallDim") saveSettings({ [k]: +v });
     else saveSettings({ [k]: v });
-    C.changed(k === "demo" ? "data" : k === "theme" ? "theme" : "view");
+    C.changed(k === "demo" ? "data" : k === "theme" || k === "wallDim" ? "theme" : "view");
     return;
   }
   const b = e.target.closest("[data-do]"); if (!b) return;
+  if (b.dataset.do === "delphoto") { delPhoto(); if (settings.wall === "photo") saveSettings({ wall: "night" }); C.changed("theme"); return; }
   if (sure !== b.dataset.do) { sure = b.dataset.do; b.textContent = t("Tap again to delete"); b.classList.add("pri"); setTimeout(() => { if (sure === b.dataset.do) { sure = null; C.changed("view"); } }, 3500); return; }
   sure = null;
   if (b.dataset.do === "clearflights") store.keys("asl.flight.").forEach((k) => store.del(k));

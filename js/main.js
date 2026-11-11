@@ -6,6 +6,7 @@ import { APP_ICONS, I } from "./icons.js";
 import { renderLock, noteHtml } from "./lock.js";
 import { renderHome, HOME_APPS } from "./home.js";
 import { loadAirports, cityOf } from "./tz.js";
+import { applyWall } from "./wall.js";
 import * as Fly from "./apps/fly.js";
 import * as Ops from "./apps/ops.js";
 import * as Log from "./apps/log.js";
@@ -32,7 +33,7 @@ if (q.get("lang")) setLang(q.get("lang"));
 setLang(getLang());
 
 // ---------- theme ----------
-export function applyTheme() { document.documentElement.dataset.theme = settings.theme === "light" ? "light" : "dark"; }
+export function applyTheme() { document.documentElement.dataset.theme = settings.theme === "light" ? "light" : "dark"; applyWall(settings); }
 applyTheme();
 
 // ---------- status bar ----------

@@ -13,7 +13,7 @@ export const API = {
   ukcp: "https://raw.githubusercontent.com/sbelic95/vdgs-slot-board/data/ukcp.json",
 };
 
-const DEF = { simbrief: "", cid: "", unit: "kg", theme: "dark", lock: 10, demo: "" };
+const DEF = { simbrief: "", cid: "", unit: "kg", theme: "dark", wall: "night", wallDim: 0.3, lock: 10, demo: "" };
 export let settings = { ...DEF, ...store.get("asl.settings", {}) };
 export function saveSettings(patch) { settings = { ...settings, ...patch }; store.set("asl.settings", settings); }
 
