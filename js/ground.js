@@ -42,7 +42,38 @@ function prepare(g) {
     });
   }
   const runways = g.ways.filter((w) => w.k === "runway" && w.ref);
-  return { ...g, pos, adj, refsAt, runways };
+  // In OSM some taxiways stop just short of a runway (at LYBE the exits R1–R4 and D5–D7 next to 12R/30L).
+  // A loose taxiway end within 120 m of a runway it does not touch gets a link to the closest point on it.
+  let v = 0; const extra = {}; // runway ref → the added link nodes on it
+  for (const way of g.ways) {
+    if (!isTaxi(way.k)) continue;
+    for (const id of [way.n[0], way.n[way.n.length - 1]]) {
+      if ((adj.get(id) || []).length !== 1) continue; // not a loose end
+      const p = pos.get(id), on = refsAt.get(id);
+      let best = null;
+      for (const r of runways) {
+        if (on.has("RWY " + r.ref)) continue;
+        for (let i = 1; i < r.g.length; i++) {
+          const q = closestOnSegment(p, r.g[i - 1], r.g[i]), d = m(p, q);
+          if (d < 120 && (!best || d < best.d)) best = { d, q, r, i };
+        }
+      }
+      if (!best) continue;
+      const nid = "v" + v++, { r, i, q } = best;
+      pos.set(nid, q); refsAt.set(nid, new Set(["RWY " + r.ref, way.ref])); (extra[r.ref] ||= []).push(nid);
+      link(id, nid, best.d, way.ref, way.k);
+      link(nid, r.n[i - 1], m(q, r.g[i - 1]) * 6, r.ref, "runway");
+      link(nid, r.n[i], m(q, r.g[i]) * 6, r.ref, "runway");
+    }
+  }
+  return { ...g, pos, adj, refsAt, runways, extra };
+}
+// the point on the segment a–b closest to p (flat approximation, fine for a few km)
+function closestOnSegment(p, a, b) {
+  const k = Math.cos((p[0] * Math.PI) / 180), ax = a[1] * k, bx = b[1] * k, px = p[1] * k;
+  const dx = bx - ax, dy = b[0] - a[0], len = dx * dx + dy * dy;
+  const u = len ? Math.max(0, Math.min(1, ((px - ax) * dx + (p[0] - a[0]) * dy) / len)) : 0;
+  return [a[0] + u * dy, (ax + u * dx) / k];
 }
 
 // nodes of the taxi network (not on a runway) near a point
@@ -58,27 +89,41 @@ export function nearestTaxiNode(G, p, refs) {
 
 // the runway way and its threshold for a runway end like "12L"
 export function runwayEnd(G, id) {
-  const way = G.runways.find((w) => w.ref.split("/").map((s) => s.trim()).includes(id));
-  if (!way) return null;
-  const a = way.g[0], b = way.g[way.g.length - 1], num = parseInt(id, 10) * 10;
+  // a runway can be split into several ways in OSM: take all pieces, the ends are the two points farthest apart
+  const ways = G.runways.filter((w) => w.ref.split("/").map((s) => s.trim()).includes(id));
+  if (!ways.length) return null;
+  const way = ways[0], pts = ways.flatMap((w) => w.g), ids = ways.flatMap((w) => w.n);
+  let a = pts[0], b = pts[1] || pts[0], best = -1;
+  for (const p of pts) for (const q of pts) { const d = m(p, q); if (d > best) { best = d; a = p; b = q; } }
+  const num = parseInt(id, 10) * 10;
   const diff = (x, y) => Math.abs(((x - y + 540) % 360) - 180);
   const aFirst = diff(bearing(a, b), num) < diff(bearing(b, a), num); // taking off from a towards b
-  return { way, thr: aFirst ? a : b, end: aFirst ? b : a, ids: aFirst ? way.n : [...way.n].reverse() };
+  return { way, thr: aFirst ? a : b, end: aFirst ? b : a, ids: [...new Set([...ids, ...(G.extra[way.ref] || [])])] };
 }
 
-// where a taxiway meets the runway: entry for take-off ("head" = closest to the threshold) or the exit after landing
-export function runwayJoin(G, rwyId, twy) {
-  const R = runwayEnd(G, rwyId); if (!R) return null;
-  const cands = R.ids.filter((id) => [...(G.refsAt.get(id) || [])].some((r) => !r.startsWith("RWY ")));
-  if (!cands.length) return null;
-  if (twy === "head") return cands.reduce((a, b) => (m(G.pos.get(a), R.thr) < m(G.pos.get(b), R.thr) ? a : b));
-  const named = cands.filter((id) => G.refsAt.get(id).has(twy));
-  if (!named.length) return null;
-  return named.reduce((a, b) => (m(G.pos.get(a), R.thr) < m(G.pos.get(b), R.thr) ? a : b));
+// where a taxiway meets the runway: entry for take-off ("head" = closest to the threshold) or the exit after landing.
+// All candidates, best first (a piece of taxiway in OSM may not be connected to the rest).
+export function runwayJoins(G, rwyId, twy) {
+  const R = runwayEnd(G, rwyId); if (!R) return [];
+  let cands = R.ids.filter((id) => [...(G.refsAt.get(id) || [])].some((r) => !r.startsWith("RWY ")));
+  if (twy !== "head") cands = cands.filter((id) => G.refsAt.get(id).has(twy));
+  return cands.sort((a, b) => m(G.pos.get(a), R.thr) - m(G.pos.get(b), R.thr));
+}
+export const runwayJoin = (G, rwyId, twy) => runwayJoins(G, rwyId, twy)[0] ?? null;
+
+// route to the runway (dep) or from it to a stand (arr), trying the joins in order until one is reachable
+export function routeVia(G, rwyId, twy, other, dep) {
+  const avoid = [runwayRef(G, rwyId)];
+  for (const j of runwayJoins(G, rwyId, twy).slice(0, 8)) {
+    const R = dep ? taxiRoute(G, other, j, avoid) : taxiRoute(G, j, other, avoid);
+    if (R) return R;
+  }
+  return null;
 }
 
-// shortest route (Dijkstra); returns the points, the length in m and the taxiways in order
-export function taxiRoute(G, from, to) {
+// shortest route (Dijkstra); returns the points, the length in m and the taxiways in order.
+// avoid: runway refs that must not be taxied along (the landing runway after the exit, the runway of departure)
+export function taxiRoute(G, from, to, avoid = []) {
   if (from == null || to == null || !G.adj.has(from) || !G.adj.has(to)) return null;
   const dist = new Map([[from, 0]]), prev = new Map(), done = new Set();
   const open = [[0, from]];
@@ -88,6 +133,7 @@ export function taxiRoute(G, from, to) {
     if (done.has(u)) continue; done.add(u);
     if (u === to) break;
     for (const e of G.adj.get(u) || []) {
+      if (e.kind === "runway" && avoid.includes(e.ref)) continue;
       const nd = d + e.w;
       if (nd < (dist.get(e.to) ?? Infinity)) { dist.set(e.to, nd); prev.set(e.to, { u, e }); open.push([nd, e.to]); }
     }
@@ -102,12 +148,17 @@ export function taxiRoute(G, from, to) {
   return { ids, pts, len, names };
 }
 
-// holding positions within 25 m of the route
+// holding positions on the route (within 12 m of one of its points), in the order you pass them
 export function holdsOn(G, route) {
   if (!route) return [];
-  return (G.points || []).filter((p) => (p.k === "holding_position" || p.k === "stopbar") &&
-    route.pts.some((q) => m([p.lat, p.lon], q) < 25));
+  const out = [];
+  route.pts.forEach((q, i) => {
+    for (const p of G.points || []) if ((p.k === "holding_position" || p.k === "stopbar") && !out.some((o) => o.p === p) && m([p.lat, p.lon], q) < 12) out.push({ p, i });
+  });
+  return out.sort((a, b) => a.i - b.i).map((o) => o.p);
 }
+// the runway way ref of a runway end ("12L" → "12L/30R")
+export const runwayRef = (G, id) => runwayEnd(G, id)?.way.ref || "";
 
 // where two named taxiways meet (for hot spots), else the closest pair of their nodes
 export function meetPoint(G, a, b) {

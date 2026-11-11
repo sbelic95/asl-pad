@@ -3,7 +3,7 @@
 import { S, settings, departureStand, arrivalStand, loadStandsFor } from "../data.js";
 import { t, loc } from "../i18n.js";
 import { esc, store, getJSON, distKm } from "../util.js";
-import { loadGround, groundOf, GROUND_AIRPORTS, nearestTaxiNode, runwayEnd, runwayJoin, taxiRoute, holdsOn, meetPoint } from "../ground.js";
+import { loadGround, groundOf, GROUND_AIRPORTS, nearestTaxiNode, runwayEnd, routeVia, holdsOn, meetPoint } from "../ground.js";
 
 export const name = "Airport";
 export const tabs = [["map", "Ground map"], ["brief", "Briefing"], ["stands", "Stands"]];
@@ -181,7 +181,7 @@ const plane = (hdg, color) => `<svg viewBox="0 0 24 24" width="28" height="28" s
 // the runway and entry / exit to use
 function plan(G, icao, mode) {
   const b = briefs[icao], o = S.ofp;
-  const rwyIds = G.runways.flatMap((w) => w.ref.split("/").map((s) => s.trim())).filter(Boolean);
+  const rwyIds = [...new Set(G.runways.flatMap((w) => w.ref.split("/").map((s) => s.trim())).filter(Boolean))];
   const planned = o && icao === o.dep?.icao && mode === "dep" ? o.dep.rwy : o && icao === o.dest?.icao && mode === "arr" ? o.dest.rwy : null;
   let rwy = ui.rwy && rwyIds.includes(ui.rwy) ? ui.rwy : rwyIds.includes(planned) ? planned : rwyIds[0];
   const joins = mode === "dep" ? (b?.takeoff?.[rwy]?.map(([j]) => j) || ["head"]) : (b?.exits?.[rwy]?.map((x) => x.twy) || []);
@@ -207,11 +207,11 @@ function update(G, icao, mode) {
   const auto = mode === "dep" ? departureStand()?.ref : arrivalStand()?.ref;
   const stand = byRef(ui.stand) || byRef(auto) || null;
   // route
-  const rNode = runwayJoin(G, P.rwy, P.join);
-  let R = null, from = null;
-  if (mode === "dep") from = me && me.groundspeed < 40 ? nearestTaxiNode(G, [me.latitude, me.longitude]) : stand ? nearestTaxiNode(G, [stand.lat, stand.lon]) : null;
-  if (mode === "dep" && from != null && rNode != null) R = taxiRoute(G, from, rNode);
-  if (mode === "arr" && rNode != null && stand) R = taxiRoute(G, rNode, nearestTaxiNode(G, [stand.lat, stand.lon]));
+  let R = null;
+  if (mode === "dep") {
+    const from = me && me.groundspeed < 40 ? nearestTaxiNode(G, [me.latitude, me.longitude]) : stand ? nearestTaxiNode(G, [stand.lat, stand.lon]) : null;
+    if (from != null) R = routeVia(G, P.rwy, P.join, from, true);
+  } else if (stand) R = routeVia(G, P.rwy, P.join, nearestTaxiNode(G, [stand.lat, stand.lon]), false);
   route.setLatLngs(R ? R.pts : []);
   holdMarks.clearLayers();
   const holds = holdsOn(G, R);
@@ -235,8 +235,9 @@ function update(G, icao, mode) {
     ${P.joins.length ? pick("join", P.joins, P.join, mode === "dep" ? t("Entry") : t("Exit")) : ""}
     <div class="gp-row"><span class="lbl">${t("Stand")}</span><select data-k="stand"><option value="">${mode === "dep" && me ? t("where you are") : "—"}</option>${stands.filter((s) => s.lat != null).map((s) => `<option ${s.ref === stand?.ref ? "selected" : ""}>${esc(s.ref)}</option>`).join("")}</select></div>
     ${R ? `<div class="gp-route"><div class="lbl">${t("Taxi route")} · ${len.toLocaleString()} m · ~${Math.max(1, Math.round(len / 1000 / 25 * 60))} min</div><b>${R.names.map(esc).join(" → ") || "—"}</b>
-      ${holds.length ? `<div class="gp-hold">${t("Hold short")}: ${holds.map((h) => esc(h.ref || "●")).join(", ")}</div>` : ""}</div>`
+      ${holds.length ? `<div class="gp-hold">${t("Hold short")}: ${holds.map((h) => esc(h.ref || "●")).join(" → ")}</div>` : ""}</div>`
       : `<div class="gp-route dim">${mode === "dep" ? t("Pick your stand, or connect to VATSIM, for a taxi route.") : t("Pick a stand for a taxi route from your exit.")}</div>`}
+    ${mode === "arr" && b?.exits?.[P.rwy] ? (() => { const x = b.exits[P.rwy].find((e) => e.twy === P.join); return x ? `<div class="gp-exit"><span class="lbl">${t("Vacating RWY {r}", { r: P.rwy })} · ${esc(x.twy)}</span>${esc(loc(x))}</div>` : ""; })() : ""}
     <p class="gp-note">${t("Suggested route along the taxiways – always follow the instructions of ATC.")}</p>`;
 }
 

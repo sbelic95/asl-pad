@@ -16,6 +16,7 @@ Es gibt keinen Demo-Modus: Das Pad zeigt immer den eigenen Flug aus SimBrief und
 | **ASL Fly** | Übersicht (Flughäfen mit Wetter und Piste, Phase, nächster Wegpunkt, ETA, OUT/OFF/ON/IN, Treibstoff), Zeiten, Flugplan mit ETA/ATA je Wegpunkt, Karte mit Route, geflogenem Weg und Vertikalprofil, Wetter (METAR, TAF, ATIS), Treibstoff mit Fuel Checks. |
 | **ASL Ops** | Dienst-Leiste, To-do, Abflug (Stand, Piste, SID, vIFF-CDM: EOBT/TOBT/TSAT/TTOT/CTOT, Frequenzen) und Ankunft (Stand-Prognose, Piste, STAR, ATIS, Frequenzen). Reiter **Flotte** mit den SimBrief-Airframes der A319 YU-APA bis YU-APE und eigenen Flugzeugen. |
 | **Logbuch** | Jeder Flug wird beim On-Block eingetragen. Statistik, Details mit Streckenkarte, Flug von Hand eintragen, CSV-Export, Sicherung und Import (JSON). |
+| **Aerodrom (Airport)** | Rollkarte von LYBE, LYNI und LYKV (Pisten, Rollwege mit Schildern, Stände, Haltepunkte, Hot Spots, VATSIM-Verkehr – unsere in Rot) mit **Rollweg** vom Stand zur Piste bzw. vom Abrollweg zum Stand und den Haltepunkten; **LYBE-Briefing** aus [`va/airports/LYBE.json`](va/airports/LYBE.json); **Stände** mit Spannweite, Einweisung, passt / belegt. |
 | **Preuzimanja (Downloads)** | Links der VA aus [`va/downloads.json`](va/downloads.json): ACARS (Pflicht), Crew Lounge, Liveries, SimBrief, VATSIM, SCG vACC. Reiter **Promene** mit allen Updates. |
 | **Cabin / VDGS** | Öffnet die Air-Serbia-Kabinenanzeige und das VDGS aus `vdgs-slot-board` mit dem Rufzeichen des Flugs. |
 | **Zurück** | Das App-Logo oben links (z. B. „‹ ASL Ops“) führt in jeder App zurück zum Home-Bildschirm, wie ein Tipp auf den Home-Balken unten. |
@@ -75,6 +76,14 @@ Lizenzen der verwendeten Bibliotheken und Daten: [LIZENZEN.md](LIZENZEN.md).
 - **Crew-Info:** Tipps in `va/notices.json` mit `"phase"` erscheinen in dieser Flugphase statt des Tipps des Tages.
 - **Home-Bildschirm anpassen:** Einstellungen → Početni ekran (Wetter, Karriere, Mitteilungen, Events ein/aus).
 - **Hintergrund „Nebo gde si“:** folgt Ortszeit und Wetter am Abflugort (bis zum Start), dann am Ziel.
+
+## Rollkarte und Rollwege (1.5)
+
+- Bodendaten aus OpenStreetMap holt [`.github/workflows/ground-data.yml`](.github/workflows/ground-data.yml) wöchentlich in den Branch `ground`
+  (`ground/<ICAO>.json`); weitere Flughäfen in `AIRPORTS` im Workflow und in `GROUND_AIRPORTS` in `js/ground.js` eintragen.
+- `js/ground.js` baut daraus ein Rollweg-Netz und sucht den kürzesten Weg; Pisten nur zum Kreuzen (bzw. als Notlösung), die eigene Start-/Landepiste nie.
+  Lose Rollweg-Enden bis 120 m vor einer Piste werden mit ihr verbunden (in OSM enden bei LYBE z. B. R1–R4 und D5–D7 knapp davor).
+- Das Briefing steht in `va/airports/<ICAO>.json` (sr/en), nur Fakten von den aktuellen Karten in eigenen Worten.
 
 ## Ein Update machen
 

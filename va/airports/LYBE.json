@@ -75,9 +75,9 @@
   ],
   "hotspots": [
     { "id": "HS1", "twys": ["D3", "D4"], "en": "High-volume intersection for all traffic to and from both runways; vehicles cross here too. Vacating 12L/30R at R4: do not mix up D3 and D4.", "sr": "Prometna raskrsnica za sav saobraćaj ka i sa obe piste; ovde prelaze i vozila. Napuštanje 12L/30R preko R4: ne mešaj D3 i D4." },
-    { "id": "HS2", "twys": ["F3", "M"], "en": "High-volume intersection for all traffic to and from both runways; vehicles cross here too.", "sr": "Prometna raskrsnica za sav saobraćaj ka i sa obe piste; ovde prelaze i vozila." },
+    { "id": "HS2", "twys": ["F", "M"], "en": "High-volume intersection for all traffic to and from both runways; vehicles cross here too.", "sr": "Prometna raskrsnica za sav saobraćaj ka i sa obe piste; ovde prelaze i vozila." },
     { "id": "HS3", "twys": ["L", "H"], "en": "Busy intersection where a service road crosses TWY L – watch for ground vehicles, towed aircraft and aircraft leaving stand B10.", "sr": "Prometna raskrsnica gde servisni put prelazi TWY L – pazi na vozila, vučene avione i avione sa pozicije B10." },
-    { "id": "HS4", "twys": ["FB", "D1"], "en": "Complex taxiway intersection – taxi with care.", "sr": "Složena raskrsnica rulnih staza – oprezno." }
+    { "id": "HS4", "twys": ["FB", "T"], "en": "Complex taxiway intersection – taxi with care.", "sr": "Složena raskrsnica rulnih staza – oprezno." }
   ],
   "stands": {
     "A1": 42, "A2": 36, "A3": 36, "A4": 36, "A5": 36, "A6": 36, "A7": 36, "A8": 36, "A9": 36, "A10": 36, "A11": 36, "A12": 36, "A13": 36, "A14": 36, "A15": 36,

@@ -36,6 +36,12 @@ Branch `data` (`events.json`, Workflow `vatsim-events.yml`). `S.events` sind die
 Vorschlag, bis die VA-Leitung sie bestätigt). Nur echte, geprüfte Links und keine erfundenen VA-Inhalte. Karriere ist lokal je Gerät –
 offizielle Ränge/Stunden gäbe es erst mit einer Anbindung an die Crew Lounge der VA (airserbiavirtual.online).
 
+## App „Airport“ (1.5)
+
+`js/apps/airport.js` + `js/ground.js`: Rollkarte (Leaflet ohne Kacheln) aus Branch `ground` (Workflow `ground-data.yml`), Rollwege per Dijkstra,
+Briefing aus `va/airports/<ICAO>.json`. Keine Karten oder Texte von Jeppesen/Navigraph ins Repo – nur Fakten in eigenen Worten.
+Der Name „flySmart“ wird nicht verwendet (siehe Marke). Getestet mit `ground/LYBE.json`: jede Stand–Pisten-Kombination hat eine Route.
+
 ## Updates
 
 Jede sichtbare Neuerung als neuer Eintrag oben in `js/whatsnew.js` (nur, was das Pad wirklich kann). Das Pad zeigt ihn einmal
