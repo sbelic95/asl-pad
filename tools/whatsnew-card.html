@@ -48,7 +48,7 @@
   <h1 id="title"></h1>
   <div class="date" id="date"></div>
   <div class="live" id="live"></div>
-  <div class="open"><span id="open"></span><b>sbelic95.github.io/asl-pad</b></div>
+  <div class="open" id="openbox"><span id="open"></span><b id="link">sbelic95.github.io/asl-pad</b></div>
 </div>
 <div class="shots">
   <div class="shot"><div class="cap"><b id="c1"></b><span>ASL Pad</span></div><div class="frame"><iframe id="f1"></iframe></div></div>
@@ -59,6 +59,7 @@
   import { setLang, t } from "../js/i18n.js";
   import { latest, relDate, groupsHtml, cardTexts } from "../js/whatsnew.js";
   const qs = new URLSearchParams(location.search), lang = qs.get("lang") || "sr";
+  if (qs.has("nolink")) document.getElementById("link").remove(); // --no-link: the graphic without the address of the pad
   // the Air Serbia logo: a file given to whatsnew-card.mjs (--logo), else loaded at render time like in the pad; never stored in the repo
   { const img = new Image(); img.alt = "Air Serbia"; img.referrerPolicy = "no-referrer";
     img.onload = () => { const l = document.getElementById("logo"); l.appendChild(img); l.hidden = false; document.querySelector(".hero").classList.add("has-logo"); };
