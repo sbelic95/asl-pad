@@ -93,6 +93,14 @@ Lizenzen der verwendeten Bibliotheken und Daten: [LIZENZEN.md](LIZENZEN.md).
 - Performance: **Temperaturkorrektur** nach ICAO (PANS-OPS) bei 0 °C und darunter, am Abflug- und Zielflughafen (`js/cold.js`).
 - Abflugverfahren der Airline (NADP, EOSID) kann die VA-Leitung in `va/airports/<ICAO>.json` unter `procedures` eintragen.
 
+## Flugkarte, SIGMETs und Kälte-Korrektur (1.6)
+
+- Flugkarte: **MESSEN** (zwei Punkte: NM, Kurs, Zeit bei aktueller GS), **RINGE** (25/50/100/200 NM ums Flugzeug), **Direct to** im Wegpunkt-Fenster
+  (Kurs, Entfernung, Zeit, Ersparnis gegenüber der Route), **SIGMET**-Ebene. Unter Wetter: SIGMETs auf der Route.
+- SIGMETs holt [`.github/workflows/sigmets.yml`](.github/workflows/sigmets.yml) alle 30 Minuten von aviationweather.gov in den Branch `wx`.
+- Performance: **Temperaturkorrektur** nach ICAO (PANS-OPS) bei 0 °C und darunter, am Abflug- und Zielflughafen (`js/cold.js`).
+- Abflugverfahren der Airline (NADP, EOSID) kann die VA-Leitung in `va/airports/<ICAO>.json` unter `procedures` eintragen.
+
 ## Ein Update machen
 
 1. Änderung bauen und testen (`node tests/smoke.mjs`).
