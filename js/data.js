@@ -15,7 +15,13 @@ export const API = {
 
 const DEF = { simbrief: "", cid: "", unit: "kg", theme: "dark", wall: "night", wallDim: 0.3, lock: 10, demo: "" };
 export let settings = { ...DEF, ...store.get("asl.settings", {}) };
-export function saveSettings(patch) { settings = { ...settings, ...patch }; store.set("asl.settings", settings); }
+let urlDemo = false; // demo opened with ?demo: only for this visit, never saved
+export function setUrlDemo(v) { settings.demo = v; urlDemo = true; }
+export function saveSettings(patch) {
+  if ("demo" in patch) urlDemo = false;
+  settings = { ...settings, ...patch };
+  store.set("asl.settings", urlDemo ? { ...settings, demo: store.get("asl.settings", {}).demo || "" } : settings);
+}
 
 export const S = {
   ofp: null, ofpErr: "", ofpAt: 0, pilot: null, prefile: null, feedOk: null, feedAt: 0,

@@ -83,6 +83,13 @@ if (chromium) {
       if (text.trim().length < 20) errs.push(`${app}/${tab || ""} is empty`);
       if (shotsAt) await page.screenshot({ path: `${shotsAt}/${name}-${app}${tab ? "-" + tab : ""}.png` });
     }
+    // real clicks in Settings: a button must change its setting (all clicks once went to the wallpaper)
+    await page.evaluate(() => window.ASL.openApp("settings")); await page.waitForTimeout(300);
+    await page.click('#app-settings [data-seg="unit"][data-v="lb"]'); await page.waitForTimeout(150);
+    await page.click('#app-settings [data-wp="dusk"]'); await page.waitForTimeout(150);
+    const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("asl.settings") || "{}"));
+    if (saved.unit !== "lb" || saved.wall !== "dusk") errs.push(`settings clicks not saved: unit ${saved.unit}, wall ${saved.wall}`);
+    if (saved.demo) errs.push("demo from the URL was saved");
     await page.click("#homebar"); await page.waitForTimeout(80); await page.click("#homebar"); await page.waitForTimeout(500);
     if (!(await page.$("#switcher:not(.gone) .sw-card"))) errs.push("app switcher did not open");
     errs.length ? fail(`${name}: ${errs.join(" | ")}`) : ok(`${name}: all apps and tabs`);

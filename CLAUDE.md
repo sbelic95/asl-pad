@@ -4,7 +4,7 @@ Crew-Pad (iPad-Web-App) für **virtuelle Air-Serbia-Flüge** im MSFS 2024 mit Si
 Der Nutzer (sbelic95) schreibt Deutsch; antworte auf Deutsch. Die Oberfläche ist Englisch und umschaltbar auf Srpski und Deutsch.
 
 - Repo: `sbelic95/asl-pad`, Branch `main`. Seite: `https://sbelic95.github.io/asl-pad/` (GitHub Pages aus `main`, Ordner `/`)
-- Ausprobieren: `?demo` (JU500 LYBE–KJFK im Flug), `?demo=ground` (am Gate), dazu `&lang=sr|de`, `&app=fly&tab=perf`, `&unlock`
+- Ausprobieren: `?demo` (JU500 LYBE–KJFK im Flug), `?demo=ground` (am Gate; beides nur für diesen Aufruf, `?demo=off` löscht eine gespeicherte Demo), dazu `&lang=sr|de`, `&app=fly&tab=perf`, `&unlock`
 - Schwesterprojekt: `sbelic95/vdgs-slot-board` (VDGS, Kabinenanzeige `/airserbia/`). Von dort kommen Standdaten
   (Branch `stands`), Pisten (Branch `atc`) und VATSIM-UK-Stände (Branch `data`); `js/stands.js` ist aus dessen `index.html` übernommen.
 - Was die Apps können und wie der Code aufgebaut ist: [README.md](README.md). Lizenzen: [LIZENZEN.md](LIZENZEN.md).
