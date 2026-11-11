@@ -17,6 +17,7 @@ am besten als App auf dem Home-Bildschirm (Safari → Teilen → Zum Home-Bildsc
 | **ASL Ops** | Dienst-Leiste, To-do, Abflug (Stand, Piste, SID, vIFF-CDM: EOBT/TOBT/TSAT/TTOT/CTOT, Frequenzen) und Ankunft (Stand-Prognose, Piste, STAR, ATIS, Frequenzen). Reiter **Flotte** mit den SimBrief-Airframes der A319 YU-APA bis YU-APE und eigenen Flugzeugen. |
 | **Logbuch** | Jeder Flug wird beim On-Block eingetragen. Statistik, Details mit Streckenkarte, Flug von Hand eintragen, CSV-Export, Sicherung und Import (JSON). |
 | **Cabin / VDGS** | Öffnet die Air-Serbia-Kabinenanzeige und das VDGS aus `vdgs-slot-board` mit dem Rufzeichen des Flugs. |
+| **Home-Knopf** | Oben links in jeder App; führt zurück zum Home-Bildschirm (wie ein Tipp auf den Home-Balken unten). |
 | **Einstellungen** | SimBrief-Name oder Pilot-ID, VATSIM-CID, Sprache (Englisch, Srpski, Deutsch), kg / t / lb, hell / dunkel, **Hintergrund** für Sperr- und Home-Bildschirm (sechs Vorlagen oder ein eigenes Foto vom Gerät, abdunkelbar), Auto-Sperre, Demo. |
 
 Doppeltipp auf den Home-Balken unten öffnet den **App-Umschalter** mit Miniaturen der offenen Apps (Karte nach oben wischen oder × schließt sie).

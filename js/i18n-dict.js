@@ -113,7 +113,7 @@ export const SR = {
   "Wallpaper": "Pozadina", "Background of the lock and home screen. A photo stays on this device only.": "Pozadina zaključanog i početnog ekrana. Fotografija ostaje samo na ovom uređaju.",
   "Night sky": "Noćno nebo", "Stratosphere": "Stratosfera", "Dusk": "Sumrak", "Beacon": "Svetionik", "Polar night": "Polarna noć", "Graphite": "Grafit",
   "My photo": "Moja fotografija", "Choose another photo": "Izaberi drugu fotografiju", "Remove photo": "Ukloni fotografiju", "Dim photo": "Zatamni fotografiju",
-  "Low": "Malo", "High": "Jako", "Wallpaper changed": "Pozadina promenjena", "Photo not saved": "Fotografija nije sačuvana",
+  "Home": "Početna", "Low": "Malo", "High": "Jako", "Wallpaper changed": "Pozadina promenjena", "Photo not saved": "Fotografija nije sačuvana",
   "The photo could not be read or the storage of the browser is full.": "Fotografija ne može da se pročita ili je memorija pregledača puna.",
 };
 export const DE = {
@@ -230,6 +230,6 @@ export const DE = {
   "Wallpaper": "Hintergrund", "Background of the lock and home screen. A photo stays on this device only.": "Hintergrund von Sperr- und Home-Bildschirm. Ein Foto bleibt nur auf diesem Gerät.",
   "Night sky": "Nachthimmel", "Stratosphere": "Stratosphäre", "Dusk": "Abenddämmerung", "Beacon": "Leuchtfeuer", "Polar night": "Polarnacht", "Graphite": "Graphit",
   "My photo": "Eigenes Foto", "Choose another photo": "Anderes Foto wählen", "Remove photo": "Foto entfernen", "Dim photo": "Foto abdunkeln",
-  "Low": "Wenig", "High": "Stark", "Wallpaper changed": "Hintergrund geändert", "Photo not saved": "Foto nicht gespeichert",
+  "Home": "Home", "Low": "Wenig", "High": "Stark", "Wallpaper changed": "Hintergrund geändert", "Photo not saved": "Foto nicht gespeichert",
   "The photo could not be read or the storage of the browser is full.": "Das Foto ließ sich nicht lesen oder der Speicher des Browsers ist voll.",
 };
