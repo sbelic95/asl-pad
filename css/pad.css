@@ -30,6 +30,11 @@ input, select { font: inherit; color: var(--fg); background: var(--panel2); bord
 :root[data-theme="light"] { --wall: radial-gradient(120% 90% at 85% 10%, #cfe0fa 0%, rgba(207, 224, 250, 0) 55%), linear-gradient(160deg, #f4f8fd 0%, #e6eef9 100%); }
 .wall { position: absolute; inset: 0; background: var(--wall); }
 .wall::before { content: ""; position: absolute; inset: 0; background: var(--pattern); opacity: .9; }
+:root[data-wall="photo"] .wall::before, :root[data-wall="photo"] .wall::after { display: none; }
+:root[data-wall="photo"] #lock { background: var(--wall); }
+:root[data-wall="photo"] :is(.hm-greet, .hm-sub, .app-ic > span, .lk-date) { text-shadow: 0 1px 2px rgba(0, 8, 30, .7), 0 0 14px rgba(0, 8, 30, .55); }
+:root[data-wall="photo"] .hm-sub { color: var(--fg); opacity: .9; }
+:root[data-theme="light"][data-wall="photo"] :is(.hm-greet, .hm-sub, .app-ic > span, .lk-date) { text-shadow: 0 0 2px rgba(255, 255, 255, .9), 0 0 14px rgba(255, 255, 255, .8); }
 .wall::after { content: ""; position: absolute; right: -12vmin; bottom: -18vmin; width: 70vmin; height: 70vmin; border-radius: 50%; border: 1px solid rgba(120, 170, 255, .1); box-shadow: 0 0 0 7vmin rgba(120, 170, 255, .03), 0 0 0 14vmin rgba(120, 170, 255, .02); }
 .status { position: absolute; top: 0; left: 0; right: 0; height: 30px; display: flex; align-items: center; gap: 14px; padding: 0 22px; font: 600 13px var(--f-ui); z-index: 50; color: var(--fg); pointer-events: none; }
 .status .sp { flex: 1; }
@@ -307,3 +312,12 @@ a.btn { text-decoration: none; color: inherit; } a.btn.pri { color: #fff; }
   .app-head { flex-wrap: wrap; } .tabs { order: 3; width: 100%; } .set-row { grid-template-columns: 1fr; }
   .tabs.none { display: none; } .wx-grid { grid-template-columns: 1fr; } .fixpop .kv { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ---------- settings: wallpaper ---------- */
+.walls { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 10px; margin: 6px 0 4px; }
+.wtile { display: flex; flex-direction: column; gap: 6px; align-items: stretch; text-align: center; font: 600 12.5px var(--f-ui); color: var(--dim); }
+.wtile i { display: block; aspect-ratio: 1180 / 820; border-radius: 12px; border: 2px solid var(--line2); background-size: cover; background-position: center; position: relative; overflow: hidden; }
+.wtile i.add { display: grid; place-items: center; background: var(--panel2); font: 300 34px/1 var(--f-ui); color: var(--dim); }
+.wtile.on { color: var(--fg); } .wtile.on i { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59, 140, 255, .3); }
+.wall-row { padding: 10px 0 12px; border-bottom: 1px solid var(--line); }
+.wall-btns { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
