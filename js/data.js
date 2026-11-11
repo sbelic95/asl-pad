@@ -22,6 +22,8 @@ export function saveSettings(patch) {
   settings = { ...settings, ...patch };
   store.set("asl.settings", urlDemo ? { ...settings, demo: store.get("asl.settings", {}).demo || "" } : settings);
 }
+// once: a demo that the ?demo link saved by mistake (11.11.2026) is switched off
+if (!store.get("asl.fix.demo")) { store.set("asl.fix.demo", 1); if (settings.demo) saveSettings({ demo: "" }); }
 
 export const S = {
   ofp: null, ofpErr: "", ofpAt: 0, pilot: null, prefile: null, feedOk: null, feedAt: 0,

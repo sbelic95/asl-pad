@@ -51,13 +51,14 @@ function frameOf(id) {
   const [first, ...rest] = (meta?.name || A.name).split(" ");
   el = document.createElement("div");
   el.className = "app"; el.id = "app-" + id;
-  el.innerHTML = `<div class="app-head"><div class="app-name"><span class="mini">${APP_ICONS[meta?.icon || id] || ""}</span>${rest.length ? `${esc(first)} <em>${esc(rest.join(" "))}</em>` : esc(t(first))}</div>
+  el.innerHTML = `<div class="app-head"><button class="home-btn" data-act="home" aria-label="${t("Home")}">${I.home}<span>${t("Home")}</span></button><div class="app-name"><span class="mini">${APP_ICONS[meta?.icon || id] || ""}</span>${rest.length ? `${esc(first)} <em>${esc(rest.join(" "))}</em>` : esc(t(first))}</div>
     <div class="tabs">${(A.tabs || []).map(([k, l]) => `<button data-tab="${k}">${esc(t(l))}</button>`).join("")}</div>
     <div class="head-r"><span class="zclock num"></span><button class="rbtn" data-act="theme" title="${t("Light / dark")}">${I.sun}</button><button class="rbtn" data-act="refresh" title="${t("Refresh")}">${I.refresh}</button></div></div>
     <div class="app-body"></div>`;
   if (!A.tabs?.length) el.querySelector(".tabs").classList.add("none");
   if (A.frame) el.querySelector(".app-body").style.padding = "0";
   el.querySelector(".tabs").addEventListener("click", (e) => { const b = e.target.closest("[data-tab]"); if (b) { ui.tab[id] = b.dataset.tab; renderApp(id); } });
+  el.querySelector(".home-btn").addEventListener("click", () => goHome());
   el.querySelector(".head-r").addEventListener("click", async (e) => {
     const b = e.target.closest("[data-act]"); if (!b) return;
     if (b.dataset.act === "theme") { saveSettings({ theme: settings.theme === "light" ? "dark" : "light" }); applyTheme(); renderAll(); }
@@ -236,5 +237,9 @@ renderLock($("lock")); renderHome($("home")); renderStatus();
 if (q.has("unlock") || q.get("app")) { $("lock").classList.add("gone"); ui.view = "home"; }
 if (q.get("app")) openApp(q.get("app"), q.get("tab") || undefined);
 startPolling();
-if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
+if ("serviceWorker" in navigator && location.protocol === "https:") {
+  // a new version took over (sw.js changed): load it once, so a fix shows up without opening the pad twice
+  if (navigator.serviceWorker.controller) navigator.serviceWorker.addEventListener("controllerchange", () => location.reload(), { once: true });
+  navigator.serviceWorker.register("sw.js", { updateViaCache: "none" }).catch(() => {});
+}
 window.ASL = { S, settings, openApp, goHome, emit }; // for the console and tests
