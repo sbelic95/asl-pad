@@ -413,3 +413,15 @@ a.btn { text-decoration: none; color: inherit; } a.btn.pri { color: #fff; }
 .bf-ex > b.hs { background: transparent; color: #d64dff; box-shadow: 0 0 0 1.5px #d64dff; }
 .bf-ul { margin: 0; padding-left: 18px; } .bf-ul li { margin: 6px 0; font-size: 14.5px; line-height: 1.45; }
 @media (max-width: 760px) { .bf-2, .bf-tos { grid-template-columns: 1fr; } .gpanel { width: calc(100% - 28px); top: auto; bottom: 14px; max-height: 45%; } }
+
+/* ---------- 1.6: map tools, SIGMETs, cold temperature ---------- */
+.measure-info { position: absolute; z-index: 600; bottom: 205px; left: 50%; transform: translateX(-50%); background: var(--glass); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--line2); border-radius: 12px; padding: 8px 14px; font: 600 14px var(--f-num); white-space: nowrap; } .measure-info b { color: #ffb21f; font-size: 17px; }
+.mapbox.measuring { cursor: crosshair; }
+.ring-lbl { font: 700 10.5px var(--f-cond); color: #9cc4ff; text-shadow: 0 1px 2px #000; text-align: center; background: none; border: 0; }
+.dct-row { display: flex; align-items: center; gap: 12px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 14px; flex-wrap: wrap; }
+.dct-row .btn.pri { background: #b0369a; border-color: #b0369a; }
+.sg-card .sg-row { display: grid; grid-template-columns: 12px 1fr; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--line); } .sg-card .sg-row:last-child { border-bottom: 0; }
+.sg-row i { width: 12px; height: 12px; border-radius: 3px; margin-top: 4px; }
+.sg-card { grid-column: 1 / -1; }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--bg2); color: var(--fg); } .leaflet-popup-content { font: 13px var(--f-ui); }

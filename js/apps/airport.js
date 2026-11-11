@@ -116,6 +116,8 @@ function briefHtml(icao) {
     <div class="card"><div class="lbl" style="margin-bottom:6px">${t("Runways")}</div><table class="t"><thead><tr><th>RWY</th><th>MAG</th><th>${t("Size")}</th><th>TORA</th><th>LDA</th><th>${t("Lights")}</th><th></th></tr></thead><tbody>${rw}</tbody></table></div>
     <div class="card"><div class="lbl" style="margin-bottom:8px">${t("Take-off run available from intersections")}</div><div class="bf-tos">${to}</div></div>
     <div class="bf-2">${ex}</div>
+    ${b.procedures && Object.keys(b.procedures).length ? `<div class="card"><div class="lbl" style="margin-bottom:8px">${t("Departure procedures of the airline")}</div>${Object.entries(b.procedures).map(([r, p]) =>
+      `<div class="bf-ex"><b>${esc(r)}</b><span>${p.nadp ? `<b>${t("Noise abatement (NADP)")}:</b> ${esc(loc(p.nadp))}<br>` : ""}${p.eosid ? `<b>${t("Engine failure (EOSID)")}:</b> ${esc(loc(p.eosid))}` : ""}</span></div>`).join("")}</div>` : ""}
     <div class="card"><div class="lbl" style="margin-bottom:8px">${t("Hot spots")}</div>${hs}</div>
     ${sec}
     <p class="dim" style="font-size:12.5px;margin:4px 2px 0">${esc(loc(b.source))}</p></div>`;

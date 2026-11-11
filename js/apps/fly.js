@@ -9,6 +9,7 @@ import { I } from "../icons.js";
 import { PHASE } from "../lock.js";
 import { renderMap, dropMap } from "./map.js";
 import { perfView, sel as perfSel } from "./perf.js";
+import { routeSigmetsHtml } from "../sigmet.js";
 
 export const name = "ASL Fly";
 export const tabs = [["overview", "Overview"], ["times", "Times"], ["plan", "Flight plan"], ["map", "Map"], ["wx", "Weather"], ["fuel", "Fuel"], ["perf", "Performance"]];
@@ -212,7 +213,7 @@ const VIEW = {
   },
 
   wx(o, d, now) {
-    return `<div class="grid wx-grid">${airportsOfFlight(o).map((a) => {
+    return `<div class="grid wx-grid">${routeSigmetsHtml(o, now)}${airportsOfFlight(o).map((a) => {
       const w = wxOf(a.icao), at = (a === o.dep || a === o.dest) ? atisOf(a.icao) : null;
       const age = w?.at ? Math.round((now - w.at) / 60e3) : null;
       return `<div class="card wx-card"><div class="h"><span class="icao">${esc(a.icao)}</span>${cat(w)}<span class="pill">${esc(roleOf(o, a))}</span><span class="dim" style="margin-left:auto;font-size:12px">${esc(cityOf(a))}</span></div>

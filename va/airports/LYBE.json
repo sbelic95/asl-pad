@@ -1,5 +1,5 @@
 {
-  "_help": "Brifing za aerodrom u aplikaciji „Aerodrom“. Tekstovi na en/sr (de koristi en). Samo činjenice sa važećih karata, sopstvenim rečima; za simulaciju letenja. Izmeni na GitHubu kad se karte promene.",
+  "_help": "Brifing za aerodrom u aplikaciji „Aerodrom“. Tekstovi na en/sr (de koristi en). Samo činjenice sa važećih karata, sopstvenim rečima; za simulaciju letenja. Izmeni na GitHubu kad se karte promene. Procedure kompanije po pisti (NADP, EOSID) upiši u \"procedures\", npr. \"procedures\": {\"12L\": {\"nadp\": {\"en\": \"…\", \"sr\": \"…\"}, \"eosid\": {\"en\": \"…\", \"sr\": \"…\"}}} – samo stvarne procedure kompanije.",
   "icao": "LYBE",
   "name": "Belgrade Nikola Tesla",
   "elev": 336,

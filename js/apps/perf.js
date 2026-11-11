@@ -4,6 +4,7 @@ import { S, wxOf, runwayOf } from "../data.js";
 import { t, nf } from "../i18n.js";
 import { esc, rad, clamp } from "../util.js";
 import { fmtW } from "../units.js";
+import { coldHtml } from "../cold.js";
 
 export const sel = { key: "", to: "", ldg: "" }; // runway the pilot picked, per flight
 
@@ -55,10 +56,10 @@ export function ldgPick(o) {
 
 export function perfView(o) {
   const T = o.tlr;
-  if (!T || (!T.to?.rwys?.length && !T.ldg?.rwys?.length && !T.ldg?.dry)) return noTlr();
+  if (!T || (!T.to?.rwys?.length && !T.ldg?.rwys?.length && !T.ldg?.dry)) return noTlr() + coldHtml(o);
   const k = o.id + o.callsign;
   if (sel.key !== k) { sel.key = k; sel.to = ""; sel.ldg = ""; }
-  return `${T.to?.rwys?.length ? takeoff(o, T.to) : ""}${T.ldg ? landing(o, T.ldg) : ""}
+  return `${T.to?.rwys?.length ? takeoff(o, T.to) : ""}${T.ldg ? landing(o, T.ldg) : ""}${coldHtml(o)}
     <p class="dim" style="font-size:12px;margin:14px 2px 0">${t("Values from SimBrief's runway analysis for your OFP. Check them against your aircraft (for example the EFB of the Fenix) before you use them – for flight simulation only.")}</p>`;
 }
 
