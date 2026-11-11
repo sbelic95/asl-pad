@@ -15,6 +15,9 @@
   .hero { position: absolute; left: 40px; top: 40px; width: 430px; height: 520px; border-radius: 30px; padding: 40px 38px;
     background: linear-gradient(150deg, #f0102c 0%, #e3001f 45%, #a8001a 100%); box-shadow: 0 24px 60px rgba(0, 0, 0, .45); display: flex; flex-direction: column; overflow: hidden; }
   .hero::after { content: ""; position: absolute; right: -90px; bottom: -110px; width: 330px; height: 330px; border-radius: 50%; border: 34px solid rgba(255, 255, 255, .08); }
+  .logo { background: #fff; border-radius: 16px; padding: 14px 18px; margin: -6px 0 22px; align-self: flex-start; box-shadow: 0 8px 22px rgba(0, 0, 0, .25); }
+  .logo img { display: block; height: 58px; width: auto; max-width: 330px; object-fit: contain; }
+  .hero.has-logo h1 { font-size: 76px; margin-top: 16px; } .hero.has-logo .open { margin-top: 10px; } .hero.has-logo .logo { margin-bottom: 16px; }
   .brand { display: flex; align-items: center; gap: 14px; font: 700 22px "Roboto Condensed", sans-serif; letter-spacing: .14em; }
   .brand img { width: 52px; height: 52px; border-radius: 13px; }
   .brand small { display: block; font: 500 15px "Roboto", sans-serif; letter-spacing: .02em; opacity: .85; }
@@ -40,6 +43,7 @@
 <body>
 <div class="bg"></div>
 <div class="hero">
+  <div class="logo" id="logo" hidden></div>
   <div class="brand"><img src="../icons/icon.svg" alt=""><div>AIR SERBIA VIRTUAL<small id="sub"></small></div></div>
   <h1 id="title"></h1>
   <div class="date" id="date"></div>
@@ -54,7 +58,11 @@
 <script type="module">
   import { setLang, t } from "../js/i18n.js";
   import { latest, relDate, groupsHtml, cardTexts } from "../js/whatsnew.js";
-  const lang = new URLSearchParams(location.search).get("lang") || "sr";
+  const qs = new URLSearchParams(location.search), lang = qs.get("lang") || "sr";
+  // the Air Serbia logo: a file given to whatsnew-card.mjs (--logo), else loaded at render time like in the pad; never stored in the repo
+  { const img = new Image(); img.alt = "Air Serbia"; img.referrerPolicy = "no-referrer";
+    img.onload = () => { const l = document.getElementById("logo"); l.appendChild(img); l.hidden = false; document.querySelector(".hero").classList.add("has-logo"); };
+    img.src = qs.get("logo") || "https://pics.avs.io/480/160/JU.png"; }
   setLang(lang);
   const r = latest(), c = cardTexts(), $ = (id) => document.getElementById(id);
   $("title").textContent = c.title; $("sub").textContent = c.sub; $("date").textContent = relDate(r); $("live").textContent = c.live;
