@@ -8,6 +8,7 @@ import { sheet } from "./sheet.js";
 import { APP_ICONS, I } from "./icons.js";
 import { flightWidget, timesWidget, todayWidget, liveHtml } from "./lock.js";
 import { cityOf } from "./tz.js";
+import { planCard, suggestCard } from "./booking.js";
 
 export const HOME_APPS = [
   { id: "fly", name: "ASL Fly", icon: "fly" }, { id: "ops", name: "ASL Ops", icon: "ops" }, { id: "apt", name: "Airport", icon: "airport" }, { id: "log", name: "Logbook", icon: "log" },
@@ -34,13 +35,16 @@ export function renderHome(el, now = Date.now()) {
     </div>
     <div class="hm-main">
       <div class="hm-apps">${HOME_APPS.map((a) => icon(a, badges[a.id])).join("")}</div>
-      <div class="hm-board">${show("notices") ? noticesCard(now, d) : ""}${show("events") ? eventsCard(o, now) : ""}</div>
+      <div class="hm-board">${boardOrder().filter(show).map((k) => BOARD[k](o, now, d)).join("")}</div>
     </div>
     <div class="dock">${DOCK.map((id) => icon(HOME_APPS.find((a) => a.id === id), badges[id])).join("")}</div>`;
 }
 
-// cards the pilot can hide (Settings → Home screen)
-export const HOME_CARDS = [["wx", "Weather here"], ["career", "Career"], ["notices", "Notices"], ["events", "Network events"]];
+// cards the pilot can hide (Settings → Home screen); the cards of the board can also be sorted
+export const HOME_CARDS = [["wx", "Weather here"], ["career", "Career"], ["plan", "Flight plan"], ["suggest", "Suggested for you"], ["notices", "Notices"], ["events", "Network events"]];
+const BOARD = { plan: (o, now) => planCard(o, now), suggest: (o, now) => suggestCard(now), notices: (o, now, d) => noticesCard(now, d), events: (o, now) => eventsCard(o, now) };
+export const BOARD_DEFAULT = ["plan", "suggest", "notices", "events"];
+export function boardOrder() { const o = (settings.homeOrder || []).filter((k) => BOARD[k]); return [...o, ...BOARD_DEFAULT.filter((k) => !o.includes(k))]; }
 const show = (k) => !(settings.homeHide || []).includes(k);
 
 // ---------- weather where you are: departure until take-off, then destination ----------

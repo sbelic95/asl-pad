@@ -7,6 +7,18 @@ import { esc } from "./util.js";
 import { APP_ICONS } from "./icons.js";
 
 export const releases = () => [
+  { v: "1.7", date: "2026-11-15", groups: [
+    { icon: "pad", name: "ASL Pad", items: [
+      t("Suggested for you: a flight from our route network – new routes, events at the destination, your most flown type"),
+      t("A free callsign on VATSIM and when you are back in Belgrade"),
+      t("Sort the cards of the home screen, not only hide them"),
+    ] },
+    { icon: "ops", name: "ASL Ops", items: [
+      t("Book a flight in four steps: flight, aircraft and time, SimBrief plan, prefile on VATSIM"),
+      t("Plan card: weather at both ends, stands, fuel from taxi to extra, ZFW, TOW and LDW"),
+      t("Change the block fuel with + and − and see the minutes you land with"),
+    ] },
+  ] },
   { v: "1.6.2", date: "2026-11-11", groups: [
     { icon: "airport", name: "Airport", items: [
       t("Ground map: each stand once, names when you zoom in, your stand highlighted"),

@@ -16,9 +16,10 @@ export const API = {
   notices: "va/notices.json", // written by the airline's staff on GitHub, like the two below
   downloads: "va/downloads.json",
   ranks: "va/ranks.json",
+  routes: "va/routes.json", // route network for the flight suggestions (a proposal until the VA confirms it)
 };
 
-const DEF = { simbrief: "", cid: "", unit: "kg", theme: "dark", wall: "night", wallDim: 0.3, homeHide: [], lock: 10, demo: "" };
+const DEF = { simbrief: "", cid: "", unit: "kg", theme: "dark", wall: "night", wallDim: 0.3, homeHide: [], homeOrder: [], lock: 10, demo: "" };
 export let settings = { ...DEF, ...store.get("asl.settings", {}) };
 // The demo flight is only for the automated test on the developer's own computer (localhost).
 // On the real site it can never be switched on, and a demo saved earlier is switched off.
@@ -37,7 +38,8 @@ export const S = {
   st: null, pr: null, events: [],
   // the airline's notices and tips, and the coming VATSIM events (kept for offline use)
   notices: store.get("asl.notices", null), vatEvents: store.get("asl.vatevents", []),
-  downloads: store.get("asl.downloads", null), ranks: store.get("asl.ranks", null), traffic: [], sigmets: null,
+  downloads: store.get("asl.downloads", null), ranks: store.get("asl.ranks", null), routes: store.get("asl.routes", null), traffic: [], sigmets: null,
+  inUse: new Set(), // ASL callsigns flying or prefiled on VATSIM right now (free callsign for a booking)
 };
 const listeners = new Set();
 export const onChange = (fn) => listeners.add(fn);
@@ -101,7 +103,7 @@ export async function pollFeed() {
     S.feedOk = true; S.feedAt = Date.now();
     S.pilot = o ? demoPilot(o, settings.demo === "ground") : null;
     S.atis = demoAtis(); S.ctrl = demoControllers();
-    S.near = { dep: [], arr: [] }; S.traffic = demoTraffic();
+    S.near = { dep: [], arr: [] }; S.traffic = demoTraffic(); S.inUse = new Set(S.traffic.map((p) => p.callsign).filter((c) => c.startsWith("ASL")));
     afterPosition(); return;
   }
   try {
@@ -111,6 +113,7 @@ export async function pollFeed() {
     const cs = o?.callsign;
     S.pilot = d.pilots.find((p) => (cid && p.cid === cid) || (!cid && cs && p.callsign === cs)) || null;
     S.prefile = S.pilot ? null : d.prefiles.find((p) => (cid && p.cid === cid) || (cs && p.callsign === cs)) || null;
+    S.inUse = new Set([...d.pilots, ...d.prefiles].map((p) => p.callsign).filter((c) => /^ASL/.test(c)));
     const apts = [o?.dep?.icao, o?.dest?.icao].filter(Boolean);
     S.atis = d.atis.filter((a) => apts.some((x) => a.callsign.startsWith(x + "_")));
     S.ctrl = d.controllers.filter((c) => c.facility > 0 && c.frequency !== "199.998");
@@ -225,7 +228,7 @@ export async function loadStandsFor(a) {
 }
 // notices and tips of the airline (va/notices.json) and the coming VATSIM events
 export async function pollNotices() {
-  await Promise.all(["notices", "downloads", "ranks"].map(async (k) => {
+  await Promise.all(["notices", "downloads", "ranks", "routes"].map(async (k) => {
     try { const n = await getJSON(API[k]); if (n) { S[k] = n; store.set("asl." + k, n); } } catch {}
   }));
   emit();

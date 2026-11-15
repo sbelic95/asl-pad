@@ -6,6 +6,7 @@ import { esc, hhmmz, localHM, dur, store } from "../util.js";
 import { I } from "../icons.js";
 import { tzOf, cityOf } from "../tz.js";
 import { sheet } from "../sheet.js";
+import { planCard, suggestCard, bookingClick } from "../booking.js";
 
 export const name = "ASL Ops";
 export const tabs = [["ops", "Operations"], ["fleet", "Fleet"]];
@@ -35,6 +36,7 @@ export function summary() {
 }
 
 function onClick(e) {
+  if (bookingClick(e)) { render(e.target.closest(".app-body") || document.querySelector("#app-ops .app-body"), C); return; }
   const a = e.target.closest("[data-open]");
   if (a && !a.closest("a")) { C.open(a.dataset.open, a.dataset.tab || undefined); return; }
   const b = e.target.closest("[data-do]"); if (!b) return;
@@ -69,7 +71,7 @@ function ops(now) {
       <div><b>${esc(a.title)}</b><div class="dim" style="font-size:13px">${esc(a.text || "")}</div></div>
       ${a.link ? `<a class="btn small" href="${esc(a.link)}" target="_blank" rel="noopener">${t("Open")}</a>` : a.app && a.app !== "ops" ? `<button class="btn small" data-open="${a.app}" data-tab="${a.tab || ""}">${t("Open")}</button>` : "<span></span>"}</div>`).join("")
     : `<div class="dim" style="padding:10px 0">${t("Nothing to do right now.")}</div>`}</div>`;
-  if (!o) return todo;
+  if (!o) return `<div class="ops-book">${suggestCard(now)}</div><div style="margin-top:14px">${todo}</div>`;
   const st = S.st, d = derived(now), T = o.times;
   const report = T.out ? T.out - 60 * 60e3 : null;
   const duty = `<div class="duty"><div><div class="lbl">${t("Duty")} · ${esc(o.iataNo || o.callsign)}</div><div class="legs">${esc(o.dep.icao)} – ${esc(o.dest.icao)}</div>
@@ -110,7 +112,7 @@ function ops(now) {
       <div class="lbl" style="margin:14px 0 2px">${t("Frequencies")}</div>${freqs(o.dest.icao)}
       ${wxLine(o.dest.icao)}
       <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn small" data-open="vdgs">${t("Docking guidance (VDGS)")}</button><button class="btn small" data-open="cabin">${t("Cabin screen")}</button></div></div>`;
-  return duty + `<div style="margin-top:14px">${todo}</div><div class="ops-cols">${dep}${arr}</div>`;
+  return duty + `<div class="ops-book">${planCard(o, now)}</div><div style="margin-top:14px">${todo}</div><div class="ops-cols">${dep}${arr}</div>`;
 }
 
 // ---------- fleet ----------
