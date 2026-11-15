@@ -98,7 +98,8 @@ Lizenzen der verwendeten Bibliotheken und Daten: [LIZENZEN.md](LIZENZEN.md).
 - **Vorschlag für dich** (Home und ASL Ops, `js/booking.js`): ein Flug aus `va/routes.json` – zuerst zurück nach Belgrad, wenn der letzte
   Logbuch-Flug woanders endete; sonst bevorzugt VATSIM-Events am Ziel (nächste 12 h), noch nicht geflogene Strecken und den meistgeflogenen Typ.
   Dazu ein freies Rufzeichen (nicht online und nicht vorab angemeldet auf VATSIM, `S.inUse`) und wann man zurück in Belgrad ist (grobe Blockzeit).
-- `va/routes.json` ist ein **Vorschlag** des Streckennetzes ab Belgrad, bis die VA-Leitung ihn bestätigt (wie `ranks.json`).
+- `va/routes.json`: **nur das Air-Serbia-Netz** (`airports` + `routes`, jede Strecke in beide Richtungen, `season` summer/winter), ab Belgrad und Niš.
+  Vorschläge und Buchung erlauben nichts anderes (Rufzeichen nur ASL…). Ein **Vorschlag**, bis die VA-Leitung ihn bestätigt (wie `ranks.json`).
 - **Buchung** in vier Schritten: Flug → Flugzeug, Zeit und Rufzeichen → SimBrief öffnet sich ausgefüllt (`dispatch.simbrief.com/options/custom`) →
   Plan laden → in der Plan-Karte bei VATSIM vorab anmelden (Link aus dem OFP). Die Buchung liegt in `asl.booking`.
 - **Plan-Karte**: Wetter an beiden Enden, Stände, Sprit (Rollen, Strecke, Reserven, Extra mit Minuten), ZFW/TOW/LDW gegen die Höchstwerte.

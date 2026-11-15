@@ -1,5 +1,5 @@
 // Flight suggestions, booking and the plan check.
-// Suggestions come from the route list of the airline (va/routes.json, a proposal until the VA confirms it), the logbook
+// Only the Air Serbia network: suggestions and bookings come from va/routes.json (a proposal until the VA confirms it), the logbook
 // (where you are, your most flown type, routes you have not flown), the coming VATSIM events and the callsigns in use on VATSIM.
 // Booking: flight, aircraft, time and callsign → SimBrief makes the plan (prefilled) → the pad loads it → prefile on VATSIM.
 // The plan card shows fuel and weights of the SimBrief OFP; the pilot can change the block fuel with + and −
@@ -18,10 +18,19 @@ const DAY = 864e5;
 const hash = (s) => [...String(s)].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
 const blockMin = (nm) => Math.round(25 + nm / 7.3); // rough block time: taxi, climb and descent, ~440 kt in cruise
 const quarter = (ms) => Math.ceil(ms / 9e5) * 9e5;
-const routeList = () => S.routes?.routes || [];
-const base = () => S.routes?.base || { icao: "LYBE", name: "Belgrade", lat: 44.82, lon: 20.31 };
-const posOf = (icao) => (icao === base().icao ? [base().lat, base().lon] : (() => { const r = routeList().find((x) => x.to === icao); return r ? [r.lat, r.lon] : null; })());
-const nameOf = (icao) => (icao === base().icao ? base().name : routeList().find((x) => x.to === icao)?.name || icao);
+// the Air Serbia network (va/routes.json): airports and routes, each route both ways; seasonal ones only in their season
+const NET = () => S.routes?.airports && S.routes?.routes ? S.routes : { base: "LYBE", airports: {}, routes: [] };
+const home = () => NET().base || "LYBE";
+const apt = (icao) => NET().airports[icao] || null;
+const posOf = (icao) => (apt(icao) ? [apt(icao).lat, apt(icao).lon] : null);
+const nameOf = (icao) => apt(icao)?.name || icao;
+const season = (now) => { const m = new Date(now).getUTCMonth(); return m >= 3 && m <= 9 ? "summer" : "winter"; };
+export function legs(now = Date.now()) {
+  const se = season(now);
+  return NET().routes.filter((r) => !r.season || r.season === se).flatMap((r) => [{ dep: r.from, dest: r.to, r }, { dep: r.to, dest: r.from, r }]);
+}
+const legOf = (dep, dest, now) => legs(now).find((l) => l.dep === dep && l.dest === dest) || null;
+export const inNetwork = (dep, dest) => !!legOf(dep, dest);
 export const fleetAll = () => [...FLEET, ...store.get("asl.fleet", [])];
 
 // a callsign that is neither flying nor prefiled on VATSIM right now (ASL + 3 digits, stable for a route)
@@ -41,71 +50,78 @@ function topType() {
 // events on VATSIM at an airport in the next 12 hours
 const eventAt = (icao, now) => (S.vatEvents || []).find((e) => (e.airports || []).includes(icao) && Date.parse(e.end) > now && Date.parse(e.start) < now + 12 * 36e5);
 
-// ---------- suggestions ----------
+// ---------- suggestions: only routes of the Air Serbia network ----------
 export function suggestions(now = Date.now()) {
-  const R = routeList(); if (!R.length) return [];
-  const home = base().icao, log = logbook(), last = log[0], type = topType();
-  const flown = new Set(log.flatMap((e) => [e.dep + e.arr, e.arr + e.dep]));
-  const here = last?.arr && last.arr !== home && R.some((r) => r.to === last.arr) ? last.arr : home;
+  const L = legs(now); if (!L.length) return [];
+  const base = home(), log = logbook(), last = log[0], type = topType();
+  const flown = new Set(log.map((e) => e.dep + e.arr));
+  // where the aircraft is: where your last flight ended, if that is in the network
+  const here = last?.arr && L.some((l) => l.dep === last.arr) ? last.arr : base;
   const off = quarter(now + 40 * 60e3), dayKey = Math.floor(now / DAY);
-  const make = (dep, dest, r) => {
-    const a = posOf(dep), b = posOf(dest), nm = a && b ? Math.round(distNm(a, b)) : 0, blk = blockMin(nm) * 60e3;
-    const types = r?.types?.length ? r.types : ["A319"], ac = type && types.includes(type) ? type : types[0];
-    const ev = eventAt(dest, now), isNew = !flown.has(dep + dest), reasons = [];
-    let score = (hash(dest + dayKey) % 100) / 100;
+  const make = (l) => {
+    const { dep, dest, r } = l, a = posOf(dep), b = posOf(dest), nm = a && b ? Math.round(distNm(a, b)) : 0, blk = blockMin(nm) * 60e3;
+    const types = r.types?.length ? r.types : ["A319"], ac = type && types.includes(type) ? type : types[0];
+    const ev = eventAt(dest, now), reasons = [];
+    let score = (hash(dep + dest + dayKey) % 100) / 100;
+    if (dest === base && dep !== base) { score += 10; reasons.push(["home", t("Back to {city} from where you landed last", { city: nameOf(base) })]); }
     if (ev) { score += 3; reasons.push(["ev", t("Event at {icao}: {name}", { icao: dest, name: ev.name })]); }
-    if (isNew) { score += 2; reasons.push(["new", t("A route you have not flown yet")]); }
+    if (!flown.has(dep + dest)) { score += 2; reasons.push(["new", t("A route you have not flown yet")]); }
     if (type && ac === type) { score += 1; reasons.push(["type", t("Your most flown type lately: {t}", { t: type })]); }
-    const backBy = dep === home ? off + blk * 2 + 50 * 60e3 : off + blk;
+    const backBy = dep === base ? off + blk * 2 + 50 * 60e3 : off + blk;
     return { dep, dest, nm, type: ac, off, block: blk, arr: off + blk, backBy, callsign: freeCallsign(dep + dest), reasons, score, event: ev };
   };
-  if (here !== home) { // first bring the aircraft home
-    const s = make(here, home, R.find((r) => r.to === here)); s.score += 10; s.reasons.unshift(["home", t("Back to {city} from where you landed last", { city: base().name })]);
-    return [s, ...R.filter((r) => r.to !== here).map((r) => make(home, r.to, r)).sort((a, b) => b.score - a.score).slice(0, 5)];
-  }
-  return R.map((r) => make(home, r.to, r)).sort((a, b) => b.score - a.score).slice(0, 6);
+  return L.filter((l) => l.dep === here).map(make).sort((a, b) => b.score - a.score).slice(0, 6);
 }
 
 export function suggestCard(now = Date.now()) {
   const list = suggestions(now);
   if (!list.length) return `<div class="hb-card bk-sug"><div class="lbl">${t("Suggested for you")}</div><div class="dim hb-empty">${t("Loading the route network…")}</div></div>`;
   const i = (store.get("asl.sugIdx", 0) || 0) % list.length, s = list[i], free = callsignFree(s.callsign);
-  const home = base().icao;
-  return `<div class="hb-card bk-sug"><div class="bk-sug-top"><div class="lbl">${t("Suggested for you")}</div><span class="dim">${i + 1}/${list.length}</span></div>
+  return `<div class="hb-card bk-sug"><div class="bk-sug-top"><div class="lbl">Air Serbia · ${t("Suggested for you")}</div><span class="dim">${i + 1}/${list.length}</span></div>
     <div class="bk-legs"><div><b>${esc(s.dep)}</b><span>${esc(nameOf(s.dep))}</span></div>
       <div class="bk-line"><span>${hhmmz(s.off)}</span><i></i><span>${dur(s.block)} · ${nf(s.nm)} NM</span><i></i><span>${hhmmz(s.arr)}</span></div>
       <div class="r"><b>${esc(s.dest)}</b><span>${esc(nameOf(s.dest))}</span></div></div>
     <div class="bk-chips"><span class="bk-chip">${esc(s.type)}</span><span class="bk-chip ${free ? "ok" : "bad"}">${esc(s.callsign)} ${free ? "✓" : "✗"}</span>
-      ${s.dep === home ? `<span class="bk-chip">${t("Back in {city} by {t}", { city: base().name, t: hhmmz(s.backBy) })}</span>` : ""}</div>
+      ${s.dep === home() ? `<span class="bk-chip">${t("Back in {city} by {t}", { city: nameOf(home()), t: hhmmz(s.backBy) })}</span>` : ""}</div>
     ${s.reasons.length ? `<ul class="bk-why">${s.reasons.map(([k, x]) => `<li class="${k}">${esc(x)}</li>`).join("")}</ul>` : ""}
     <div class="bk-act"><button class="btn small pri" data-bk="book">${t("Book this flight")}</button><button class="btn small" data-bk="next">${t("Another one")}</button>
-      <button class="btn small" data-bk="new">${t("Own flight")}</button></div></div>`;
+      <button class="btn small" data-bk="new">${t("Pick a route")}</button></div></div>`;
 }
 
-// ---------- booking ----------
+// ---------- booking: only Air Serbia routes and ASL callsigns ----------
 function simbriefUrl(b) {
   const m = /^([A-Z]{3})(\w+)$/.exec(b.callsign) || [];
   const d = new Date(b.off);
-  const q = { orig: b.dep, dest: b.dest, type: b.type, reg: b.reg || "", airline: m[1] || "ASL", fltnum: m[2] || "", callsign: b.callsign,
+  const q = { orig: b.dep, dest: b.dest, type: b.type, reg: b.reg || "", airline: "ASL", fltnum: m[2] || "", callsign: b.callsign,
     deph: String(d.getUTCHours()), depm: String(d.getUTCMinutes()) };
   return SB + "?" + new URLSearchParams(Object.entries(q).filter(([, v]) => v !== "")).toString();
 }
 export const booking = () => store.get("asl.booking", null);
+const CS_OK = /^ASL\d{1,4}[A-Z]{0,2}$/;
 
 export function openBooking(pre) {
-  const s = pre || { dep: base().icao, dest: "", type: "A319", off: quarter(Date.now() + 40 * 60e3), callsign: freeCallsign(String(Date.now() / DAY | 0)) };
-  const regs = fleetAll().filter((a) => a.type === s.type || !s.type);
+  const L = legs(), froms = [...new Set(L.map((l) => l.dep))].sort((a, b) => (a === home() ? -1 : b === home() ? 1 : nameOf(a).localeCompare(nameOf(b))));
+  const s0 = pre && L.some((l) => l.dep === pre.dep && l.dest === pre.dest) ? pre : { ...(pre || {}), dep: pre && froms.includes(pre.dep) ? pre.dep : home(), dest: "" };
+  const s = { type: "A319", off: quarter(Date.now() + 40 * 60e3), callsign: freeCallsign(String(Date.now() / DAY | 0)), ...s0 };
+  if (!CS_OK.test(s.callsign || "")) s.callsign = freeCallsign(s.dep + s.dest);
   const hhmm = hhmmz(s.off).slice(0, 5);
-  const opts = fleetAll().map((a) => `<option value="${esc(a.reg)}|${esc(a.type)}" ${a.reg === (s.reg || regs[0]?.reg) ? "selected" : ""}>${esc(a.reg)} · ${esc(a.type)}</option>`).join("");
+  const fromOpts = froms.map((a) => `<option value="${a}" ${a === s.dep ? "selected" : ""}>${esc(nameOf(a))} · ${a}</option>`).join("");
+  const toOpts = (dep, sel) => L.filter((l) => l.dep === dep).sort((a, b) => nameOf(a.dest).localeCompare(nameOf(b.dest)))
+    .map((l) => `<option value="${l.dest}" ${l.dest === sel ? "selected" : ""}>${esc(nameOf(l.dest))} · ${l.dest}${l.r.season ? " · " + (l.r.season === "summer" ? t("summer") : t("winter")) : ""}</option>`).join("");
+  const acOpts = (dep, dest, reg) => {
+    const types = legOf(dep, dest)?.r.types || [], list = fleetAll(), fit = list.filter((a) => !types.length || types.includes(a.type));
+    const pick = reg && fit.some((a) => a.reg === reg) ? reg : fit[0]?.reg;
+    return (fit.length ? fit : list).map((a) => `<option value="${esc(a.reg)}|${esc(a.type)}" ${a.reg === pick ? "selected" : ""}>${esc(a.reg)} · ${esc(a.type)}</option>`).join("")
+      + types.filter((ty) => !list.some((a) => a.type === ty)).map((ty) => `<option value="|${esc(ty)}">${esc(ty)}</option>`).join("");
+  };
   const steps = (n) => `<div class="bk-steps">${[t("Flight"), t("Aircraft and time"), t("Flight plan"), t("Prefile")].map((x, k) => `<div class="${k < n ? "done" : k === n ? "on" : ""}"><i>${k + 1}</i><span>${esc(x)}</span></div>`).join("")}</div>`;
-  const form = `${steps(1)}<h2 style="margin:6px 0 12px">${t("Book a flight")}</h2>
+  const form = `${steps(1)}<h2 style="margin:6px 0 4px">${t("Book a flight")}</h2><p class="dim" style="font-size:13px;margin:0 0 12px">${t("Only routes of the Air Serbia network.")}</p>
     <div class="bk-form">
-      <label><div class="lbl">${t("From")}</div><input name="dep" value="${esc(s.dep)}" maxlength="4" autocapitalize="characters"></label>
-      <label><div class="lbl">${t("To")}</div><input name="dest" value="${esc(s.dest)}" maxlength="4" autocapitalize="characters" list="bk-dests"></label>
-      <datalist id="bk-dests">${routeList().map((r) => `<option value="${esc(r.to)}">${esc(r.name)}</option>`).join("")}</datalist>
-      <label class="w2"><div class="lbl">${t("Aircraft")}</div><select name="ac">${opts}<option value="|${esc(s.type)}">${t("Other aircraft")} (${esc(s.type)})</option></select></label>
+      <label><div class="lbl">${t("From")}</div><select name="dep">${fromOpts}</select></label>
+      <label><div class="lbl">${t("To")}</div><select name="dest">${toOpts(s.dep, s.dest)}</select></label>
+      <label class="w2"><div class="lbl">${t("Aircraft")}</div><select name="ac">${acOpts(s.dep, s.dest, s.reg)}</select></label>
       <label><div class="lbl">${t("Off-block (UTC)")}</div><input name="off" type="time" value="${hhmm}"></label>
-      <label><div class="lbl">${t("Callsign")} <span class="bk-cs"></span></div><input name="cs" value="${esc(s.callsign)}" maxlength="7" autocapitalize="characters"></label>
+      <label><div class="lbl">${t("Callsign")} <span class="bk-cs"></span></div><input name="cs" value="${esc(s.callsign)}" maxlength="8" autocapitalize="characters"></label>
       <div class="w2 dim" style="font-size:12.5px">${t("Network")}: <b>VATSIM</b> · ${t("SimBrief opens with everything filled in. Check it there and press Generate.")}</div>
     </div>
     <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px"><button class="btn" data-close>${t("Cancel")}</button><a class="btn pri" data-go target="_blank" rel="noopener" href="#">${t("Plan in SimBrief")} ↗</a></div>`;
@@ -116,7 +132,7 @@ export function openBooking(pre) {
     if (e.target.closest("[data-load]")) { runJob("simbrief", true).then(() => { emit(); close(); }); return; }
     const go = e.target.closest("[data-go]"); if (!go) return;
     const b = read(box);
-    if (!/^[A-Z]{4}$/.test(b.dep) || !/^[A-Z]{4}$/.test(b.dest) || !/^[A-Z]{3}\w{1,4}$/.test(b.callsign)) { e.preventDefault(); box.querySelectorAll("input").forEach((i) => { if (!i.value.trim()) i.style.borderColor = "var(--red)"; }); return; }
+    if (!inNetwork(b.dep, b.dest) || !CS_OK.test(b.callsign)) { e.preventDefault(); if (!CS_OK.test(b.callsign)) box.querySelector("[name=cs]").style.borderColor = "var(--red)"; return; }
     go.href = simbriefUrl(b); // the link opens SimBrief in a new tab (allowed on the iPad because it is a real tap on a link)
     store.set("asl.booking", { ...b, at: Date.now() });
     setTimeout(() => { box.querySelector(".box").innerHTML = after(b); }, 50);
@@ -129,8 +145,16 @@ export function openBooking(pre) {
     if (off < Date.now() - 60 * 60e3) off += DAY; // a time earlier today means tomorrow
     return { dep: v("dep"), dest: v("dest"), reg, type: type || s.type, off, callsign: v("cs") };
   };
-  const csCheck = () => { const cs = el.querySelector("[name=cs]")?.value.trim().toUpperCase(), sp = el.querySelector(".bk-cs"); if (sp) sp.innerHTML = cs ? (callsignFree(cs) ? `<span class="ok">✓ ${t("free on VATSIM")}</span>` : `<span class="bad">✗ ${t("in use on VATSIM")}</span>`) : ""; };
+  const csCheck = () => {
+    const cs = el.querySelector("[name=cs]")?.value.trim().toUpperCase(), sp = el.querySelector(".bk-cs"); if (!sp) return;
+    sp.innerHTML = !cs ? "" : !CS_OK.test(cs) ? `<span class="bad">✗ ${t("ASL and a number")}</span>` : callsignFree(cs) ? `<span class="ok">✓ ${t("free on VATSIM")}</span>` : `<span class="bad">✗ ${t("in use on VATSIM")}</span>`;
+  };
   el.addEventListener("input", csCheck); csCheck();
+  el.addEventListener("change", (e) => { // the destinations and aircraft follow the departure
+    const f = el.querySelector("[name=dep]"), d = el.querySelector("[name=dest]");
+    if (e.target === f) d.innerHTML = toOpts(f.value, "");
+    if (e.target === f || e.target === d) el.querySelector("[name=ac]").innerHTML = acOpts(f.value, d.value);
+  });
 }
 
 // ---------- the plan card ----------
