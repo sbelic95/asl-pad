@@ -4,7 +4,7 @@ import { t, LANGS, getLang, setLang } from "../i18n.js";
 import { esc, store } from "../util.js";
 import { WALLS, getPhoto, delPhoto, savePhoto } from "../wall.js";
 import { latest } from "../whatsnew.js";
-import { HOME_CARDS } from "../home.js";
+import { HOME_CARDS, boardOrder } from "../home.js";
 
 export const name = "Settings";
 export const tabs = [];
@@ -44,6 +44,8 @@ function page() {
       ${row(t("Look"), "", seg("theme", [["dark", t("Dark")], ["light", t("Light")]], settings.theme))}
       ${wallRow()}
       ${row(t("Home screen"), t("Cards on the home screen. Tap to show or hide."), `<div class="seg">${HOME_CARDS.map(([k, l]) => `<button data-hc="${k}" class="${(settings.homeHide || []).includes(k) ? "" : "on"}">${esc(t(l))}</button>`).join("")}</div>`)}
+      ${row(t("Order of the cards"), t("Which card comes first on the home screen."), `<div class="hc-order">${boardOrder().map((k, i, a) => `<div><span>${esc(t(HOME_CARDS.find((c) => c[0] === k)?.[1] || k))}</span>
+        <button class="btn small" data-hco="${k}" data-dir="-1" ${i ? "" : "disabled"} aria-label="up">▲</button><button class="btn small" data-hco="${k}" data-dir="1" ${i < a.length - 1 ? "" : "disabled"} aria-label="down">▼</button></div>`).join("")}</div>`)}
       ${row(t("Auto-lock"), t("Locks the pad after this time without a touch."), seg("lock", [[0, t("Never")], [5, "5 min"], [10, "10 min"], [30, "30 min"]], settings.lock))}
     </div>
     <div class="card"><div class="lbl" style="margin-bottom:4px">${t("Data")}</div>
@@ -93,6 +95,8 @@ function onInput(e) {
 }
 let sure = null;
 function onClick(e) {
+  const ho = e.target.closest("[data-hco]");
+  if (ho) { const l = boardOrder(), i = l.indexOf(ho.dataset.hco), j = i + Number(ho.dataset.dir); if (j >= 0 && j < l.length) { [l[i], l[j]] = [l[j], l[i]]; saveSettings({ homeOrder: l }); C.changed("view"); } return; }
   const hc = e.target.closest("[data-hc]");
   if (hc) { const k = hc.dataset.hc, h = new Set(settings.homeHide || []); h.has(k) ? h.delete(k) : h.add(k); saveSettings({ homeHide: [...h] }); C.changed("view"); return; }
   const w = e.target.closest("[data-wp]"); // not [data-wall]: <html> carries data-wall

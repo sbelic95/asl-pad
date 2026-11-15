@@ -47,6 +47,11 @@ Der Name „flySmart“ wird nicht verwendet (siehe Marke). Getestet mit `ground
 Kartenwerkzeuge in `js/apps/map.js`, SIGMETs aus Branch `wx` (`js/sigmet.js`), Kälte-Korrektur `js/cold.js` (ICAO-Formel; bei 0 °C/1000 ft = +60 ft wie die ICAO-Tabelle).
 EOSID/NADP nur echte Verfahren der Airline in `procedures` – nichts erfinden.
 
+## 1.7 Buchung
+
+`js/booking.js`: Flugvorschläge aus `va/routes.json` (Vorschlag, bis die VA-Leitung bestätigt – keine Linien erfinden), Buchung → SimBrief → Plan-Karte
+mit Sprit ±. Sprit/Gewichte nur als Summen aus dem OFP, keine Performance. Kein LH-Layout nachbauen, eigener Stil.
+
 ## Updates
 
 Jede sichtbare Neuerung als neuer Eintrag oben in `js/whatsnew.js` (nur, was das Pad wirklich kann). Das Pad zeigt ihn einmal

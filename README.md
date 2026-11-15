@@ -93,13 +93,17 @@ Lizenzen der verwendeten Bibliotheken und Daten: [LIZENZEN.md](LIZENZEN.md).
 - Performance: **Temperaturkorrektur** nach ICAO (PANS-OPS) bei 0 °C und darunter, am Abflug- und Zielflughafen (`js/cold.js`).
 - Abflugverfahren der Airline (NADP, EOSID) kann die VA-Leitung in `va/airports/<ICAO>.json` unter `procedures` eintragen.
 
-## Flugkarte, SIGMETs und Kälte-Korrektur (1.6)
+## Flugvorschlag, Buchung und Plan-Karte (1.7)
 
-- Flugkarte: **MESSEN** (zwei Punkte: NM, Kurs, Zeit bei aktueller GS), **RINGE** (25/50/100/200 NM ums Flugzeug), **Direct to** im Wegpunkt-Fenster
-  (Kurs, Entfernung, Zeit, Ersparnis gegenüber der Route), **SIGMET**-Ebene. Unter Wetter: SIGMETs auf der Route.
-- SIGMETs holt [`.github/workflows/sigmets.yml`](.github/workflows/sigmets.yml) alle 30 Minuten von aviationweather.gov in den Branch `wx`.
-- Performance: **Temperaturkorrektur** nach ICAO (PANS-OPS) bei 0 °C und darunter, am Abflug- und Zielflughafen (`js/cold.js`).
-- Abflugverfahren der Airline (NADP, EOSID) kann die VA-Leitung in `va/airports/<ICAO>.json` unter `procedures` eintragen.
+- **Vorschlag für dich** (Home und ASL Ops, `js/booking.js`): ein Flug aus `va/routes.json` – zuerst zurück nach Belgrad, wenn der letzte
+  Logbuch-Flug woanders endete; sonst bevorzugt VATSIM-Events am Ziel (nächste 12 h), noch nicht geflogene Strecken und den meistgeflogenen Typ.
+  Dazu ein freies Rufzeichen (nicht online und nicht vorab angemeldet auf VATSIM, `S.inUse`) und wann man zurück in Belgrad ist (grobe Blockzeit).
+- `va/routes.json` ist ein **Vorschlag** des Streckennetzes ab Belgrad, bis die VA-Leitung ihn bestätigt (wie `ranks.json`).
+- **Buchung** in vier Schritten: Flug → Flugzeug, Zeit und Rufzeichen → SimBrief öffnet sich ausgefüllt (`dispatch.simbrief.com/options/custom`) →
+  Plan laden → in der Plan-Karte bei VATSIM vorab anmelden (Link aus dem OFP). Die Buchung liegt in `asl.booking`.
+- **Plan-Karte**: Wetter an beiden Enden, Stände, Sprit (Rollen, Strecke, Reserven, Extra mit Minuten), ZFW/TOW/LDW gegen die Höchstwerte.
+  Block Fuel mit + und − (100 kg bzw. 200 lb, nicht unter den Plan ohne Extra) – nur Summen aus dem OFP, keine eigene Performance (`asl.fuelAdj`).
+- Karten des Home-Bildschirms lassen sich in den Einstellungen sortieren (`settings.homeOrder`).
 
 ## Ein Update machen
 

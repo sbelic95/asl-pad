@@ -1,4 +1,5 @@
 // ASL Pad shell: lock screen, home screen, apps, app switcher (double-tap the home bar), status bar.
+import { bookingClick } from "./booking.js";
 import { $, esc, hhmmz, store } from "./util.js";
 import { S, settings, saveSettings, setTestDemo, onChange, wxOf, startPolling, refreshAll, restart, emit } from "./data.js";
 import { t, setLang, getLang, dateLong } from "./i18n.js";
@@ -206,6 +207,7 @@ $("lock").addEventListener("pointerup", (e) => {
 $("home").addEventListener("click", (e) => {
   const a = e.target.closest("[data-app]"); if (a) { openApp(a.dataset.app); return; }
   const n = e.target.closest("[data-notice]"); if (n) { openNotice(n.dataset.notice); renderHome($("home")); return; }
+  if (bookingClick(e)) { renderHome($("home")); return; }
   const o = e.target.closest("[data-open]"); if (o) openApp(o.dataset.open, o.dataset.tab || undefined);
 });
 
