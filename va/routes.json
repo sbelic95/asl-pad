@@ -1,360 +1,760 @@
 {
- "_help": "Predlog mreže linija iz Beograda za predloge letova u padu (kartica „Predlog leta“). Lista je PREDLOG dok je uprava VA ne potvrdi – dodaj, obriši ili promeni linije ovde. types = tipovi aviona za liniju (prvi je podrazumevani).",
+ "_help": "Mreža linija Air Serbia za predloge i rezervacije u padu – samo linije Air Serbia, ništa drugo. Lista je PREDLOG dok je uprava VA ne potvrdi: dodaj, obriši ili promeni linije. Svaka linija važi u oba smera. types = tipovi aviona (prvi je podrazumevani); season = summer/winter ako je sezonska.",
  "proposal": true,
- "base": {
-  "icao": "LYBE",
-  "name": "Belgrade",
-  "lat": 44.82,
-  "lon": 20.31
+ "base": "LYBE",
+ "airports": {
+  "LYBE": {
+   "name": "Belgrade",
+   "lat": 44.82,
+   "lon": 20.31
+  },
+  "LYNI": {
+   "name": "Niš",
+   "lat": 43.34,
+   "lon": 21.85
+  },
+  "LOWW": {
+   "name": "Vienna",
+   "lat": 48.11,
+   "lon": 16.57
+  },
+  "EDDF": {
+   "name": "Frankfurt",
+   "lat": 50.03,
+   "lon": 8.57
+  },
+  "EDDM": {
+   "name": "Munich",
+   "lat": 48.35,
+   "lon": 11.79
+  },
+  "EDDL": {
+   "name": "Düsseldorf",
+   "lat": 51.29,
+   "lon": 6.77
+  },
+  "EDDB": {
+   "name": "Berlin",
+   "lat": 52.37,
+   "lon": 13.5
+  },
+  "EDDH": {
+   "name": "Hamburg",
+   "lat": 53.63,
+   "lon": 9.99
+  },
+  "EDDS": {
+   "name": "Stuttgart",
+   "lat": 48.69,
+   "lon": 9.22
+  },
+  "LSZH": {
+   "name": "Zurich",
+   "lat": 47.46,
+   "lon": 8.55
+  },
+  "LSGG": {
+   "name": "Geneva",
+   "lat": 46.24,
+   "lon": 6.11
+  },
+  "LFPG": {
+   "name": "Paris",
+   "lat": 49.01,
+   "lon": 2.55
+  },
+  "EGLL": {
+   "name": "London",
+   "lat": 51.47,
+   "lon": -0.45
+  },
+  "EHAM": {
+   "name": "Amsterdam",
+   "lat": 52.31,
+   "lon": 4.76
+  },
+  "EBBR": {
+   "name": "Brussels",
+   "lat": 50.9,
+   "lon": 4.48
+  },
+  "LIRF": {
+   "name": "Rome",
+   "lat": 41.8,
+   "lon": 12.24
+  },
+  "LIMC": {
+   "name": "Milan",
+   "lat": 45.63,
+   "lon": 8.72
+  },
+  "LGAV": {
+   "name": "Athens",
+   "lat": 37.94,
+   "lon": 23.94
+  },
+  "LGTS": {
+   "name": "Thessaloniki",
+   "lat": 40.52,
+   "lon": 22.97
+  },
+  "LTFM": {
+   "name": "Istanbul",
+   "lat": 41.26,
+   "lon": 28.74
+  },
+  "LCLK": {
+   "name": "Larnaca",
+   "lat": 34.88,
+   "lon": 33.62
+  },
+  "UUEE": {
+   "name": "Moscow",
+   "lat": 55.97,
+   "lon": 37.41
+  },
+  "LDZA": {
+   "name": "Zagreb",
+   "lat": 45.74,
+   "lon": 16.07
+  },
+  "LQSA": {
+   "name": "Sarajevo",
+   "lat": 43.82,
+   "lon": 18.33
+  },
+  "LWSK": {
+   "name": "Skopje",
+   "lat": 41.96,
+   "lon": 21.62
+  },
+  "LYPG": {
+   "name": "Podgorica",
+   "lat": 42.36,
+   "lon": 19.25
+  },
+  "LYTV": {
+   "name": "Tivat",
+   "lat": 42.4,
+   "lon": 18.72
+  },
+  "LJLJ": {
+   "name": "Ljubljana",
+   "lat": 46.22,
+   "lon": 14.46
+  },
+  "LBSF": {
+   "name": "Sofia",
+   "lat": 42.7,
+   "lon": 23.41
+  },
+  "LROP": {
+   "name": "Bucharest",
+   "lat": 44.57,
+   "lon": 26.1
+  },
+  "LHBP": {
+   "name": "Budapest",
+   "lat": 47.44,
+   "lon": 19.26
+  },
+  "LKPR": {
+   "name": "Prague",
+   "lat": 50.1,
+   "lon": 14.26
+  },
+  "EPWA": {
+   "name": "Warsaw",
+   "lat": 52.17,
+   "lon": 20.97
+  },
+  "ESSA": {
+   "name": "Stockholm",
+   "lat": 59.65,
+   "lon": 17.92
+  },
+  "EKCH": {
+   "name": "Copenhagen",
+   "lat": 55.62,
+   "lon": 12.65
+  },
+  "LEBL": {
+   "name": "Barcelona",
+   "lat": 41.3,
+   "lon": 2.08
+  },
+  "KJFK": {
+   "name": "New York",
+   "lat": 40.64,
+   "lon": -73.78
+  },
+  "LEMD": {
+   "name": "Madrid",
+   "lat": 40.47,
+   "lon": -3.57
+  },
+  "ENGM": {
+   "name": "Oslo",
+   "lat": 60.2,
+   "lon": 11.08
+  },
+  "LGIR": {
+   "name": "Heraklion",
+   "lat": 35.34,
+   "lon": 25.18
+  },
+  "LGSR": {
+   "name": "Santorini",
+   "lat": 36.4,
+   "lon": 25.48
+  },
+  "UBBB": {
+   "name": "Baku",
+   "lat": 40.47,
+   "lon": 50.05
+  },
+  "CYYZ": {
+   "name": "Toronto",
+   "lat": 43.68,
+   "lon": -79.63
+  },
+  "LEAL": {
+   "name": "Alicante",
+   "lat": 38.28,
+   "lon": -0.56
+  },
+  "LDSB": {
+   "name": "Brač",
+   "lat": 43.29,
+   "lon": 16.68
+  },
+  "LDPL": {
+   "name": "Pula",
+   "lat": 44.89,
+   "lon": 13.92
+  },
+  "LDDU": {
+   "name": "Dubrovnik",
+   "lat": 42.56,
+   "lon": 18.27
+  },
+  "LEZL": {
+   "name": "Seville",
+   "lat": 37.42,
+   "lon": -5.89
+  },
+  "GCTS": {
+   "name": "Tenerife",
+   "lat": 28.04,
+   "lon": -16.57
+  },
+  "ENTC": {
+   "name": "Tromsø",
+   "lat": 69.68,
+   "lon": 18.92
+  },
+  "UWGG": {
+   "name": "Nizhny Novgorod",
+   "lat": 56.23,
+   "lon": 43.78
+  },
+  "ESGG": {
+   "name": "Gothenburg",
+   "lat": 57.66,
+   "lon": 12.28
+  },
+  "LIRN": {
+   "name": "Naples",
+   "lat": 40.89,
+   "lon": 14.29
+  },
+  "LMML": {
+   "name": "Malta",
+   "lat": 35.86,
+   "lon": 14.48
+  },
+  "EDDK": {
+   "name": "Cologne",
+   "lat": 50.87,
+   "lon": 7.14
+  },
+  "EDFH": {
+   "name": "Frankfurt-Hahn",
+   "lat": 49.95,
+   "lon": 7.26
+  }
  },
  "routes": [
   {
+   "from": "LYBE",
    "to": "LOWW",
-   "name": "Vienna",
-   "lat": 48.11,
-   "lon": 16.57,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "EDDF",
-   "name": "Frankfurt",
-   "lat": 50.03,
-   "lon": 8.57,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "EDDM",
-   "name": "Munich",
-   "lat": 48.35,
-   "lon": 11.79,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "EDDL",
-   "name": "Düsseldorf",
-   "lat": 51.29,
-   "lon": 6.77,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "EDDB",
-   "name": "Berlin",
-   "lat": 52.37,
-   "lon": 13.5,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "EDDH",
-   "name": "Hamburg",
-   "lat": 53.63,
-   "lon": 9.99,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "EDDS",
-   "name": "Stuttgart",
-   "lat": 48.69,
-   "lon": 9.22,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "LSZH",
-   "name": "Zurich",
-   "lat": 47.46,
-   "lon": 8.55,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "LSGG",
-   "name": "Geneva",
-   "lat": 46.24,
-   "lon": 6.11,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "LFPG",
-   "name": "Paris",
-   "lat": 49.01,
-   "lon": 2.55,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "EGLL",
-   "name": "London",
-   "lat": 51.47,
-   "lon": -0.45,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "EHAM",
-   "name": "Amsterdam",
-   "lat": 52.31,
-   "lon": 4.76,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "EBBR",
-   "name": "Brussels",
-   "lat": 50.9,
-   "lon": 4.48,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "LIRF",
-   "name": "Rome",
-   "lat": 41.8,
-   "lon": 12.24,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "LIMC",
-   "name": "Milan",
-   "lat": 45.63,
-   "lon": 8.72,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "LGAV",
-   "name": "Athens",
-   "lat": 37.94,
-   "lon": 23.94,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "LGTS",
-   "name": "Thessaloniki",
-   "lat": 40.52,
-   "lon": 22.97,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "LTFM",
-   "name": "Istanbul",
-   "lat": 41.26,
-   "lon": 28.74,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "LCLK",
-   "name": "Larnaca",
-   "lat": 34.88,
-   "lon": 33.62,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "UUEE",
-   "name": "Moscow",
-   "lat": 55.97,
-   "lon": 37.41,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "LDZA",
-   "name": "Zagreb",
-   "lat": 45.74,
-   "lon": 16.07,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "LQSA",
-   "name": "Sarajevo",
-   "lat": 43.82,
-   "lon": 18.33,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "LWSK",
-   "name": "Skopje",
-   "lat": 41.96,
-   "lon": 21.62,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "LYPG",
-   "name": "Podgorica",
-   "lat": 42.36,
-   "lon": 19.25,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "LYTV",
-   "name": "Tivat",
-   "lat": 42.4,
-   "lon": 18.72,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "LJLJ",
-   "name": "Ljubljana",
-   "lat": 46.22,
-   "lon": 14.46,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "LBSF",
-   "name": "Sofia",
-   "lat": 42.7,
-   "lon": 23.41,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "LROP",
-   "name": "Bucharest",
-   "lat": 44.57,
-   "lon": 26.1,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "LHBP",
-   "name": "Budapest",
-   "lat": 47.44,
-   "lon": 19.26,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "LKPR",
-   "name": "Prague",
-   "lat": 50.1,
-   "lon": 14.26,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "EPWA",
-   "name": "Warsaw",
-   "lat": 52.17,
-   "lon": 20.97,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "ESSA",
-   "name": "Stockholm",
-   "lat": 59.65,
-   "lon": 17.92,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "EKCH",
-   "name": "Copenhagen",
-   "lat": 55.62,
-   "lon": 12.65,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "LEBL",
-   "name": "Barcelona",
-   "lat": 41.3,
-   "lon": 2.08,
    "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LYBE",
    "to": "KJFK",
-   "name": "New York",
-   "lat": 40.64,
-   "lon": -73.78,
    "types": [
     "A332"
+   ]
+  },
+  {
+   "from": "LYBE",
+   "to": "LEMD",
+   "types": [
+    "A319",
+    "A320"
+   ]
+  },
+  {
+   "from": "LYBE",
+   "to": "ENGM",
+   "types": [
+    "A319",
+    "A320"
+   ]
+  },
+  {
+   "from": "LYBE",
+   "to": "LGIR",
+   "types": [
+    "A319",
+    "A320"
+   ],
+   "season": "summer"
+  },
+  {
+   "from": "LYBE",
+   "to": "LGSR",
+   "types": [
+    "A319",
+    "A320"
+   ],
+   "season": "summer"
+  },
+  {
+   "from": "LYBE",
+   "to": "UBBB",
+   "types": [
+    "A319",
+    "A320"
+   ]
+  },
+  {
+   "from": "LYBE",
+   "to": "CYYZ",
+   "types": [
+    "A332"
+   ],
+   "season": "summer"
+  },
+  {
+   "from": "LYBE",
+   "to": "LEAL",
+   "types": [
+    "A319",
+    "A320"
+   ]
+  },
+  {
+   "from": "LYBE",
+   "to": "LDSB",
+   "types": [
+    "A319",
+    "A320"
+   ],
+   "season": "summer"
+  },
+  {
+   "from": "LYBE",
+   "to": "LDPL",
+   "types": [
+    "A319",
+    "A320"
+   ],
+   "season": "summer"
+  },
+  {
+   "from": "LYBE",
+   "to": "LDDU",
+   "types": [
+    "A319",
+    "A320"
+   ]
+  },
+  {
+   "from": "LYBE",
+   "to": "LEZL",
+   "types": [
+    "A319",
+    "A320"
+   ],
+   "season": "winter"
+  },
+  {
+   "from": "LYBE",
+   "to": "GCTS",
+   "types": [
+    "A319",
+    "A320"
+   ],
+   "season": "winter"
+  },
+  {
+   "from": "LYBE",
+   "to": "ENTC",
+   "types": [
+    "A319",
+    "A320"
+   ],
+   "season": "winter"
+  },
+  {
+   "from": "LYBE",
+   "to": "UWGG",
+   "types": [
+    "A319",
+    "A320"
+   ]
+  },
+  {
+   "from": "LYBE",
+   "to": "ESGG",
+   "types": [
+    "A319",
+    "A320"
+   ],
+   "season": "summer"
+  },
+  {
+   "from": "LYBE",
+   "to": "LIRN",
+   "types": [
+    "A319",
+    "A320"
+   ],
+   "season": "summer"
+  },
+  {
+   "from": "LYNI",
+   "to": "LYBE",
+   "types": [
+    "A319",
+    "A320"
+   ]
+  },
+  {
+   "from": "LYNI",
+   "to": "LOWW",
+   "types": [
+    "A319",
+    "A320"
+   ]
+  },
+  {
+   "from": "LYNI",
+   "to": "LMML",
+   "types": [
+    "A319",
+    "A320"
+   ]
+  },
+  {
+   "from": "LYNI",
+   "to": "EDDK",
+   "types": [
+    "A319",
+    "A320"
+   ]
+  },
+  {
+   "from": "LYNI",
+   "to": "EDFH",
+   "types": [
+    "A319",
+    "A320"
+   ]
+  },
+  {
+   "from": "LYNI",
+   "to": "LTFM",
+   "types": [
+    "A319",
+    "A320"
+   ]
+  },
+  {
+   "from": "LYNI",
+   "to": "LJLJ",
+   "types": [
+    "A319",
+    "A320"
    ]
   }
  ]
