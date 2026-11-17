@@ -38,6 +38,23 @@ function routePoints(nl) {
 }
 
 const tiles = () => (settings.theme === "light" ? "light_all" : "dark_all");
+// Open map data under the tiles: land, coasts and borders of Natural Earth (public domain, vendor/world.json).
+// It shows when the tiles cannot load (offline, blocked); with tiles it lies hidden underneath.
+let WORLD = null;
+function drawWorld(map) {
+  WORLD ||= fetch("vendor/world.json").then((r) => r.json()).catch(() => null);
+  WORLD.then((w) => {
+    if (!w || !map.getContainer().isConnected) return;
+    if (!map.getPane("world")) { map.createPane("world").style.zIndex = 150; }
+    const light = settings.theme === "light", renderer = L.canvas({ pane: "world", padding: 0.5 });
+    const shift = (pts, k) => pts.map(([a, b]) => [a, b + k]);
+    for (const k of [-360, 0, 360]) { // the route may run past the date line (unwrapped longitudes)
+      L.polygon(w.land.map((p) => p.map((r) => shift(r, k))), { renderer, pane: "world", interactive: false, stroke: true, weight: 0.8,
+        color: light ? "#9fb0c7" : "#3a5a8c", fillColor: light ? "#e9eef5" : "#13294d", fillOpacity: 1 }).addTo(map);
+      L.polyline(w.borders.map((l) => shift(l, k)), { renderer, pane: "world", interactive: false, weight: 0.6, color: light ? "#b5c2d4" : "#2c4a78", opacity: 0.9 }).addTo(map);
+    }
+  });
+}
 const planeSvg = (hdg) => `<svg viewBox="0 0 24 24" width="30" height="30" style="transform:rotate(${hdg || 0}deg)"><path fill="currentColor" stroke="#002e5d" stroke-width=".8" d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>`;
 
 export function renderMap(body, o, d) {
@@ -57,9 +74,10 @@ function build(body, o, key) {
   const el = body.querySelector(".mapbox");
   const map = L.map(el, { zoomControl: false, attributionControl: true, worldCopyJump: false, minZoom: 2, zoomSnap: 0.5 });
   L.tileLayer(`https://{s}.basemaps.cartocdn.com/${tiles()}/{z}/{x}/{y}{r}.png`, {
-    subdomains: "abcd", maxZoom: 13, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: "abcd", maxZoom: 13, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> · Natural Earth',
   }).addTo(map);
   L.control.zoom({ position: "bottomright" }).addTo(map);
+  drawWorld(map);
 
   const nl = o.navlog;
   const fixPts = unwrap(nl.map((x) => x.pos));
