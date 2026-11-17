@@ -20,6 +20,7 @@ Logo-Dienst (`pics.avs.io`) geladen. Die App-Symbole und Grafiken sind eigene En
 | Stände, Gates, Terminals | © OpenStreetMap-Mitwirkende, [ODbL](https://www.openstreetmap.org/copyright) |
 | Pisten | [OurAirports](https://ourairports.com/data/), Public Domain |
 | Kartenkacheln | © OpenStreetMap-Mitwirkende, © [CARTO](https://carto.com/attributions) |
+| `vendor/world.json` (Länder, Küsten, Grenzen der Flugkarte) | [Natural Earth](https://www.naturalearthdata.com) 1:50m, Public Domain; umgewandelt aus [world-atlas](https://github.com/topojson/world-atlas) 2.0.2 (ISC) |
 | Flugplan (OFP) | SimBrief (Navigraph) – Daten des eigenen Kontos |
 | Netzwerkdaten, METAR, ATIS | VATSIM |
 | Slot-Zeiten | vIFF CDM |

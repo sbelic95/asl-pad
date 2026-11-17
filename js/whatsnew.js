@@ -7,6 +7,11 @@ import { esc } from "./util.js";
 import { APP_ICONS } from "./icons.js";
 
 export const releases = () => [
+  { v: "1.7.2", date: "2026-11-17", groups: [
+    { icon: "fly", name: "ASL Fly", items: [
+      t("Flight map: countries, coasts and borders from Natural Earth even when the map tiles do not load"),
+    ] },
+  ] },
   { v: "1.7.1", date: "2026-11-15", groups: [
     { icon: "ops", name: "ASL Ops", items: [
       t("Suggestions and bookings only on the Air Serbia network – with the new routes of 2026, seasonal routes in their season and the flights from Niš"),
