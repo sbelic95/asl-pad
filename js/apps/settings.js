@@ -54,7 +54,7 @@ function page() {
       ${row(t("Install"), t("In Safari: Share → Add to Home Screen. The pad then opens full screen."), "")}
     </div>
     <div class="card"><div class="lbl" style="margin-bottom:8px">${t("About")}</div>
-      <p style="margin:0 0 8px"><b>ASL Pad ${VERSION}</b> · ${t("Crew pad for virtual Air Serbia flights in the flight simulator.")} <button class="btn small" data-do="whatsnew" style="margin-left:6px">${t("What's new")}</button></p>
+      <p style="margin:0 0 8px"><b>ASL Pad ${VERSION}</b> · ${t("Crew pad for virtual Air Serbia flights in the flight simulator.")} <button class="btn small" data-do="whatsnew" style="margin-left:6px">${t("What's new")}</button> <a class="btn small" href="privacy.html" target="_blank" rel="noopener">${t("Privacy")}</a></p>
       <p class="dim" style="font-size:13px;margin:0 0 8px">${t("Unofficial fan project. Not affiliated with or endorsed by Air Serbia. The Air Serbia name and logo belong to Air Serbia; the logo is loaded from a public logo service and is not part of this project. For flight simulation only – not for real-world navigation.")}</p>
       <p class="dim" style="font-size:12.5px;margin:0">${t("Data")}: SimBrief (Navigraph), VATSIM, vIFF CDM, OpenStreetMap (ODbL), OurAirports, CARTO. ${t("Software")}: Leaflet (BSD-2), Roboto / Roboto Condensed (Apache 2.0), B612 Mono (OFL).</p></div>
   </div>`;

@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ASL Pad · Privacy</title>
+<meta name="description" content="Privacy policy of ASL Pad, the unofficial crew pad for Air Serbia Virtual: what data the pad uses, where it stays and how to delete it.">
+<meta name="theme-color" content="#002e5d">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="vendor/fonts.css">
+<style>
+  :root { --strato: #002e5d; --sky: #0059c2; --beacon: #e3001f; --bg: #f4f7fb; --card: #fff; --fg: #0a2447; --dim: #4f6584; --line: #d9e2ee; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #04122b; --card: #0b1f42; --fg: #eaf1fb; --dim: #9cb0cf; --line: #1d3560; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 Roboto, system-ui, sans-serif; }
+  header { background: linear-gradient(135deg, #002e5d, #0059c2); color: #fff; padding: 34px 20px 28px; }
+  header .in, main { max-width: 820px; margin: 0 auto; }
+  header h1 { margin: 0; font: 700 34px/1.15 "Roboto Condensed", Roboto, sans-serif; letter-spacing: .01em; }
+  header p { margin: 8px 0 0; color: #d6e3f7; }
+  header .bar { width: 64px; height: 4px; background: var(--beacon); border-radius: 2px; margin-top: 16px; }
+  .lang { display: flex; gap: 6px; margin-top: 18px; }
+  .lang button { font: 600 14px Roboto, sans-serif; padding: 6px 14px; border-radius: 999px; border: 1px solid rgba(255,255,255,.45); background: transparent; color: #fff; cursor: pointer; }
+  .lang button.on { background: #fff; color: var(--strato); border-color: #fff; }
+  main { padding: 22px 20px 50px; }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px 22px; margin-bottom: 14px; }
+  h2 { margin: 0 0 8px; font: 700 20px "Roboto Condensed", Roboto, sans-serif; letter-spacing: .02em; color: var(--sky); }
+  @media (prefers-color-scheme: dark) { h2 { color: #6aa8ff; } }
+  p, li { margin: 0 0 8px; } ul { margin: 0; padding-left: 20px; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; } td, th { text-align: left; vertical-align: top; padding: 7px 8px; border-bottom: 1px solid var(--line); }
+  th { font: 700 12px "Roboto Condensed", Roboto, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); }
+  .dim { color: var(--dim); font-size: 14px; } a { color: var(--sky); } @media (prefers-color-scheme: dark) { a { color: #6aa8ff; } }
+  [data-l] { display: none; } [data-l].show { display: block; } span[data-l].show { display: inline; } tr[data-l].show { display: table-row; }
+  footer { max-width: 820px; margin: 0 auto; padding: 0 20px 40px; } footer a { font-weight: 600; }
+</style>
+</head>
+<body>
+<header><div class="in">
+  <h1>ASL Pad · <span data-l="en">Privacy</span><span data-l="sr">Privatnost</span><span data-l="de">Datenschutz</span></h1>
+  <p data-l="en">Unofficial crew pad for Air Serbia Virtual – for flight simulation only.</p>
+  <p data-l="sr">Nezvanični pad za posadu Air Serbia Virtual – samo za simulaciju letenja.</p>
+  <p data-l="de">Inoffizielles Crew-Pad für Air Serbia Virtual – nur für die Flugsimulation.</p>
+  <div class="bar"></div>
+  <div class="lang"><button data-set="en">English</button><button data-set="sr">Srpski</button><button data-set="de">Deutsch</button></div>
+</div></header>
+
+<main>
+<!-- ================= ENGLISH ================= -->
+<div data-l="en">
+<section><h2>In short</h2>
+<ul>
+  <li>ASL Pad runs entirely in your browser. There is <b>no server and no database</b> of ours behind it.</li>
+  <li>Everything the pad keeps (settings, your flights, your logbook, your vAMSYS sign-in) stays <b>on your own device</b>.</li>
+  <li>We do <b>not</b> collect, sell or share your data. No analytics, no advertising, no tracking cookies.</li>
+  <li>You can delete everything at any time: sign out of vAMSYS in the settings of the pad, or clear the website data of the pad in your browser.</li>
+</ul></section>
+
+<section><h2>Who runs ASL Pad</h2>
+<p>ASL Pad is an unofficial fan project for the pilots of Air Serbia Virtual, made by the GitHub user <b>sbelic95</b>. It is not affiliated with or endorsed by Air Serbia. The source code is public: <a href="https://github.com/sbelic95/asl-pad">github.com/sbelic95/asl-pad</a>.</p>
+<p>Questions about privacy: open an issue on GitHub or ask in the Discord of Air Serbia Virtual.</p></section>
+
+<section><h2>Signing in with vAMSYS</h2>
+<p class="dim">The vAMSYS sign-in is in preparation. Until it is available, the pad does not connect to vAMSYS at all.</p>
+<p>If you choose to sign in with your Air Serbia Virtual account on vAMSYS, you sign in on the vAMSYS website itself – ASL Pad never sees your password. vAMSYS then gives the pad an access token for your account. The pad keeps this token only on your device and uses it to read the following, depending on what you allow:</p>
+<table>
+  <tr><th>Permission</th><th>What the pad does with it</th></tr>
+  <tr><td>Name and e-mail address</td><td>Shows your name in the pad. The e-mail address is not shown or used.</td></tr>
+  <tr><td>Network IDs (VATSIM, IVAO …)</td><td>Fills in your VATSIM ID so the pad can find your aircraft on the VATSIM network.</td></tr>
+  <tr><td>Pilot profile, rank, stats, badges</td><td>Shows your official rank and hours.</td></tr>
+  <tr><td>Bookings, PIREPs, logbook</td><td>Shows your booked flight and your logbook of the airline.</td></tr>
+  <tr><td>Activities (events, tours, rosters)</td><td>Shows the events and tours of the airline; with your permission you can register for them.</td></tr>
+</table>
+<p class="dim">The pad only reads and shows this data on your device. It does not send it anywhere else. Signing out deletes the token and the copied data from the device. You can also withdraw the access of ASL Pad at any time in your vAMSYS account.</p></section>
+
+<section><h2>What is stored on your device</h2>
+<ul>
+  <li>Settings: language, units, look, wallpaper (also a photo you choose), home screen cards, your SimBrief user name or ID and your VATSIM ID.</li>
+  <li>Your flights: times, track and fuel checks of the current flight, and your logbook.</li>
+  <li>Bookings made in the pad, fuel changes on the plan card, and the vAMSYS sign-in (if used).</li>
+  <li>Copies of public data for offline use (airline notices, events, weather, ground maps).</li>
+</ul>
+<p class="dim">All of this is kept in the browser storage of this website on your device. It never leaves the device unless you export your logbook yourself.</p></section>
+
+<section><h2>Services the pad talks to</h2>
+<p>To show live data, your browser fetches it directly from these services. They see your IP address like with any website and work under their own privacy policies:</p>
+<table>
+  <tr><th>Service</th><th>What for, and what is sent</th></tr>
+  <tr><td>GitHub Pages / GitHub</td><td>Hosts the pad and its data files (notices, events, weather, ground maps).</td></tr>
+  <tr><td>vAMSYS</td><td>Only if you sign in: your access token, to read the data listed above.</td></tr>
+  <tr><td>SimBrief (Navigraph)</td><td>Your SimBrief user name or ID, to load your latest flight plan.</td></tr>
+  <tr><td>VATSIM</td><td>Public network data and weather; nothing personal is sent.</td></tr>
+  <tr><td>vIFF CDM</td><td>The callsign of your flight, to read your slot times.</td></tr>
+  <tr><td>CARTO / OpenStreetMap, Overpass</td><td>Map tiles and airport stand data.</td></tr>
+  <tr><td>pics.avs.io</td><td>The airline logo.</td></tr>
+</table></section>
+
+<section><h2>Your rights</h2>
+<p>As all data stays on your device, you are in full control of it: you can view it in the pad, change it in the settings and delete it at any time. For the data held by vAMSYS or Air Serbia Virtual, please contact the airline or vAMSYS directly.</p></section>
+
+<section><h2>Changes</h2>
+<p>If ASL Pad starts to use data in a new way, this page will be updated first. Last updated: <b>18 November 2026</b>.</p></section>
+</div>
+
+<!-- ================= SRPSKI ================= -->
+<div data-l="sr">
+<section><h2>Ukratko</h2>
+<ul>
+  <li>ASL Pad radi potpuno u tvom pretraživaču. Iza njega <b>nema našeg servera ni baze podataka</b>.</li>
+  <li>Sve što pad čuva (podešavanja, tvoji letovi, dnevnik letenja, prijava na vAMSYS) ostaje <b>na tvom uređaju</b>.</li>
+  <li><b>Ne</b> prikupljamo, ne prodajemo i ne delimo tvoje podatke. Bez analitike, reklama i kolačića za praćenje.</li>
+  <li>Sve možeš obrisati u svakom trenutku: odjavi se sa vAMSYS-a u podešavanjima pada ili obriši podatke sajta u pretraživaču.</li>
+</ul></section>
+
+<section><h2>Ko stoji iza ASL Pada</h2>
+<p>ASL Pad je nezvanični projekat zaljubljenika za pilote Air Serbia Virtual, autor je GitHub korisnik <b>sbelic95</b>. Nije povezan sa kompanijom Air Serbia niti ga ona podržava. Izvorni kod je javan: <a href="https://github.com/sbelic95/asl-pad">github.com/sbelic95/asl-pad</a>.</p>
+<p>Pitanja o privatnosti: otvori „issue“ na GitHubu ili pitaj na Discordu Air Serbia Virtual.</p></section>
+
+<section><h2>Prijava preko vAMSYS-a</h2>
+<p class="dim">Prijava preko vAMSYS-a je u pripremi. Dok ne bude dostupna, pad se uopšte ne povezuje sa vAMSYS-om.</p>
+<p>Ako se prijaviš svojim nalogom Air Serbia Virtual na vAMSYS-u, prijavljuješ se na samom sajtu vAMSYS-a – ASL Pad nikad ne vidi tvoju lozinku. vAMSYS zatim padu daje pristupni token za tvoj nalog. Pad čuva taj token samo na tvom uređaju i koristi ga da pročita sledeće, u zavisnosti od onoga što dozvoliš:</p>
+<table>
+  <tr><th>Dozvola</th><th>Šta pad radi sa njom</th></tr>
+  <tr><td>Ime i e-adresa</td><td>Prikazuje tvoje ime u padu. E-adresa se ne prikazuje i ne koristi.</td></tr>
+  <tr><td>ID-jevi mreža (VATSIM, IVAO …)</td><td>Upisuje tvoj VATSIM ID da bi pad našao tvoj avion na mreži.</td></tr>
+  <tr><td>Profil pilota, čin, statistika, značke</td><td>Prikazuje tvoj zvanični čin i sate.</td></tr>
+  <tr><td>Rezervacije, PIREP-ovi, dnevnik</td><td>Prikazuje tvoj rezervisani let i dnevnik letenja kompanije.</td></tr>
+  <tr><td>Aktivnosti (događaji, ture, rasporedi)</td><td>Prikazuje događaje i ture kompanije; uz tvoju dozvolu možeš se prijaviti na njih.</td></tr>
+</table>
+<p class="dim">Pad ove podatke samo čita i prikazuje na tvom uređaju i ne šalje ih nigde dalje. Odjava briše token i kopirane podatke sa uređaja. Pristup ASL Pada možeš u svakom trenutku ukinuti i u svom vAMSYS nalogu.</p></section>
+
+<section><h2>Šta se čuva na tvom uređaju</h2>
+<ul>
+  <li>Podešavanja: jezik, jedinice, izgled, pozadina (i fotografija koju izabereš), kartice početnog ekrana, SimBrief korisničko ime ili ID i VATSIM ID.</li>
+  <li>Tvoji letovi: vremena, putanja i provere goriva tekućeg leta, i dnevnik letenja.</li>
+  <li>Rezervacije napravljene u padu, izmene goriva na kartici plana i prijava na vAMSYS (ako je koristiš).</li>
+  <li>Kopije javnih podataka za rad bez interneta (obaveštenja, događaji, vreme, mape aerodroma).</li>
+</ul>
+<p class="dim">Sve se čuva u memoriji pretraživača za ovaj sajt na tvom uređaju i ne napušta uređaj, osim ako sam izvezeš dnevnik letenja.</p></section>
+
+<section><h2>Servisi sa kojima pad komunicira</h2>
+<p>Za podatke uživo tvoj pretraživač ih preuzima direktno sa ovih servisa. Oni vide tvoju IP adresu kao i kod svakog sajta i rade po svojim pravilima privatnosti:</p>
+<table>
+  <tr><th>Servis</th><th>Za šta i šta se šalje</th></tr>
+  <tr><td>GitHub Pages / GitHub</td><td>Hostuje pad i njegove datoteke (obaveštenja, događaji, vreme, mape aerodroma).</td></tr>
+  <tr><td>vAMSYS</td><td>Samo ako se prijaviš: tvoj pristupni token, za čitanje gore navedenih podataka.</td></tr>
+  <tr><td>SimBrief (Navigraph)</td><td>Tvoje SimBrief korisničko ime ili ID, za učitavanje poslednjeg plana leta.</td></tr>
+  <tr><td>VATSIM</td><td>Javni podaci mreže i vreme; ništa lično se ne šalje.</td></tr>
+  <tr><td>vIFF CDM</td><td>Pozivni znak tvog leta, za vremena slota.</td></tr>
+  <tr><td>CARTO / OpenStreetMap, Overpass</td><td>Pločice mape i podaci o pozicijama na aerodromu.</td></tr>
+  <tr><td>pics.avs.io</td><td>Logo kompanije.</td></tr>
+</table></section>
+
+<section><h2>Tvoja prava</h2>
+<p>Pošto svi podaci ostaju na tvom uređaju, ti imaš potpunu kontrolu: možeš ih videti u padu, promeniti u podešavanjima i obrisati u svakom trenutku. Za podatke koje čuvaju vAMSYS ili Air Serbia Virtual obrati se direktno kompaniji ili vAMSYS-u.</p></section>
+
+<section><h2>Izmene</h2>
+<p>Ako ASL Pad počne da koristi podatke na nov način, prvo će se ažurirati ova stranica. Poslednja izmena: <b>18. novembar 2026.</b></p></section>
+</div>
+
+<!-- ================= DEUTSCH ================= -->
+<div data-l="de">
+<section><h2>Kurz gesagt</h2>
+<ul>
+  <li>ASL Pad läuft vollständig in deinem Browser. Dahinter steht <b>kein Server und keine Datenbank</b> von uns.</li>
+  <li>Alles, was das Pad speichert (Einstellungen, deine Flüge, dein Logbuch, deine vAMSYS-Anmeldung), bleibt <b>auf deinem Gerät</b>.</li>
+  <li>Wir sammeln, verkaufen und teilen deine Daten <b>nicht</b>. Keine Analyse, keine Werbung, keine Tracking-Cookies.</li>
+  <li>Du kannst jederzeit alles löschen: dich in den Einstellungen des Pads von vAMSYS abmelden oder die Websitedaten des Pads im Browser löschen.</li>
+</ul></section>
+
+<section><h2>Wer ASL Pad betreibt</h2>
+<p>ASL Pad ist ein inoffizielles Fanprojekt für die Piloten von Air Serbia Virtual, gemacht vom GitHub-Nutzer <b>sbelic95</b>. Es steht in keiner Verbindung zu Air Serbia und wird von Air Serbia nicht unterstützt. Der Quellcode ist öffentlich: <a href="https://github.com/sbelic95/asl-pad">github.com/sbelic95/asl-pad</a>.</p>
+<p>Fragen zum Datenschutz: ein Issue auf GitHub eröffnen oder im Discord von Air Serbia Virtual fragen.</p></section>
+
+<section><h2>Anmeldung mit vAMSYS</h2>
+<p class="dim">Die Anmeldung mit vAMSYS ist in Vorbereitung. Bis sie verfügbar ist, verbindet sich das Pad überhaupt nicht mit vAMSYS.</p>
+<p>Wenn du dich mit deinem Konto von Air Serbia Virtual bei vAMSYS anmeldest, geschieht das auf der Website von vAMSYS selbst – ASL Pad sieht dein Passwort nie. vAMSYS gibt dem Pad danach einen Zugangstoken für dein Konto. Das Pad speichert ihn nur auf deinem Gerät und liest damit, je nachdem was du erlaubst:</p>
+<table>
+  <tr><th>Berechtigung</th><th>Was das Pad damit macht</th></tr>
+  <tr><td>Name und E-Mail-Adresse</td><td>Zeigt deinen Namen im Pad. Die E-Mail-Adresse wird weder angezeigt noch verwendet.</td></tr>
+  <tr><td>Netzwerk-IDs (VATSIM, IVAO …)</td><td>Trägt deine VATSIM-ID ein, damit das Pad dein Flugzeug im Netzwerk findet.</td></tr>
+  <tr><td>Pilotenprofil, Rang, Statistik, Abzeichen</td><td>Zeigt deinen offiziellen Rang und deine Stunden.</td></tr>
+  <tr><td>Buchungen, PIREPs, Logbuch</td><td>Zeigt deinen gebuchten Flug und das Logbuch der Airline.</td></tr>
+  <tr><td>Aktivitäten (Events, Touren, Dienstpläne)</td><td>Zeigt Events und Touren der Airline; mit deiner Erlaubnis kannst du dich dafür anmelden.</td></tr>
+</table>
+<p class="dim">Das Pad liest und zeigt diese Daten nur auf deinem Gerät und schickt sie nirgendwohin weiter. Abmelden löscht den Token und die kopierten Daten vom Gerät. Den Zugriff von ASL Pad kannst du außerdem jederzeit in deinem vAMSYS-Konto entziehen.</p></section>
+
+<section><h2>Was auf deinem Gerät gespeichert wird</h2>
+<ul>
+  <li>Einstellungen: Sprache, Einheiten, Aussehen, Hintergrund (auch ein eigenes Foto), Karten des Home-Bildschirms, dein SimBrief-Benutzername oder deine ID und deine VATSIM-ID.</li>
+  <li>Deine Flüge: Zeiten, Flugweg und Spritkontrollen des aktuellen Flugs sowie dein Logbuch.</li>
+  <li>Buchungen im Pad, Sprit-Änderungen auf der Plan-Karte und die vAMSYS-Anmeldung (falls genutzt).</li>
+  <li>Kopien öffentlicher Daten für die Nutzung ohne Internet (Mitteilungen, Events, Wetter, Rollkarten).</li>
+</ul>
+<p class="dim">All das liegt im Browserspeicher dieser Website auf deinem Gerät und verlässt es nicht, außer du exportierst dein Logbuch selbst.</p></section>
+
+<section><h2>Dienste, mit denen das Pad spricht</h2>
+<p>Für Live-Daten holt dein Browser sie direkt bei diesen Diensten. Sie sehen wie bei jeder Website deine IP-Adresse und arbeiten nach ihren eigenen Datenschutzregeln:</p>
+<table>
+  <tr><th>Dienst</th><th>Wofür, und was gesendet wird</th></tr>
+  <tr><td>GitHub Pages / GitHub</td><td>Hostet das Pad und seine Datendateien (Mitteilungen, Events, Wetter, Rollkarten).</td></tr>
+  <tr><td>vAMSYS</td><td>Nur wenn du dich anmeldest: dein Zugangstoken, um die oben genannten Daten zu lesen.</td></tr>
+  <tr><td>SimBrief (Navigraph)</td><td>Dein SimBrief-Benutzername oder deine ID, um deinen letzten Flugplan zu laden.</td></tr>
+  <tr><td>VATSIM</td><td>Öffentliche Netzwerkdaten und Wetter; nichts Persönliches wird gesendet.</td></tr>
+  <tr><td>vIFF CDM</td><td>Das Rufzeichen deines Flugs, für deine Slot-Zeiten.</td></tr>
+  <tr><td>CARTO / OpenStreetMap, Overpass</td><td>Kartenkacheln und Standdaten der Flughäfen.</td></tr>
+  <tr><td>pics.avs.io</td><td>Das Logo der Airline.</td></tr>
+</table></section>
+
+<section><h2>Deine Rechte</h2>
+<p>Da alle Daten auf deinem Gerät bleiben, hast du die volle Kontrolle: Du kannst sie im Pad ansehen, in den Einstellungen ändern und jederzeit löschen. Für Daten, die vAMSYS oder Air Serbia Virtual speichern, wende dich bitte direkt an die Airline oder an vAMSYS.</p></section>
+
+<section><h2>Änderungen</h2>
+<p>Wenn ASL Pad Daten auf eine neue Art nutzt, wird zuerst diese Seite angepasst. Stand: <b>18. November 2026</b>.</p></section>
+</div>
+</main>
+
+<footer><a href="./">← ASL Pad</a></footer>
+
+<script>
+  // language: ?lang=, else the language of the pad (asl.lang), else the browser's
+  const pick = () => {
+    const q = new URLSearchParams(location.search).get("lang");
+    let pad = null; try { pad = JSON.parse(localStorage.getItem("asl.lang")); } catch (e) {}
+    const nav = (navigator.language || "en").slice(0, 2);
+    return [q, pad, nav === "sr" || nav === "hr" || nav === "bs" ? "sr" : nav].find((x) => ["en", "sr", "de"].includes(x)) || "en";
+  };
+  const show = (l) => {
+    document.documentElement.lang = l === "sr" ? "sr-Latn" : l;
+    document.querySelectorAll("[data-l]").forEach((e) => e.classList.toggle("show", e.dataset.l === l));
+    document.querySelectorAll("[data-set]").forEach((b) => b.classList.toggle("on", b.dataset.set === l));
+  };
+  document.querySelector(".lang").addEventListener("click", (e) => { const b = e.target.closest("[data-set]"); if (b) show(b.dataset.set); });
+  show(pick());
+</script>
+</body>
+</html>

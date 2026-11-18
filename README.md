@@ -106,6 +106,11 @@ Lizenzen der verwendeten Bibliotheken und Daten: [LIZENZEN.md](LIZENZEN.md).
   Block Fuel mit + und − (100 kg bzw. 200 lb, nicht unter den Plan ohne Extra) – nur Summen aus dem OFP, keine eigene Performance (`asl.fuelAdj`).
 - Karten des Home-Bildschirms lassen sich in den Einstellungen sortieren (`settings.homeOrder`).
 
+## Datenschutz
+
+[`privacy.html`](privacy.html) (EN/SR/DE, Sprache per `?lang=` oder wie im Pad): was das Pad speichert (nur im Browser), welche Dienste es abfragt
+und was die geplante vAMSYS-Anmeldung liest. Link in den Einstellungen unter „About“. Bei neuer Datennutzung zuerst diese Seite anpassen.
+
 ## Ein Update machen
 
 1. Änderung bauen und testen (`node tests/smoke.mjs`).
