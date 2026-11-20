@@ -44,6 +44,8 @@ export function demoControllers() {
   return [
     { callsign: "KJFK_TWR", frequency: "119.100", facility: 4, name: "Demo" }, { callsign: "KJFK_GND", frequency: "121.900", facility: 3, name: "Demo" },
     { callsign: "NY_APP", frequency: "132.400", facility: 5, name: "Demo" }, { callsign: "LYBE_TWR", frequency: "118.100", facility: 4, name: "Demo" },
+    { callsign: "LYBE_APP", frequency: "133.100", facility: 5, name: "Demo" }, { callsign: "LYBA_CTR", frequency: "127.900", facility: 6, name: "Demo" },
+    { callsign: "EGGX_FSS", frequency: "127.650", facility: 1, name: "Demo" },
   ];
 }
 
@@ -183,4 +185,15 @@ export function demoSigmets(now = Date.now()) {
     { fir: "LYBA", name: "BEOGRAD", hazard: "TURB", qual: "SEV", from: iso(-2), to: iso(2), base: 25000, top: 38000,
       poly: [[46, 17], [46, 22], [43, 22], [43, 17]], raw: "LYBA SIGMET 1 VALID ... SEV TURB FCST FL250/380 STNR NC=" },
   ];
+}
+
+// departures from and arrivals at the destination (Cabin app)
+export function demoBoard(apt) {
+  if (!apt?.icao) return null;
+  const now = Date.now(), hh = (m) => { const d = new Date(now + m * 60e3); return String(d.getUTCHours()).padStart(2, "0") + String(d.getUTCMinutes()).padStart(2, "0"); };
+  return { icao: apt.icao, at: now,
+    dep: [["DAL412", "KATL", "B739", 40, "boarding"], ["AAL100", "EGLL", "B77W", 75, "scheduled"], ["JBU623", "KMCO", "A321", 20, "taxi"], ["UAE202", "OMDB", "A388", 130, "scheduled"], ["DLH401", "EDDF", "B748", 95, "scheduled"]]
+      .map(([cs, to, type, m, st]) => ({ cs, to, type, dep: hh(m), st })),
+    arr: [["BAW117", "EGLL", "A35K", 180, "enroute"], ["AFR6", "LFPG", "B77W", 60, "approach"], ["THY3", "LTFM", "B789", 0, "landed"], ["SWR16", "LSZH", "A333", 0, "stand"]]
+      .map(([cs, from, type, km, st]) => ({ cs, from, type, km, st, eta: km ? now + (km / 800) * 36e5 : null })) };
 }

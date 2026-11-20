@@ -106,6 +106,19 @@ Lizenzen der verwendeten Bibliotheken und Daten: [LIZENZEN.md](LIZENZEN.md).
   Block Fuel mit + und − (100 kg bzw. 200 lb, nicht unter den Plan ohne Extra) – nur Summen aus dem OFP, keine eigene Performance (`asl.fuelAdj`).
 - Karten des Home-Bildschirms lassen sich in den Einstellungen sortieren (`settings.homeOrder`).
 
+## Funk, ACARS, Cabin und vAMSYS (1.8)
+
+- Die alte eingebettete VDGS-App ist entfernt; ihre Funktionen sind jetzt eigene Module:
+  - **ASL Fly → „Radio & ACARS“** (`js/apps/radio.js`): Slot-Status (vIFF CDM) vor dem Off-Block, **Frequenz-Führer** (`js/atc.js`, aus dem VDGS übernommen:
+    VATSpy-Luftraumgrenzen, TRACON-Bereiche aus `vdgs-slot-board` Zweig `atc`, VATSIM top-down, UNICOM 122.800) und **Hoppie ACARS/CPDLC**
+    (`js/hoppie.js`: peek alle 60 s, PDC-Anfrage als Telex, METAR/TAF/ATIS per inforeq, Telex, CPDLC-Logon/-Logoff, Antworten WILCO/UNABLE/…).
+    In der Übersicht eine Funk-Zeile; Frequenzwechsel und neue Nachrichten erscheinen als Hinweise (Sperrbildschirm, Badges).
+  - **Cabin** (`js/apps/cabin.js`): eigene Passagier-App im Air-Serbia-Look – Flugkarte (km/h, m, Außentemperatur, Ortszeiten), Ziel (Ortszeit, Wetter),
+    Anschlussflüge und Ankünfte (VATSIM, `S.board` in `data.js`), Diashow.
+- **vAMSYS** (`js/vamsys.js`, Einstellungen `va/vamsys.json`): OAuth 2.0 mit PKCE, Client-ID 1409, kein Secret. Redirect `https://sbelic95.github.io/asl-pad/`.
+  Liest `/user`, `/profile`, `/bookings` der Pilot API (`vamsys.io/api/v3/pilot`); Name im Home-Bildschirm, Rang/Stunden, VATSIM-ID, Buchung als Home-Karte.
+  **Ungetestet gegen das echte vAMSYS** (Client muss von der VA aktiviert sein; ob vAMSYS Aufrufe aus dem Browser erlaubt (CORS), ist offen).
+
 ## Datenschutz
 
 [`privacy.html`](privacy.html) (EN/SR/DE, Sprache per `?lang=` oder wie im Pad): was das Pad speichert (nur im Browser), welche Dienste es abfragt

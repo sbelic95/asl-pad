@@ -111,7 +111,7 @@ function ops(now) {
         ${cell("ATIS", esc(atisOf(o.dest.icao)?.letter || "—"))}${cell(st.landing ? t("Landed") : "ETA", hhmmz(st.landing || d.est.on), t("in-block {t}", { t: hhmmz(d.est.in) }))}</div>
       <div class="lbl" style="margin:14px 0 2px">${t("Frequencies")}</div>${freqs(o.dest.icao)}
       ${wxLine(o.dest.icao)}
-      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn small" data-open="vdgs">${t("Docking guidance (VDGS)")}</button><button class="btn small" data-open="cabin">${t("Cabin screen")}</button></div></div>`;
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn small" data-open="fly" data-tab="radio">${t("Radio & ACARS")}</button><button class="btn small" data-open="cabin">${t("Cabin screen")}</button></div></div>`;
   return duty + `<div class="ops-book">${planCard(o, now)}</div><div style="margin-top:14px">${todo}</div><div class="ops-cols">${dep}${arr}</div>`;
 }
 

@@ -10,6 +10,7 @@ import { t, nf } from "./i18n.js";
 import { esc, store, hhmmz, dur, distNm } from "./util.js";
 import { fmtW } from "./units.js";
 import { sheet } from "./sheet.js";
+import { V } from "./vamsys.js";
 
 const SB = "https://dispatch.simbrief.com/options/custom";
 const DAY = 864e5;
@@ -86,6 +87,18 @@ export function suggestCard(now = Date.now()) {
     ${s.reasons.length ? `<ul class="bk-why">${s.reasons.map(([k, x]) => `<li class="${k}">${esc(x)}</li>`).join("")}</ul>` : ""}
     <div class="bk-act"><button class="btn small pri" data-bk="book">${t("Book this flight")}</button><button class="btn small" data-bk="next">${t("Another one")}</button>
       <button class="btn small" data-bk="new">${t("Pick a route")}</button></div></div>`;
+}
+
+// ---------- the booking in vAMSYS (signed in): plan it in SimBrief with one tap ----------
+export function vamBookingCard(now = Date.now()) {
+  const list = (V.data?.bookings || []).filter((b) => !b.at || b.at > now - 6 * 36e5).sort((a, b) => (a.at || 9e15) - (b.at || 9e15));
+  if (!list.length) return "";
+  const b = list[0];
+  return `<div class="hb-card bk-sug"><div class="bk-sug-top"><div class="lbl">vAMSYS · ${t("Your booking")}</div>${list.length > 1 ? `<span class="dim">+${list.length - 1}</span>` : ""}</div>
+    <div class="bk-legs"><div><b>${esc(b.dep)}</b><span>${esc(nameOf(b.dep))}</span></div><div class="bk-line"><span>${b.at ? hhmmz(b.at) : ""}</span><i></i><span>${esc(b.callsign || b.number || "")}</span><i></i><span></span></div>
+      <div class="r"><b>${esc(b.arr)}</b><span>${esc(nameOf(b.arr))}</span></div></div>
+    <div class="bk-chips">${b.type ? `<span class="bk-chip">${esc(b.type)}</span>` : ""}${b.reg ? `<span class="bk-chip">${esc(b.reg)}</span>` : ""}</div>
+    <div class="bk-act"><button class="btn small pri" data-bk="vam-book">${t("Plan in SimBrief")}</button></div></div>`;
 }
 
 // ---------- booking: only Air Serbia routes and ASL callsigns ----------
@@ -217,6 +230,8 @@ export function bookingClick(e) {
   if (k === "next") store.set("asl.sugIdx", (store.get("asl.sugIdx", 0) || 0) + 1);
   if (k === "book") { const l = suggestions(), s = l[(store.get("asl.sugIdx", 0) || 0) % l.length]; if (s) openBooking({ ...s, reg: fleetAll().find((a) => a.type === s.type)?.reg }); }
   if (k === "new") openBooking();
+  if (k === "vam-book") { const b = (V.data?.bookings || []).filter((x) => !x.at || x.at > Date.now() - 6 * 36e5).sort((a, c) => (a.at || 9e15) - (c.at || 9e15))[0];
+    if (b) { const cs = /^[A-Z]{3}\w+$/.test(b.callsign || "") ? b.callsign : ""; window.open(simbriefUrl({ dep: b.dep, dest: b.arr, type: b.type || "A319", reg: b.reg || "", callsign: cs || "ASL" + (b.number || ""), off: b.at || quarter(Date.now() + 40 * 60e3) }), "_blank", "noopener"); } }
   if (k === "again" && o) openBooking({ dep: o.dep.icao, dest: o.dest.icao, type: o.type, reg: o.reg, off: o.times.out > Date.now() ? o.times.out : quarter(Date.now() + 40 * 60e3), callsign: o.callsign });
   if (o && /^fuel/.test(k)) {
     const step = (settings.unit === "lb") === (o.units === "lb") ? (o.units === "lb" ? 200 : 100) : o.units === "lb" ? 220.46 : 90.72; // 100 kg or 200 lb as the pilot sees it

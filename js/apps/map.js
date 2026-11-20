@@ -41,12 +41,12 @@ const tiles = () => (settings.theme === "light" ? "light_all" : "dark_all");
 // Open map data under the tiles: land, coasts and borders of Natural Earth (public domain, vendor/world.json).
 // It shows when the tiles cannot load (offline, blocked); with tiles it lies hidden underneath.
 let WORLD = null;
-function drawWorld(map) {
+export function drawWorld(map, light = settings.theme === "light") {
   WORLD ||= fetch("vendor/world.json").then((r) => r.json()).catch(() => null);
   WORLD.then((w) => {
     if (!w || !map.getContainer().isConnected) return;
     if (!map.getPane("world")) { map.createPane("world").style.zIndex = 150; }
-    const light = settings.theme === "light", renderer = L.canvas({ pane: "world", padding: 0.5 });
+    const renderer = L.canvas({ pane: "world", padding: 0.5 });
     const shift = (pts, k) => pts.map(([a, b]) => [a, b + k]);
     for (const k of [-360, 0, 360]) { // the route may run past the date line (unwrapped longitudes)
       L.polygon(w.land.map((p) => p.map((r) => shift(r, k))), { renderer, pane: "world", interactive: false, stroke: true, weight: 0.8,

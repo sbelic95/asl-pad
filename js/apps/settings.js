@@ -5,6 +5,7 @@ import { esc, store } from "../util.js";
 import { WALLS, getPhoto, delPhoto, savePhoto } from "../wall.js";
 import { latest } from "../whatsnew.js";
 import { HOME_CARDS, boardOrder } from "../home.js";
+import { V, signedIn, signIn, signOut, loadVamsys } from "../vamsys.js";
 
 export const name = "Settings";
 export const tabs = [];
@@ -28,6 +29,15 @@ export function summary() { return [t("Settings"), `SimBrief: ${settings.simbrie
 const seg = (key, opts, cur) => `<div class="seg">${opts.map(([v, l]) => `<button data-seg="${key}" data-v="${esc(v)}" class="${String(cur) === String(v) ? "on" : ""}">${esc(l)}</button>`).join("")}</div>`;
 const row = (h, sub, ctl) => `<div class="set-row"><div class="h">${h}${sub ? `<small>${sub}</small>` : ""}</div><div>${ctl}</div></div>`;
 
+function vamRow() {
+  const err = V.err === "browser" ? t("vAMSYS could not be reached from the browser. The airline may first have to activate the pad in vAMSYS.")
+    : V.err === "state" ? t("The sign-in was not completed. Please try again.") : V.err === "signed out" ? t("Signed out by vAMSYS. Please sign in again.") : V.err;
+  const d = V.data;
+  const who = signedIn() && d ? `<span class="pill ok">${esc(d.name || d.callsign || "vAMSYS")}</span>${d.rank ? ` <span class="pill">${esc(d.rank)}</span>` : ""}${d.hours != null ? ` <span class="pill">${esc(String(Math.round(+d.hours)))} h</span>` : ""}` : "";
+  return (signedIn() ? `${who || `<span class="pill ok">${t("signed in")}</span>`} <button class="btn small" data-do="vam-load">${V.busy ? t("Loading…") : t("Refresh")}</button> <button class="btn small" data-do="vam-out">${t("Sign out")}</button>`
+    : `<button class="btn small pri" data-do="vam-in">${t("Sign in with vAMSYS")}</button>`) + (err ? `<div class="bad" style="font-size:12.5px;margin-top:6px">${esc(err)}</div>` : "");
+}
+
 function page() {
   const st = S.ofp ? `<span class="pill ok">${t("loaded")}: ${esc(S.ofp.callsign)} ${esc(S.ofp.dep.icao)}–${esc(S.ofp.dest.icao)}</span>`
     : S.ofpErr === "user" ? `<span class="pill bad">${t("SimBrief user not found.")}</span>` : S.ofpErr === "noofp" ? `<span class="pill warn">${t("No OFP found at SimBrief.")}</span>`
@@ -37,6 +47,8 @@ function page() {
     <div class="card"><div class="lbl" style="margin-bottom:4px">${t("Flight")}</div>
       ${row(t("SimBrief"), t("Username or pilot ID. Your latest OFP is loaded."), `<input data-k="simbrief" value="${esc(settings.simbrief)}" placeholder="${t("e.g. 123456")}" autocomplete="off" autocapitalize="off" spellcheck="false" style="width:240px"> ${st}`)}
       ${row(t("VATSIM CID"), t("Finds your aircraft on the network. Without it the callsign of the OFP is used."), `<input data-k="cid" value="${esc(settings.cid)}" inputmode="numeric" placeholder="1234567" autocomplete="off" style="width:160px"> ${vat}`)}
+      ${row(t("Hoppie ACARS"), t("Your personal logon code from hoppie.nl. For ACARS and CPDLC in ASL Fly. Stays on this device."), `<input data-k="hoppie" type="password" value="${esc(settings.hoppie || "")}" placeholder="${t("logon code")}" autocomplete="off" autocapitalize="off" spellcheck="false" style="width:200px"> <a class="btn small" href="https://www.hoppie.nl/acars/system/register.html" target="_blank" rel="noopener">${t("Get a code")}</a>`)}
+      ${row("vAMSYS", t("Sign in with your Air Serbia Virtual account: your name, rank, hours and bookings come into the pad. The password stays at vAMSYS."), vamRow())}
     </div>
     <div class="card"><div class="lbl" style="margin-bottom:4px">${t("Display")}</div>
       ${row(t("Language"), "", seg("lang", Object.entries(LANGS), getLang()))}
@@ -112,6 +124,9 @@ function onClick(e) {
   }
   const b = e.target.closest("[data-do]"); if (!b) return;
   if (b.dataset.do === "whatsnew") { window.ASL.showWhatsNew(); return; }
+  if (b.dataset.do === "vam-in") { b.disabled = true; signIn().catch(() => { b.disabled = false; }); return; }
+  if (b.dataset.do === "vam-load") { loadVamsys(); return; }
+  if (b.dataset.do === "vam-out") { signOut(); return; }
   if (b.dataset.do === "delphoto") { delPhoto(); if (settings.wall === "photo") saveSettings({ wall: "night" }); C.changed("theme"); return; }
   if (sure !== b.dataset.do) { sure = b.dataset.do; b.textContent = t("Tap again to delete"); b.classList.add("pri"); setTimeout(() => { if (sure === b.dataset.do) { sure = null; C.changed("view"); } }, 3500); return; }
   sure = null;

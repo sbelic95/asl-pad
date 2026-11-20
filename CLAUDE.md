@@ -52,6 +52,11 @@ EOSID/NADP nur echte Verfahren der Airline in `procedures` – nichts erfinden.
 `js/booking.js`: Flugvorschläge aus `va/routes.json` (Vorschlag, bis die VA-Leitung bestätigt – keine Linien erfinden), Buchung → SimBrief → Plan-Karte
 mit Sprit ±. Sprit/Gewichte nur als Summen aus dem OFP, keine Performance. Kein LH-Layout nachbauen, eigener Stil.
 
+## 1.8 Funk, ACARS, Cabin, vAMSYS
+
+Keine VDGS-App mehr im Pad (Wunsch des Nutzers): Frequenz-Führer `js/atc.js`, Hoppie `js/hoppie.js` → ASL Fly Reiter „radio“; Passagier-Ansicht = App `cabin`.
+vAMSYS-Anmeldung `js/vamsys.js` + `va/vamsys.json` (nur Client-ID, **nie ein Secret ins Repo**). Feldnamen der Pilot API sind locker gemappt und mit einem echten Konto zu prüfen.
+
 ## Updates
 
 Jede sichtbare Neuerung als neuer Eintrag oben in `js/whatsnew.js` (nur, was das Pad wirklich kann). Das Pad zeigt ihn einmal
@@ -75,4 +80,5 @@ Autor `sbelic95 <119758002+sbelic95@users.noreply.github.com>`. Nach dem Push pr
 ## Offen
 
 - Feldnamen der SimBrief-Runway-Analysis (`tlr.takeoff.runway[].speeds_v1` usw.) stammen aus einem Forenbeispiel; mit einem echten OFP des Nutzers gegenprüfen (Einheiten: Längen in m?).
-- Ideen: Live-FOB und Position aus dem Simulator über die Bridge des VDGS (`bridge/vdgs_bridge.py`), weitere SimBrief-Airframes (A320, A330, ATR) in `FLEET` in `js/apps/ops.js`, Push-Hinweise.
+- vAMSYS mit echtem Konto testen (Aktivierung durch die VA, CORS, Feldnamen von /profile und /bookings).
+- Ideen: Live-FOB, Position und COM1 aus dem Simulator über die Bridge des VDGS (`bridge/vdgs_bridge.py`; braucht http im Heimnetz), weitere SimBrief-Airframes (A320, A330, ATR) in `FLEET` in `js/apps/ops.js`, Push-Hinweise.
