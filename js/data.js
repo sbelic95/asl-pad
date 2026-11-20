@@ -61,8 +61,13 @@ export function addToLogbook(e) { const l = logbook().filter((x) => x.id !== e.i
 export async function pollSimbrief(force) {
   if (settings.demo) { if (!S.ofp || force) setOfp(normOfp(demoSimbrief(settings.demo === "ground"))); return; }
   if (!settings.simbrief) { S.ofpErr = "setup"; emit(); return; }
-  try { setOfp(await fetchOfp(settings.simbrief.trim(), getJSON)); S.ofpErr = ""; }
-  catch (e) { S.ofpErr = e.message === "user" ? "user" : e.message === "noofp" ? "noofp" : "net"; }
+  let o = null;
+  try { o = await fetchOfp(settings.simbrief.trim()); }
+  catch (e) { const m = String(e.message || e); S.ofpErr = m === "user" || m === "noofp" ? m : m.startsWith("parse:") ? "parse" : "net"; S.ofpErrMsg = m.replace(/^(net|parse):/, ""); }
+  if (o) {
+    try { setOfp(o); S.ofpErr = ""; S.ofpErrMsg = ""; }
+    catch (e) { S.ofpErr = "parse"; S.ofpErrMsg = "pad: " + (e.message || e.name); console.error(e); }
+  }
   S.ofpAt = Date.now(); emit();
 }
 function setOfp(o) {

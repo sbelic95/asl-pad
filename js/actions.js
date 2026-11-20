@@ -11,7 +11,7 @@ export function actions(now = Date.now()) {
   const o = S.ofp, out = [];
   if (!o) {
     if (S.ofpErr === "setup") out.push({ id: "setup", lv: "info", ic: "plane", title: t("Set up your flight"), text: t("Enter your SimBrief name in Settings."), app: "settings" });
-    else if (S.ofpErr) out.push({ id: "ofp", lv: "red", ic: "warn", title: t("No flight plan"), text: S.ofpErr === "user" ? t("SimBrief user not found.") : S.ofpErr === "noofp" ? t("No OFP found at SimBrief.") : t("SimBrief not reachable."), app: "settings" });
+    else if (S.ofpErr) out.push({ id: "ofp", lv: "red", ic: "warn", title: t("No flight plan"), text: S.ofpErr === "user" ? t("SimBrief user not found.") : S.ofpErr === "noofp" ? t("No OFP found at SimBrief.") : S.ofpErr === "parse" ? t("The OFP could not be read.") : t("SimBrief not reachable."), app: "settings" });
     return out;
   }
   const st = S.st, d = derived(now);
