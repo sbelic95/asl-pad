@@ -117,6 +117,9 @@ Lizenzen der verwendeten Bibliotheken und Daten: [LIZENZEN.md](LIZENZEN.md).
     Anschlussflüge und Ankünfte (VATSIM, `S.board` in `data.js`), Diashow.
 - **vAMSYS** (`js/vamsys.js`, Einstellungen `va/vamsys.json`): OAuth 2.0 mit PKCE, Client-ID 1409, kein Secret. Redirect `https://sbelic95.github.io/asl-pad/`.
   Liest `/user`, `/profile`, `/bookings` der Pilot API (`vamsys.io/api/v3/pilot`); Name im Home-Bildschirm, Rang/Stunden, VATSIM-ID, Buchung als Home-Karte.
+  **Pflicht-Anmeldung:** `"required": true` in `va/vamsys.json` zeigt vor dem Pad einen Anmelde-Bildschirm. Einmal angemeldet bleibt das Gerät frei
+  (auch wenn vAMSYS später nicht erreichbar ist), bis der Pilot sich abmeldet (`asl.vamsys.ok`). Kein Zugang ohne vAMSYS; der Demo-Flug auf localhost ist ausgenommen.
+  Erst einschalten, wenn die Anmeldung mit einem echten Konto funktioniert.
   **Ungetestet gegen das echte vAMSYS** (Client muss von der VA aktiviert sein; ob vAMSYS Aufrufe aus dem Browser erlaubt (CORS), ist offen).
 
 ## Datenschutz

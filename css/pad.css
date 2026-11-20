@@ -546,3 +546,12 @@ a.btn { text-decoration: none; color: inherit; } a.btn.pri { color: #fff; }
 .cab-pos { display: block !important; background: #002e5d; color: #fff; border-radius: 12px; font: 700 18px var(--f-cond); padding: 10px 14px; margin-bottom: 10px; border: 0 !important; }
 @media (max-width: 760px) { .cab-dest { grid-template-columns: 1fr; } .cab-clock { font-size: 64px; } .cab-mapv .cab-info { left: 12px; right: 12px; width: auto; top: auto; bottom: 64px; grid-template-columns: 1fr 1fr; } .cab-board > div { grid-template-columns: 64px 1fr 1fr; } .cab-board > div > :last-child { grid-column: 2 / -1; } }
 .hm-vam { margin-top: 6px; font-size: 13px; color: var(--dim); } .hm-vam b { color: var(--fg); }
+
+/* sign-in with vAMSYS before the pad can be used */
+#gate { z-index: 80; display: grid; place-items: center; padding: 30px; background: radial-gradient(1200px 700px at 50% 35%, #0b4a9a 0%, #002e5d 55%, #001a38 100%); color: #fff; }
+#gate::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 6px; background: linear-gradient(90deg, #002e5d, #0059c2 40%, #e3001f 40% 60%, #0059c2 60%, #002e5d); }
+.gate-box { max-width: 520px; text-align: center; } .gate-logo { height: 54px; background: #fff; border-radius: 8px; padding: 6px 12px; margin-bottom: 22px; }
+.gate-box h1 { margin: 0; font: 700 64px/1 var(--f-cond); } .gate-box p { color: #d6e3f7; font-size: 17px; line-height: 1.5; margin: 14px 0 22px; }
+#gate .gate-btn { font-size: 18px; padding: 14px 28px; border-radius: 14px; background: #e3001f; border-color: #e3001f; }
+.gate-err { margin-top: 16px; padding: 10px 14px; border-radius: 10px; background: rgba(227, 0, 31, .2); border: 1px solid rgba(227, 0, 31, .6); font-size: 14px; }
+.gate-box .gate-note { font-size: 13px; color: #9fb3d3; margin-top: 26px; } .gate-box a { color: #fff; }
