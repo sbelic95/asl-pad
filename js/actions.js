@@ -6,9 +6,14 @@ import { fmtW } from "./units.js";
 import { toPick, ldgPick } from "./apps/perf.js";
 import { freqPlan, atcReady } from "./atc.js";
 import { unread } from "./hoppie.js";
+import { openReports, duties, checkedIn } from "./crew.js";
 
 export function actions(now = Date.now()) {
   const o = S.ofp, out = [];
+  const rep = openReports(now);
+  if (rep.length) out.push({ id: "report", lv: "attn", ic: "clock", title: t("Times missing"), text: t("Complete the report of {f}.", { f: rep.map((e) => e.flightNo).join(", ") }), app: "ops", tab: "report" });
+  const nd = duties().find((d) => now >= d.report - 3 * 36e5 && now < d.legs[0].std);
+  if (nd && !checkedIn(nd)) out.push({ id: "checkin", lv: now >= nd.report ? "attn" : "info", ic: "check", title: t("Check-in open"), text: t("Report {t} · {f}", { t: hhmmz(nd.report), f: nd.legs.map((l) => l.no).join(" · ") }), app: "ops", tab: "roster" });
   if (!o) {
     if (S.ofpErr === "setup") out.push({ id: "setup", lv: "info", ic: "plane", title: t("Set up your flight"), text: t("Enter your SimBrief name in Settings."), app: "settings" });
     else if (S.ofpErr) out.push({ id: "ofp", lv: "red", ic: "warn", title: t("No flight plan"), text: S.ofpErr === "user" ? t("SimBrief user not found.") : S.ofpErr === "noofp" ? t("No OFP found at SimBrief.") : S.ofpErr === "parse" ? t("The OFP could not be read.") : t("SimBrief not reachable."), app: "settings" });

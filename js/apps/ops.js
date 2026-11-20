@@ -7,9 +7,10 @@ import { I } from "../icons.js";
 import { tzOf, cityOf } from "../tz.js";
 import { sheet } from "../sheet.js";
 import { planCard, suggestCard, bookingClick } from "../booking.js";
+import { rosterView, deskView, reportView, reportInput, sendReport, duties, doCheckIn, setDesk } from "../crew.js";
 
 export const name = "ASL Ops";
-export const tabs = [["ops", "Operations"], ["fleet", "Fleet"]];
+export const tabs = [["ops", "Operations"], ["roster", "Roster"], ["edesk", "Crew Desk"], ["report", "Report"], ["fleet", "Fleet"]];
 
 // Air Serbia A319 fleet with SimBrief airframes (shared in the Air Serbia virtual community) for the Fenix A319
 export const FLEET = [
@@ -26,8 +27,10 @@ const myFleet = () => store.get("asl.fleet", []);
 let C = null;
 export function render(body, ctx) {
   C = ctx;
-  if (!body._ops) { body._ops = true; body.addEventListener("click", onClick); }
-  body.innerHTML = ctx.tab === "fleet" ? fleet() : ops(ctx.now);
+  if (!body._ops) { body._ops = true; body.addEventListener("click", onClick); body.addEventListener("change", (e) => { if (e.target.dataset.rp) reportInput(e.target); }); }
+  if (body.contains(document.activeElement) && document.activeElement.matches("input")) return; // typing a report: do not rebuild
+  const tab = ctx.tab;
+  body.innerHTML = tab === "fleet" ? fleet() : tab === "roster" ? rosterView(ctx.now) : tab === "edesk" ? deskView(ctx.now) : tab === "report" ? reportView(ctx.now) : ops(ctx.now);
 }
 export function summary() {
   const o = S.ofp; if (!o) return [t("ASL Ops"), t("No flight loaded")];
@@ -39,7 +42,12 @@ function onClick(e) {
   if (bookingClick(e)) { render(e.target.closest(".app-body") || document.querySelector("#app-ops .app-body"), C); return; }
   const a = e.target.closest("[data-open]");
   if (a && !a.closest("a")) { C.open(a.dataset.open, a.dataset.tab || undefined); return; }
+  const dk = e.target.closest("[data-desk]"); if (dk) { setDesk(dk.dataset.desk); render(dk.closest(".app-body"), C); return; }
   const b = e.target.closest("[data-do]"); if (!b) return;
+  const body = b.closest(".app-body");
+  if (b.dataset.do === "checkin") { const d = duties().find((x) => x.key === b.dataset.key); if (d) doCheckIn(d); render(body, C); return; }
+  if (b.dataset.do === "pre") { const k = "asl.pre." + (S.ofp ? `${S.ofp.callsign}.${S.ofp.dep.icao}.${S.ofp.dest.icao}` : ""), m = store.get(k, {}); m[b.dataset.k] = !m[b.dataset.k]; store.set(k, m); render(body, C); return; }
+  if (b.dataset.do === "report") { body.querySelectorAll(`[data-rp="${CSS.escape(b.dataset.id)}"]`).forEach(reportInput); sendReport(b.dataset.id); render(body, C); return; }
   if (b.dataset.do === "addac") addAircraft();
   if (b.dataset.do === "delac") { store.set("asl.fleet", myFleet().filter((x) => x.reg !== b.dataset.reg)); render(b.closest(".app-body"), C); }
 }

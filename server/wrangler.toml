@@ -1,0 +1,12 @@
+# ASL Pad server – deploy with:  npx wrangler deploy   (from this folder, after "npx wrangler login")
+name = "asl-pad"
+main = "worker.js"
+compatibility_date = "2026-01-01"
+
+[vars]
+ORIGINS = "https://sbelic95.github.io,http://localhost:8080"
+
+# create it once with:  npx wrangler kv namespace create PAD   and put the id it prints here
+[[kv_namespaces]]
+binding = "PAD"
+id = "PUT-THE-KV-ID-HERE"

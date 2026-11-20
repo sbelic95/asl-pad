@@ -1,0 +1,20 @@
+{
+  "_help": "Priručnici za ASL Pad (aplikacija „Manuals“). Samo veze (repo je javan – nikad PDF ovde). Svaka stavka: title i text na sr/en/de, url, po želji tag i type (npr. A319). Samo prave, proverene veze; dokumente kompanije dodaje uprava VA.",
+  "sections": [
+    {
+      "title": { "sr": "Air Serbia Virtual", "en": "Air Serbia Virtual", "de": "Air Serbia Virtual" },
+      "items": []
+    },
+    {
+      "title": { "sr": "ASL Pad", "en": "ASL Pad", "de": "ASL Pad" },
+      "items": [
+        { "title": { "sr": "Uputstvo za ASL Pad", "en": "ASL Pad guide", "de": "Anleitung zum ASL Pad" },
+          "text": { "sr": "Šta sve aplikacije mogu.", "en": "What every app can do.", "de": "Was jede App kann." },
+          "url": "https://github.com/sbelic95/asl-pad#readme" },
+        { "title": { "sr": "Privatnost", "en": "Privacy", "de": "Datenschutz" },
+          "text": { "sr": "Koji podaci ostaju na uređaju i ko ih dobija.", "en": "Which data stays on the device and who gets it.", "de": "Welche Daten auf dem Gerät bleiben und wer sie bekommt." },
+          "url": "https://sbelic95.github.io/asl-pad/privacy.html" }
+      ]
+    }
+  ]
+}

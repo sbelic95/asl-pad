@@ -67,7 +67,7 @@ if (chromium) {
   if (shotsAt) fs.mkdirSync(shotsAt, { recursive: true });
   const b = await chromium.launch();
   const runs = [["air", "?demo"], ["ground", "?demo=ground"], ["sr", "?demo&lang=sr"], ["de", "?demo=ground&lang=de"]];
-  const views = [["fly", "overview"], ["fly", "radio"], ["fly", "times"], ["fly", "plan"], ["fly", "map"], ["fly", "wx"], ["fly", "fuel"], ["fly", "perf"], ["ops", "ops"], ["ops", "fleet"], ["log"], ["downloads", "dl"], ["downloads", "changes"], ["apt", "brief"], ["apt", "stands"], ["cabin", "map"], ["cabin", "dest"], ["cabin", "conn"], ["cabin", "arr"], ["settings"]];
+  const views = [["fly", "overview"], ["fly", "radio"], ["fly", "times"], ["fly", "plan"], ["fly", "map"], ["fly", "wx"], ["fly", "fuel"], ["fly", "perf"], ["fly", "rwy"], ["ops", "ops"], ["ops", "roster"], ["ops", "edesk"], ["ops", "report"], ["ops", "fleet"], ["log"], ["downloads", "dl"], ["downloads", "changes"], ["apt", "brief"], ["apt", "stands"], ["cabin", "map"], ["cabin", "dest"], ["cabin", "conn"], ["cabin", "arr"], ["radar"], ["ivao"], ["weather"], ["clock", "world"], ["clock", "alarm"], ["clock", "stop"], ["clock", "timer"], ["calc"], ["calendar", "month"], ["calendar", "list"], ["kneeboard", "notes"], ["kneeboard", "draw"], ["manuals"], ["store"], ["settings"]];
   for (const [name, q] of runs) {
     const ctx = await b.newContext({ viewport: { width: 1180, height: 820 }, serviceWorkers: "block" });
     const page = await ctx.newPage(), errs = [];
@@ -90,6 +90,25 @@ if (chromium) {
     const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("asl.settings") || "{}"));
     if (saved.unit !== "lb" || saved.wall !== "dusk") errs.push(`settings clicks not saved: unit ${saved.unit}, wall ${saved.wall}`);
     if (saved.demo) errs.push("demo from the URL was saved");
+    // 2.0: home pages, App Store, Control Center, Notification Center
+    await page.evaluate(() => window.ASL.goHome()); await page.waitForTimeout(250);
+    for (const pg of [1, 2, 0]) { await page.click(`#home [data-page="${pg}"]`); await page.waitForTimeout(150); if (shotsAt && pg) await page.screenshot({ path: `${shotsAt}/${name}-home-${pg}.png` }); }
+    if ((await page.locator("#home .hm-apps .app-ic").count()) < 4) errs.push("home page has too few apps");
+    await page.evaluate(() => window.ASL.openApp("store")); await page.waitForTimeout(250);
+    await page.click('#app-store [data-inst="calc"]'); await page.waitForTimeout(150);
+    const off = await page.evaluate(() => JSON.parse(localStorage.getItem("asl.settings") || "{}").appsOff || []);
+    if (!off.includes("calc")) errs.push("App Store remove not saved");
+    await page.click('#app-store [data-inst="calc"]'); await page.waitForTimeout(150);
+    await page.evaluate(() => window.ASL.goHome()); await page.waitForTimeout(200);
+    await page.mouse.click(1100, 12); await page.waitForTimeout(350);
+    if (!(await page.locator("#dc.cc .cc-t").count())) errs.push("Control Center did not open");
+    if (shotsAt) await page.screenshot({ path: `${shotsAt}/${name}-cc.png` });
+    await page.mouse.click(40, 700); await page.waitForTimeout(300);
+    await page.evaluate(() => window.ASL.notify({ title: "Test", text: "Notification", app: "log" })); await page.waitForTimeout(100);
+    await page.mouse.click(120, 12); await page.waitForTimeout(350);
+    if (!(await page.locator("#dc.nc .nc-i").count())) errs.push("Notification Center did not open");
+    if (shotsAt) await page.screenshot({ path: `${shotsAt}/${name}-nc.png` });
+    await page.mouse.click(1150, 790); await page.waitForTimeout(300);
     await page.click("#homebar"); await page.waitForTimeout(80); await page.click("#homebar"); await page.waitForTimeout(500);
     if (!(await page.$("#switcher:not(.gone) .sw-card"))) errs.push("app switcher did not open");
     errs.length ? fail(`${name}: ${errs.join(" | ")}`) : ok(`${name}: all apps and tabs`);

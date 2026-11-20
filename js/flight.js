@@ -170,5 +170,8 @@ export function logEntry(st, ofp, fs) {
     distNm: ofp.dist || Math.round(ofp.navlog.at(-1)?.cumNm || 0), units: ofp.units, blockFuel: ofp.fuel.block,
     landingFuel: fs?.expLdg ?? null, checks: st.checks.length, route: ofp.route,
     path: pts.filter((_, k) => k % step === 0 || k === pts.length - 1).map((x) => [+x[0].toFixed(3), +x[1].toFixed(3)]),
+    // altitude profile: [minutes after take-off, feet], about 100 points
+    prof: st.track.length > 3 ? st.track.filter((_, k) => k % Math.max(1, Math.floor(st.track.length / 100)) === 0 || k === st.track.length - 1)
+      .map((x) => [Math.round(((x[3] || 0) - (st.takeoff || st.track[0][3] || 0)) / 6e4), x[2] || 0]) : null,
   };
 }

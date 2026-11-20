@@ -8,12 +8,12 @@ import { tocTod, addCheck, saveFlight, planAt } from "../flight.js";
 import { I } from "../icons.js";
 import { PHASE } from "../lock.js";
 import { renderMap, dropMap } from "./map.js";
-import { perfView, sel as perfSel } from "./perf.js";
+import { perfView, runwaysView, sel as perfSel } from "./perf.js";
 import { routeSigmetsHtml } from "../sigmet.js";
 import { radioView, radioStrip, radioClick } from "./radio.js";
 
 export const name = "ASL Fly";
-export const tabs = [["overview", "Overview"], ["radio", "Radio & ACARS"], ["times", "Times"], ["plan", "Flight plan"], ["map", "Map"], ["wx", "Weather"], ["fuel", "Fuel"], ["perf", "Performance"]];
+export const tabs = [["overview", "Overview"], ["radio", "Radio & ACARS"], ["times", "Times"], ["plan", "Flight plan"], ["map", "Map"], ["wx", "Weather"], ["fuel", "Fuel"], ["perf", "Performance"], ["rwy", "Runways"]];
 
 let C = null, lastTab = "";
 export function render(body, ctx) {
@@ -143,6 +143,7 @@ function fuelBar(o, d, legend) {
 // ---------- tabs ----------
 const VIEW = {
   perf: (o) => perfView(o),
+  rwy: (o) => runwaysView(o),
   radio: (o, d, now) => radioView(o, d, now),
   overview(o, d, now) {
     const st = S.st, ph = d.phase, pl = S.pilot;

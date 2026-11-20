@@ -1,0 +1,4 @@
+{
+  "_help": "Adresa ASL Pad servera (Cloudflare Worker, vidi server/README.md). Prazno = bez servera, sve ostaje na uređaju.",
+  "url": ""
+}

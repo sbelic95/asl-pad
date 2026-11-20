@@ -6,7 +6,7 @@ import { S, settings, saveSettings, setTestDemo, onChange, wxOf, startPolling, r
 import { t, setLang, getLang, dateLong } from "./i18n.js";
 import { APP_ICONS, I } from "./icons.js";
 import { renderLock, noteHtml } from "./lock.js";
-import { renderHome, HOME_APPS, openNotice } from "./home.js";
+import { renderHome, HOME_APPS, openNotice, homePage, installed } from "./home.js";
 import { loadAirports, cityOf, tzOf } from "./tz.js";
 import { applyWall, autoSky } from "./wall.js";
 import { career, careerHtml, promoted } from "./career.js";
@@ -19,9 +19,21 @@ import * as Settings from "./apps/settings.js";
 import * as Downloads from "./apps/downloads.js";
 import * as Airport from "./apps/airport.js";
 import * as Cabin from "./apps/cabin.js";
+import * as Weather from "./apps/weather.js";
+import * as Clock from "./apps/clock.js";
+import * as Calc from "./apps/calc.js";
+import * as Calendar from "./apps/calendar.js";
+import * as Kneeboard from "./apps/kneeboard.js";
+import * as Manuals from "./apps/manuals.js";
+import * as Store from "./apps/store.js";
+import { Vatsim, Ivao } from "./apps/radar.js";
+import { notify, N } from "./notify.js";
+import { startSync } from "./sync.js";
+import { initDevice, askPin, pinNeeded, faceId, applyBright, hide as hideDc, isOpen as dcOpen } from "./device.js";
 
 const APPS = {
   fly: Fly, ops: Ops, log: Log, settings: Settings, downloads: Downloads, apt: Airport, cabin: Cabin,
+  weather: Weather, clock: Clock, calc: Calc, calendar: Calendar, kneeboard: Kneeboard, manuals: Manuals, store: Store, radar: Vatsim, ivao: Ivao,
 };
 const NAMES = Object.fromEntries(HOME_APPS.map((a) => [a.id, a]));
 
@@ -88,6 +100,10 @@ const ctx = (id, tab, now) => ({ tab, now, open: openApp, toast, ask, changed: s
 export function openApp(id, tab) {
   if (id === "simbrief") { window.open(S.ofp?.pdf || "https://dispatch.simbrief.com/home", "_blank", "noopener"); return; }
   if (!APPS[id]) return;
+  if (ui.app !== id || ui.view !== "app") { faceId(id, () => showApp(id, tab)); return; }
+  showApp(id, tab);
+}
+function showApp(id, tab) {
   if (tab) ui.tab[id] = tab;
   if (ui.view === "lock") $("lock").classList.add("gone");
   hideSwitcher();
@@ -107,8 +123,9 @@ export function goHome() {
   ui.view = "home"; ui.app = null;
   renderHome($("home")); renderStatus();
 }
-function lockPad() { hideSwitcher(); ui.view = "lock"; renderLock($("lock")); $("lock").classList.remove("gone"); renderStatus(); }
-function unlock() { $("lock").classList.add("gone"); if (ui.app) { ui.view = "app"; renderApp(ui.app); } else goHome(); renderStatus(); whatsNewOnce(); }
+function lockPad() { hideSwitcher(); hideDc(true); ui.view = "lock"; renderLock($("lock")); $("lock").classList.remove("gone"); renderStatus(); }
+function unlock() { if (pinNeeded()) { if (!document.querySelector(".pin")) askPin(reallyUnlock); return; } reallyUnlock(); }
+function reallyUnlock() { $("lock").classList.add("gone"); if (ui.app) { ui.view = "app"; renderApp(ui.app); } else goHome(); renderStatus(); whatsNewOnce(); }
 
 // ---------- a new rank: a letter, once ----------
 function checkPromotion() {
@@ -185,7 +202,7 @@ $("homebar").addEventListener("click", () => {
 });
 document.addEventListener("keydown", (e) => {
   if (e.target.closest?.("input,select,textarea") || document.querySelector(".sheet,.ask")) return;
-  if (e.key === "Escape") { if (ui.switcher) hideSwitcher(); else if (ui.view === "app") goHome(); }
+  if (e.key === "Escape") { if (dcOpen()) return; if (ui.switcher) hideSwitcher(); else if (ui.view === "app") goHome(); }
   if (e.key === "Tab" && e.altKey) { e.preventDefault(); showSwitcher(); }
 });
 
@@ -200,11 +217,17 @@ $("lock").addEventListener("pointerup", (e) => {
   unlock();
 });
 $("home").addEventListener("click", (e) => {
+  const pg = e.target.closest("[data-page]"); if (pg) { homePage(+pg.dataset.page); renderHome($("home")); return; }
   const a = e.target.closest("[data-app]"); if (a) { openApp(a.dataset.app); return; }
   const n = e.target.closest("[data-notice]"); if (n) { openNotice(n.dataset.notice); renderHome($("home")); return; }
   if (bookingClick(e)) { renderHome($("home")); return; }
   const o = e.target.closest("[data-open]"); if (o) openApp(o.dataset.open, o.dataset.tab || undefined);
 });
+
+// swipe the app grid sideways to turn the page
+let hmX = null;
+$("home").addEventListener("pointerdown", (e) => { hmX = e.target.closest(".hm-pages") ? [e.clientX, e.clientY] : null; });
+$("home").addEventListener("pointerup", (e) => { if (!hmX) return; const dx = e.clientX - hmX[0], dy = e.clientY - hmX[1]; hmX = null; if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) { homePage(dx < 0 ? 1 : -1, true); renderHome($("home")); } });
 
 // ---------- auto-lock, like an iPad ----------
 ["pointerdown", "keydown", "wheel"].forEach((ev) => document.addEventListener(ev, () => { ui.lastInput = Date.now(); }, { passive: true }));
@@ -243,7 +266,7 @@ function renderAll() {
   if (ui.view === "lock") renderLock($("lock"), now);
   if (ui.view === "home") renderHome($("home"), now);
   if (ui.view === "app" && ui.app) renderApp(ui.app, now);
-  while (S.events.length) { const ev = S.events.shift(); const n = EVENT_NOTE[ev.e]?.(); if (n && Date.now() - ev.t < 60e3) toast(n); }
+  while (S.events.length) { const ev = S.events.shift(); const n = EVENT_NOTE[ev.e]?.(); if (n && Date.now() - ev.t < 60e3) notify(n); }
 }
 onChange(() => { if (Date.now() - lastRender > 400) renderAll(); else setTimeout(renderAll, 420); });
 setInterval(() => {
@@ -281,14 +304,17 @@ async function checkGate() {
 onChange(() => { if ($("gate") || V.err) checkGate(); });
 loadAirports().then(() => renderAll());
 renderLock($("lock")); renderHome($("home")); renderStatus();
-if (q.has("unlock") || q.get("app")) { $("lock").classList.add("gone"); ui.view = "home"; }
-if (q.get("app")) openApp(q.get("app"), q.get("tab") || undefined);
+N.banner = toast;
+initDevice({ goHome, lock: lockPad, applyTheme, renderAll, openApp, changed: settingsChanged, toast });
+applyBright();
+if ((q.has("unlock") || q.get("app")) && !pinNeeded()) { $("lock").classList.add("gone"); ui.view = "home"; if (q.get("app")) openApp(q.get("app"), q.get("tab") || undefined); }
 handleRedirect().then(async (back) => { if (back && !(await gateNeeded())) openApp("settings"); checkGate(); }); // back from the vAMSYS sign-in
 if (ui.view !== "lock") whatsNewOnce();
 startPolling();
+startSync();
 if ("serviceWorker" in navigator && location.protocol === "https:") {
   // a new version took over (sw.js changed): load it once, so a fix shows up without opening the pad twice
   if (navigator.serviceWorker.controller) navigator.serviceWorker.addEventListener("controllerchange", () => location.reload(), { once: true });
   navigator.serviceWorker.register("sw.js", { updateViaCache: "none" }).catch(() => {});
 }
-window.ASL = { S, settings, openApp, goHome, emit, showWhatsNew }; // for the console and tests
+window.ASL = { S, settings, openApp, goHome, emit, showWhatsNew, toast, notify }; // for the console and tests

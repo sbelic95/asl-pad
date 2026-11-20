@@ -10,13 +10,27 @@ import { flightWidget, timesWidget, todayWidget, liveHtml } from "./lock.js";
 import { cityOf } from "./tz.js";
 import { planCard, suggestCard, vamBookingCard } from "./booking.js";
 import { V } from "./vamsys.js";
+import { weatherWidget } from "./apps/weather.js";
+import { calendarWidget } from "./apps/calendar.js";
 
+// every app of the pad with its group (the home pages) – "core" apps cannot be removed in the App Store
+export const GROUPS = [["ops", "Operations"], ["net", "Network & weather"], ["tools", "Tools & device"]];
 export const HOME_APPS = [
-  { id: "fly", name: "ASL Fly", icon: "fly" }, { id: "ops", name: "ASL Ops", icon: "ops" }, { id: "apt", name: "Airport", icon: "airport" }, { id: "log", name: "Logbook", icon: "log" },
-  { id: "cabin", name: "Cabin", icon: "cabin" }, { id: "simbrief", name: "SimBrief", icon: "simbrief" },
-  { id: "downloads", name: "Downloads", icon: "downloads" }, { id: "settings", name: "Settings", icon: "settings" },
+  { id: "fly", name: "ASL Fly", icon: "fly", g: "ops", core: true }, { id: "ops", name: "ASL Ops", icon: "ops", g: "ops", core: true },
+  { id: "apt", name: "Airport", icon: "airport", g: "ops" }, { id: "log", name: "Logbook", icon: "log", g: "ops", core: true },
+  { id: "kneeboard", name: "Kneeboard", icon: "kneeboard", g: "ops" }, { id: "manuals", name: "Manuals", icon: "manuals", g: "ops" },
+  { id: "calendar", name: "Calendar", icon: "calendar", g: "ops" }, { id: "cabin", name: "Cabin", icon: "cabin", g: "ops" },
+  { id: "simbrief", name: "SimBrief", icon: "simbrief", g: "ops" },
+  { id: "radar", name: "VATSIM Radar", icon: "radar", g: "net" }, { id: "ivao", name: "IVAO Radar", icon: "ivao", g: "net" },
+  { id: "weather", name: "Weather", icon: "weather", g: "net" },
+  { id: "clock", name: "Clock", icon: "clock", g: "tools" }, { id: "calc", name: "Calculator", icon: "calc", g: "tools" },
+  { id: "downloads", name: "Downloads", icon: "downloads", g: "tools" }, { id: "store", name: "App Store", icon: "store", g: "tools", core: true },
+  { id: "settings", name: "Settings", icon: "settings", g: "tools", core: true },
 ];
+export const installed = (id) => { const a = HOME_APPS.find((x) => x.id === id); return !!a && (a.core || !(settings.appsOff || []).includes(id)); };
 const DOCK = ["fly", "ops", "log", "settings"];
+let page = store.get("asl.page", 0);
+export function homePage(to, rel) { page = Math.max(0, Math.min(GROUPS.length - 1, rel ? page + to : to)); store.set("asl.page", page); }
 
 function greeting(now) {
   const h = new Date(now).getHours();
@@ -32,17 +46,19 @@ export function renderHome(el, now = Date.now()) {
   el.innerHTML = `
     <div class="hm-widgets">
       <div><p class="hm-greet">${esc(greeting(now))}, ${V.data?.first ? esc(V.data.first) : t("Captain")}</p><div class="hm-sub">${esc(sub)}</div>${show("wx") ? wxHere(o, d) : ""}${show("career") ? careerHtml(career()) + (V.data?.rank ? `<div class="hm-vam"><span class="lbl">vAMSYS</span> <b>${esc(V.data.rank)}</b>${V.data.hours != null ? ` · ${Math.round(+V.data.hours)} h` : ""}${V.data.flights != null ? ` · ${esc(String(V.data.flights))} ${t("flights")}` : ""}</div>` : "") : ""}</div>
-      ${flightWidget(o, d, now)}${timesWidget(o, now)}${todayWidget(now)}
+      ${flightWidget(o, d, now)}${timesWidget(o, now)}${todayWidget(now)}${show("wwx") ? weatherWidget() : ""}${show("wcal") ? calendarWidget() : ""}
     </div>
     <div class="hm-main">
-      <div class="hm-apps">${HOME_APPS.map((a) => icon(a, badges[a.id])).join("")}</div>
+      <div class="hm-pages"><div class="hm-pg-name lbl">${t(GROUPS[page][1])}</div>
+        <div class="hm-apps">${HOME_APPS.filter((a) => a.g === GROUPS[page][0] && installed(a.id)).map((a) => icon(a, badges[a.id])).join("")}</div>
+        <div class="hm-dots">${GROUPS.map((g, i) => `<button class="${i === page ? "on" : ""}" data-page="${i}" aria-label="${esc(t(g[1]))}"></button>`).join("")}</div></div>
       <div class="hm-board">${boardOrder().filter(show).map((k) => BOARD[k](o, now, d)).join("")}</div>
     </div>
     <div class="dock">${DOCK.map((id) => icon(HOME_APPS.find((a) => a.id === id), badges[id])).join("")}</div>`;
 }
 
 // cards the pilot can hide (Settings → Home screen); the cards of the board can also be sorted
-export const HOME_CARDS = [["wx", "Weather here"], ["career", "Career"], ["vbook", "vAMSYS booking"], ["plan", "Flight plan"], ["suggest", "Suggested for you"], ["notices", "Notices"], ["events", "Network events"]];
+export const HOME_CARDS = [["wwx", "Weather widget"], ["wcal", "Calendar widget"], ["wx", "Weather here"], ["career", "Career"], ["vbook", "vAMSYS booking"], ["plan", "Flight plan"], ["suggest", "Suggested for you"], ["notices", "Notices"], ["events", "Network events"]];
 const BOARD = { vbook: (o, now) => vamBookingCard(now), plan: (o, now) => planCard(o, now), suggest: (o, now) => suggestCard(now), notices: (o, now, d) => noticesCard(now, d), events: (o, now) => eventsCard(o, now) };
 export const BOARD_DEFAULT = ["vbook", "plan", "suggest", "notices", "events"];
 export function boardOrder() { const o = (settings.homeOrder || []).filter((k) => BOARD[k]); return [...o, ...BOARD_DEFAULT.filter((k) => !o.includes(k))]; }
