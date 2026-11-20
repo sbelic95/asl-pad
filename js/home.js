@@ -8,11 +8,12 @@ import { sheet } from "./sheet.js";
 import { APP_ICONS, I } from "./icons.js";
 import { flightWidget, timesWidget, todayWidget, liveHtml } from "./lock.js";
 import { cityOf } from "./tz.js";
-import { planCard, suggestCard } from "./booking.js";
+import { planCard, suggestCard, vamBookingCard } from "./booking.js";
+import { V } from "./vamsys.js";
 
 export const HOME_APPS = [
   { id: "fly", name: "ASL Fly", icon: "fly" }, { id: "ops", name: "ASL Ops", icon: "ops" }, { id: "apt", name: "Airport", icon: "airport" }, { id: "log", name: "Logbook", icon: "log" },
-  { id: "cabin", name: "Cabin", icon: "cabin" }, { id: "vdgs", name: "VDGS", icon: "vdgs" }, { id: "simbrief", name: "SimBrief", icon: "simbrief" },
+  { id: "cabin", name: "Cabin", icon: "cabin" }, { id: "simbrief", name: "SimBrief", icon: "simbrief" },
   { id: "downloads", name: "Downloads", icon: "downloads" }, { id: "settings", name: "Settings", icon: "settings" },
 ];
 const DOCK = ["fly", "ops", "log", "settings"];
@@ -30,7 +31,7 @@ export function renderHome(el, now = Date.now()) {
   const sub = o ? t("{f} to {city} today", { f: o.iataNo || o.callsign, city: cityOf(o.dest) || o.dest?.icao }) : t("No flight loaded");
   el.innerHTML = `
     <div class="hm-widgets">
-      <div><p class="hm-greet">${esc(greeting(now))}, ${t("Captain")}</p><div class="hm-sub">${esc(sub)}</div>${show("wx") ? wxHere(o, d) : ""}${show("career") ? careerHtml(career()) : ""}</div>
+      <div><p class="hm-greet">${esc(greeting(now))}, ${V.data?.first ? esc(V.data.first) : t("Captain")}</p><div class="hm-sub">${esc(sub)}</div>${show("wx") ? wxHere(o, d) : ""}${show("career") ? careerHtml(career()) + (V.data?.rank ? `<div class="hm-vam"><span class="lbl">vAMSYS</span> <b>${esc(V.data.rank)}</b>${V.data.hours != null ? ` · ${Math.round(+V.data.hours)} h` : ""}${V.data.flights != null ? ` · ${esc(String(V.data.flights))} ${t("flights")}` : ""}</div>` : "") : ""}</div>
       ${flightWidget(o, d, now)}${timesWidget(o, now)}${todayWidget(now)}
     </div>
     <div class="hm-main">
@@ -41,9 +42,9 @@ export function renderHome(el, now = Date.now()) {
 }
 
 // cards the pilot can hide (Settings → Home screen); the cards of the board can also be sorted
-export const HOME_CARDS = [["wx", "Weather here"], ["career", "Career"], ["plan", "Flight plan"], ["suggest", "Suggested for you"], ["notices", "Notices"], ["events", "Network events"]];
-const BOARD = { plan: (o, now) => planCard(o, now), suggest: (o, now) => suggestCard(now), notices: (o, now, d) => noticesCard(now, d), events: (o, now) => eventsCard(o, now) };
-export const BOARD_DEFAULT = ["plan", "suggest", "notices", "events"];
+export const HOME_CARDS = [["wx", "Weather here"], ["career", "Career"], ["vbook", "vAMSYS booking"], ["plan", "Flight plan"], ["suggest", "Suggested for you"], ["notices", "Notices"], ["events", "Network events"]];
+const BOARD = { vbook: (o, now) => vamBookingCard(now), plan: (o, now) => planCard(o, now), suggest: (o, now) => suggestCard(now), notices: (o, now, d) => noticesCard(now, d), events: (o, now) => eventsCard(o, now) };
+export const BOARD_DEFAULT = ["vbook", "plan", "suggest", "notices", "events"];
 export function boardOrder() { const o = (settings.homeOrder || []).filter((k) => BOARD[k]); return [...o, ...BOARD_DEFAULT.filter((k) => !o.includes(k))]; }
 const show = (k) => !(settings.homeHide || []).includes(k);
 

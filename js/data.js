@@ -4,7 +4,9 @@ import { fetchOfp, normOfp } from "./ofp.js";
 import { decodeMetar, atisInfo, loadRunways, runwayFromWind } from "./wx.js";
 import { loadFlight, saveFlight, updateFlight, project, phaseOf, estimates, fuelState, logEntry, flightKey } from "./flight.js";
 import { standsCached, standsGithub, standsOverpass, predictStand } from "./stands.js";
-import { demoSimbrief, demoPilot, demoMetars, demoAtis, demoControllers, demoLogbook, demoEvents, demoTraffic, demoSigmets } from "./demo.js";
+import { demoSimbrief, demoPilot, demoMetars, demoAtis, demoControllers, demoLogbook, demoEvents, demoTraffic, demoSigmets, demoBoard } from "./demo.js";
+import { pollAcars } from "./hoppie.js";
+import { loadVamsys } from "./vamsys.js";
 
 export const API = {
   feed: "https://data.vatsim.net/v3/vatsim-data.json",
@@ -19,7 +21,7 @@ export const API = {
   routes: "va/routes.json", // route network for the flight suggestions (a proposal until the VA confirms it)
 };
 
-const DEF = { simbrief: "", cid: "", unit: "kg", theme: "dark", wall: "night", wallDim: 0.3, homeHide: [], homeOrder: [], lock: 10, demo: "" };
+const DEF = { simbrief: "", cid: "", unit: "kg", theme: "dark", wall: "night", wallDim: 0.3, homeHide: [], homeOrder: [], hoppie: "", lock: 10, demo: "" };
 export let settings = { ...DEF, ...store.get("asl.settings", {}) };
 // The demo flight is only for the automated test on the developer's own computer (localhost).
 // On the real site it can never be switched on, and a demo saved earlier is switched off.
@@ -103,7 +105,7 @@ export async function pollFeed() {
     S.feedOk = true; S.feedAt = Date.now();
     S.pilot = o ? demoPilot(o, settings.demo === "ground") : null;
     S.atis = demoAtis(); S.ctrl = demoControllers();
-    S.near = { dep: [], arr: [] }; S.traffic = demoTraffic(); S.inUse = new Set(S.traffic.map((p) => p.callsign).filter((c) => c.startsWith("ASL")));
+    S.near = { dep: [], arr: [] }; S.traffic = demoTraffic(); S.board = demoBoard(o?.dest); S.inUse = new Set(S.traffic.map((p) => p.callsign).filter((c) => c.startsWith("ASL")));
     afterPosition(); return;
   }
   try {
@@ -114,18 +116,34 @@ export async function pollFeed() {
     S.pilot = d.pilots.find((p) => (cid && p.cid === cid) || (!cid && cs && p.callsign === cs)) || null;
     S.prefile = S.pilot ? null : d.prefiles.find((p) => (cid && p.cid === cid) || (cs && p.callsign === cs)) || null;
     S.inUse = new Set([...d.pilots, ...d.prefiles].map((p) => p.callsign).filter((c) => /^ASL/.test(c)));
-    const apts = [o?.dep?.icao, o?.dest?.icao].filter(Boolean);
-    S.atis = d.atis.filter((a) => apts.some((x) => a.callsign.startsWith(x + "_")));
+    S.atis = d.atis; // all of them: the frequency guide also finds stations by other prefixes (JFK_, IATA codes)
     S.ctrl = d.controllers.filter((c) => c.facility > 0 && c.frequency !== "199.998");
     // aircraft on the ground near both airports: those stands count as taken
     const near = (pos) => (pos ? d.pilots.filter((p) => p.groundspeed < 5 && distKm([p.latitude, p.longitude], pos) < 6).map((p) => ({ callsign: p.callsign, latitude: p.latitude, longitude: p.longitude, groundspeed: p.groundspeed })) : []);
     S.near = { dep: near(o?.dep?.pos), arr: near(o?.dest?.pos) };
     // traffic on and near the ground at both airports and at Belgrade (airport map, stand taken?)
     const centres = [o?.dep?.pos, o?.dest?.pos, HOME_POS].filter(Boolean);
+    S.board = boardAt(o?.dest, d);
     S.traffic = d.pilots.filter((p) => p.groundspeed < 60 && centres.some((c) => distKm([p.latitude, p.longitude], c) < 10))
       .map((p) => ({ callsign: p.callsign, lat: p.latitude, lon: p.longitude, gs: p.groundspeed, hdg: p.heading, type: p.flight_plan?.aircraft_short || "" }));
   } catch (e) { S.feedOk = false; }
   afterPosition();
+}
+// departures from and arrivals at the destination (Cabin app: connecting flights, arrivals)
+function boardAt(apt, d) {
+  if (!apt?.icao) return null;
+  const pos = apt.pos, inAir = (p) => p.groundspeed > 50;
+  const dep = [...d.pilots.filter((p) => p.flight_plan?.departure === apt.icao).map((p) => ({ cs: p.callsign, to: p.flight_plan.arrival, type: p.flight_plan.aircraft_short || "", dep: p.flight_plan.deptime,
+      st: inAir(p) ? (pos && distKm([p.latitude, p.longitude], pos) < 40 ? "departed" : null) : p.groundspeed >= 3 ? "taxi" : "boarding" })),
+    ...d.prefiles.filter((p) => p.flight_plan?.departure === apt.icao).map((p) => ({ cs: p.callsign, to: p.flight_plan.arrival, type: p.flight_plan.aircraft_short || "", dep: p.flight_plan.deptime, st: "scheduled" }))]
+    .filter((x) => x.st);
+  const arr = d.pilots.filter((p) => p.flight_plan?.arrival === apt.icao).map((p) => {
+    const km = pos ? distKm([p.latitude, p.longitude], pos) : null;
+    return { cs: p.callsign, from: p.flight_plan.departure, type: p.flight_plan.aircraft_short || "", km, gs: p.groundspeed,
+      st: km != null && km < 15 ? (p.groundspeed < 3 ? "stand" : "landed") : inAir(p) ? (km != null && km < 100 ? "approach" : "enroute") : "planned",
+      eta: inAir(p) && km != null && p.groundspeed > 50 ? Date.now() + (km / (p.groundspeed * 1.852)) * 36e5 : null };
+  });
+  return { icao: apt.icao, dep, arr, at: Date.now() };
 }
 function afterPosition() {
   const o = S.ofp;
@@ -291,7 +309,7 @@ export function derived(now = Date.now()) {
 
 // ---------- polling ----------
 const JOBS = { simbrief: [pollSimbrief, 300e3], feed: [pollFeed, 20e3], metar: [pollMetars, 300e3], cdm: [pollCdm, 30e3], ukcp: [pollUkcp, 120e3],
-  notices: [pollNotices, 900e3], events: [pollEvents, 1800e3], sigmets: [pollSigmets, 900e3] };
+  notices: [pollNotices, 900e3], events: [pollEvents, 1800e3], sigmets: [pollSigmets, 900e3], acars: [pollAcars, 60e3], vamsys: [loadVamsys, 900e3] };
 const busy = {}, next = {};
 export function runJob(name, force) {
   if (busy[name]) return Promise.resolve();
@@ -301,7 +319,7 @@ export function runJob(name, force) {
 export async function refreshAll() {
   await runJob("simbrief", true);
   await runJob("feed");
-  runJob("metar"); runJob("cdm"); runJob("ukcp"); runJob("notices"); runJob("events"); runJob("sigmets");
+  runJob("metar"); runJob("cdm"); runJob("ukcp"); runJob("notices"); runJob("events"); runJob("sigmets"); runJob("acars"); runJob("vamsys");
 }
 export function startPolling() {
   loadRunways().then(emit);

@@ -23,6 +23,9 @@ Logo-Dienst (`pics.avs.io`) geladen. Die App-Symbole und Grafiken sind eigene En
 | `vendor/world.json` (Länder, Küsten, Grenzen der Flugkarte) | [Natural Earth](https://www.naturalearthdata.com) 1:50m, Public Domain; umgewandelt aus [world-atlas](https://github.com/topojson/world-atlas) 2.0.2 (ISC) |
 | Flugplan (OFP) | SimBrief (Navigraph) – Daten des eigenen Kontos |
 | Netzwerkdaten, METAR, ATIS | VATSIM |
+| Luftraumgrenzen und Center-Präfixe (Frequenz-Führer) | [VATSpy Data Project](https://github.com/vatsimnetwork/vatspy-data-project), SimAware TRACON Project (über `vdgs-slot-board`, Zweig `atc`) – jeweilige Projektlizenz |
+| ACARS / CPDLC | [Hoppie ACARS](https://www.hoppie.nl/acars/) – mit dem eigenen Logon-Code |
+| Pilotendaten (nach Anmeldung) | vAMSYS Pilot API – Konto bei Air Serbia Virtual |
 | Slot-Zeiten | vIFF CDM |
 | Stand-Zuweisungen UK | VATSIM UK (über `vdgs-slot-board`) |
 

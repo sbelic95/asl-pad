@@ -488,3 +488,61 @@ a.btn { text-decoration: none; color: inherit; } a.btn.pri { color: #fff; }
 .hc-order { display: grid; gap: 6px; min-width: 260px; } .hc-order > div { display: flex; align-items: center; gap: 6px; } .hc-order span { flex: 1; font-size: 14px; }
 .hc-order .btn[disabled] { opacity: .35; }
 @media (max-width: 760px) { .bk-ends, .bk-ws { grid-template-columns: 1fr; } .bk-blk { grid-template-columns: 46px 1fr 46px; } .bk-blk-s { grid-column: 1 / -1; } .bk-steps span { display: none; } }
+
+/* ---------- 1.8: Radio & ACARS in ASL Fly ---------- */
+.rd-slot { border-left: 4px solid var(--line2); } .rd-slot.wait { border-left-color: var(--warn); } .rd-slot.go { border-left-color: var(--ok); animation: rdpulse 1.6s ease-in-out infinite; } .rd-slot.late { border-left-color: var(--red); }
+@keyframes rdpulse { 50% { box-shadow: 0 0 0 4px rgba(142, 210, 142, .25); } }
+.rd-slot-h { display: flex; align-items: center; gap: 16px; margin-bottom: 10px; } .rd-slot-h > div:first-child { flex: 1; } .rd-slot-h b { display: block; font: 700 22px var(--f-cond); }
+.rd-tsat { text-align: right; } .rd-tsat b { display: block; font: 700 34px var(--f-cond); }
+.rd-row { display: grid; grid-template-columns: 1fr auto; gap: 2px 14px; padding: 10px 12px; border-radius: 12px; background: var(--panel2); margin-bottom: 8px; }
+.rd-row > .lbl { grid-column: 1 / -1; } .rd-row .stn { font: 700 19px var(--f-cond); } .rd-row .stn small { display: block; font: 600 12px var(--f-ui); color: var(--dim); }
+.rd-row .mhz { font: 700 30px var(--f-cond); color: var(--accent); align-self: center; } .rd-row .when { grid-column: 1 / -1; font-size: 13px; }
+.rd-row.next { border: 1px solid var(--line2); } .rd-row.soon { border-color: var(--warn); animation: rdsoon 1.4s ease-in-out infinite; } .rd-row.soon .mhz { color: var(--warn); }
+@keyframes rdsoon { 50% { background: rgba(253, 185, 19, .14); } }
+.rd-row.cpdlc { background: rgba(0, 89, 194, .22); border: 1px solid var(--accent2); } .rd-row.unicom .mhz { color: var(--dim); }
+.rd-later > div { display: grid; grid-template-columns: 1fr auto 80px; gap: 10px; padding: 7px 4px; border-bottom: 1px solid var(--line); font-size: 14px; align-items: center; }
+.rd-later .n b { display: block; font: 600 11px var(--f-cond); letter-spacing: .06em; text-transform: uppercase; color: var(--dim); } .rd-later .f { text-align: right; font-weight: 700; } .rd-later .tt { color: var(--dim); font-size: 12.5px; }
+.rd-ac-h { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; } .rd-ac-h .lbl { margin: 0; }
+.rd-acts { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.rd-msg { padding: 9px 10px; border-radius: 10px; border: 1px solid var(--line); margin-bottom: 6px; } .rd-msg.new { border-color: var(--accent2); background: rgba(0, 89, 194, .12); }
+.rd-msg-h { display: flex; align-items: center; gap: 8px; font-size: 13px; } .rd-msg-h .dim { margin-left: auto; }
+.rd-msg-t { font: 500 15px/1.4 var(--f-mono, monospace); margin-top: 4px; white-space: pre-wrap; word-break: break-word; } .rd-ans { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+.rd-strip { display: flex; flex-wrap: wrap; gap: 8px 22px; align-items: baseline; width: 100%; text-align: left; margin-top: 12px; padding: 11px 15px; border-radius: 14px; background: var(--panel2); border: 1px solid var(--line2); font-size: 15px; color: var(--fg); }
+.rd-strip .lbl { display: block; } .rd-strip b { font: 700 17px var(--f-cond); } .rd-strip .num { font-weight: 700; color: var(--accent); }
+.rd-strip.soon { border-color: var(--warn); } .rd-strip.soon .num { color: var(--warn); } .rd-strip .rd-new { flex-basis: 100%; font-size: 13.5px; color: var(--fg); }
+
+/* ---------- 1.8: Cabin (passenger screen, Air Serbia look) ---------- */
+.app-body.cab-body { padding: 0 !important; overflow: hidden; position: relative; }
+.cab { position: absolute; inset: 0; display: flex; flex-direction: column; background: #f3f5f9; color: #002e5d; font-family: var(--f-ui); overflow: auto;
+  background-image: radial-gradient(circle at 20% 0%, rgba(0, 89, 194, .08), transparent 45%), radial-gradient(circle at 100% 100%, rgba(227, 0, 31, .05), transparent 40%); }
+.cab-head { display: flex; align-items: center; gap: 16px; padding: 12px 20px; background: #002e5d; color: #fff; flex: none; }
+.cab-badge { background: #e3001f; color: #fff; font: 700 17px var(--f-cond); padding: 4px 12px; border-radius: 8px; letter-spacing: .04em; }
+.cab-route { flex: 1; font-size: 17px; } .cab-route span { display: block; font-size: 12.5px; color: #b9cbe6; }
+.cab-logo { height: 34px; background: #fff; border-radius: 6px; padding: 3px 8px; }
+.cab-auto { border: 1px solid rgba(255, 255, 255, .5); background: transparent; color: #fff; border-radius: 999px; padding: 6px 14px; font: 600 13px var(--f-ui); }
+.cab-auto.on { background: #fff; color: #002e5d; }
+.cab-wel { flex: none; background: #0059c2; color: #fff; padding: 8px 20px; font: 600 15px var(--f-ui); }
+.cab-page { flex: 1; padding: 22px 26px; } .cab-empty { padding: 60px 30px; text-align: center; color: #3f5878; font-size: 17px; }
+.cab-foot { flex: none; display: flex; flex-wrap: wrap; gap: 6px 26px; padding: 10px 20px; background: #002e5d; color: #dbe6f6; font-size: 13.5px; } .cab-foot b { color: #fff; margin-left: 4px; } .cab-foot .dim { margin-left: auto; color: #8ea6c8; font-size: 12px; }
+.cab-mapv .cab-map { flex: 1; min-height: 240px; background: #cfe0f2; }
+.cab-mapv { overflow: hidden; } .cab-mapv .cab-info { position: absolute; right: 18px; top: 112px; z-index: 600; width: 250px; background: rgba(255, 255, 255, .94); border-radius: 16px; padding: 12px 16px;
+  box-shadow: 0 14px 40px rgba(0, 30, 80, .18); display: grid; gap: 8px; }
+.cab-info > div span { display: block; font: 600 11px var(--f-cond); letter-spacing: .08em; text-transform: uppercase; color: #5c6f8a; } .cab-info > div b { font: 700 20px var(--f-cond); color: #002e5d; }
+.cab-phase { font: 700 14px var(--f-cond); letter-spacing: .08em; text-transform: uppercase; color: #fff; background: #e3001f; border-radius: 8px; padding: 4px 10px; justify-self: start; }
+.cab-city { background: none; border: 0; } .cab-city i { display: block; width: 12px; height: 12px; border-radius: 50%; background: #002e5d; border: 2px solid #fff; }
+.cab-city b { position: absolute; left: 16px; top: -6px; font: 700 14px var(--f-cond); color: #002e5d; white-space: nowrap; text-shadow: 0 0 3px #fff, 0 0 3px #fff; }
+.cab-city .t { position: absolute; left: 16px; top: 12px; font: 600 12px var(--f-ui); color: #3f5878; white-space: nowrap; text-shadow: 0 0 3px #fff; }
+.cab-plane { background: none; border: 0; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .35)); }
+.cab-dest { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: center; min-height: 100%; }
+.cab-clock { font: 700 96px/1 var(--f-cond); color: #002e5d; margin: 6px 0; } .cab-dest .dim { color: #5c6f8a; font-size: 18px; }
+.cab-temp { font: 700 84px/1 var(--f-cond); color: #0059c2; } .cab-temp span { display: block; font: 600 22px var(--f-ui); color: #002e5d; margin-top: 4px; }
+.cab-kv { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 18px; margin-top: 18px; } .cab-kv span { display: block; font: 600 11.5px var(--f-cond); letter-spacing: .08em; text-transform: uppercase; color: #5c6f8a; } .cab-kv b { font: 700 22px var(--f-cond); }
+.cab .lbl { color: #5c6f8a; }
+.cab-board > div { display: grid; grid-template-columns: 90px 1.2fr 1.4fr 1fr; gap: 12px; padding: 11px 12px; border-bottom: 1px solid #d7e0ec; font-size: 16px; align-items: center; }
+.cab-board .cab-bh { font: 700 12px var(--f-cond); letter-spacing: .08em; text-transform: uppercase; color: #5c6f8a; border-bottom: 2px solid #002e5d; }
+.cab-board small { color: #6a7d97; font-size: 12px; } .cab-board .gone { opacity: .45; } .cab-board .me { background: rgba(227, 0, 31, .08); border-left: 4px solid #e3001f; }
+.cab-board .st { font: 700 13px var(--f-cond); letter-spacing: .05em; text-transform: uppercase; } .cab-board .st.boarding, .cab-board .st.approach { color: #0059c2; } .cab-board .st.landed, .cab-board .st.departed, .cab-board .st.stand { color: #2f8f5b; }
+.cab-board .num { font: 700 18px var(--f-cond); }
+.cab-pos { display: block !important; background: #002e5d; color: #fff; border-radius: 12px; font: 700 18px var(--f-cond); padding: 10px 14px; margin-bottom: 10px; border: 0 !important; }
+@media (max-width: 760px) { .cab-dest { grid-template-columns: 1fr; } .cab-clock { font-size: 64px; } .cab-mapv .cab-info { left: 12px; right: 12px; width: auto; top: auto; bottom: 64px; grid-template-columns: 1fr 1fr; } .cab-board > div { grid-template-columns: 64px 1fr 1fr; } .cab-board > div > :last-child { grid-column: 2 / -1; } }
+.hm-vam { margin-top: 6px; font-size: 13px; color: var(--dim); } .hm-vam b { color: var(--fg); }

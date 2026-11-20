@@ -4,6 +4,8 @@ import { t } from "./i18n.js";
 import { hhmmz, dur } from "./util.js";
 import { fmtW } from "./units.js";
 import { toPick, ldgPick } from "./apps/perf.js";
+import { freqPlan, atcReady } from "./atc.js";
+import { unread } from "./hoppie.js";
 
 export function actions(now = Date.now()) {
   const o = S.ofp, out = [];
@@ -48,6 +50,13 @@ export function actions(now = Date.now()) {
       const r = runwayOf(o.dest.icao, "arr");
       out.push({ id: "atis", lv: "info", ic: "radio", title: t("{icao} information {l}", { icao: o.dest.icao, l: a.letter || "—" }), text: [r?.rwy && t("Landing runway {r}", { r: r.rwy }), a.freq && "ATIS " + a.freq].filter(Boolean).join(" · "), app: "ops" });
     }
+  }
+  // radio: a frequency change coming up, new ACARS / CPDLC messages
+  if (!st.onBlock) {
+    const p = atcReady() ? freqPlan() : null;
+    if (p?.soon) out.push({ id: "freq", lv: "attn", ic: "radio", title: t("Change soon: {s} {f}", { s: p.next.st.name, f: p.next.st.mhz }), text: [p.next.st.cs, p.next.min != null ? t("in about {n} min", { n: p.next.min }) : ""].filter(Boolean).join(" · "), app: "fly", tab: "radio" });
+    const u = unread(now);
+    if (u.length) out.push({ id: "acars", lv: "attn", ic: "radio", title: t("ACARS from {f}", { f: u[0].from }) + (u.length > 1 ? ` (+${u.length - 1})` : ""), text: u[0].text.slice(0, 120), app: "fly", tab: "radio" });
   }
   if (st.onBlock) out.push({ id: "logged", lv: "ok", ic: "check", title: t("Flight logged"), text: t("{f} · block {b}", { f: o.iataNo || o.callsign, b: dur(st.onBlock - st.offBlock) }), app: "log" });
   return out;

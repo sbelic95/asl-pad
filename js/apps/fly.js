@@ -10,9 +10,10 @@ import { PHASE } from "../lock.js";
 import { renderMap, dropMap } from "./map.js";
 import { perfView, sel as perfSel } from "./perf.js";
 import { routeSigmetsHtml } from "../sigmet.js";
+import { radioView, radioStrip, radioClick } from "./radio.js";
 
 export const name = "ASL Fly";
-export const tabs = [["overview", "Overview"], ["times", "Times"], ["plan", "Flight plan"], ["map", "Map"], ["wx", "Weather"], ["fuel", "Fuel"], ["perf", "Performance"]];
+export const tabs = [["overview", "Overview"], ["radio", "Radio & ACARS"], ["times", "Times"], ["plan", "Flight plan"], ["map", "Map"], ["wx", "Weather"], ["fuel", "Fuel"], ["perf", "Performance"]];
 
 let C = null, lastTab = "";
 export function render(body, ctx) {
@@ -39,6 +40,7 @@ export function summary() {
 
 function onClick(e) {
   const b = e.target.closest("[data-do]"); if (!b) return;
+  if (C.tab === "radio" && b.dataset.do !== "settings" && b.dataset.do !== "tab") { radioClick(e, C); return; }
   if (b.dataset.do === "check") fuelCheck();
   if (b.dataset.do === "settings") C.open("settings");
   if (b.dataset.do === "tab") C.setTab(b.dataset.tab);
@@ -141,6 +143,7 @@ function fuelBar(o, d, legend) {
 // ---------- tabs ----------
 const VIEW = {
   perf: (o) => perfView(o),
+  radio: (o, d, now) => radioView(o, d, now),
   overview(o, d, now) {
     const st = S.st, ph = d.phase, pl = S.pilot;
     const air = st.takeoff && !st.landing;
@@ -158,6 +161,7 @@ const VIEW = {
       ${routeLine(o, d)}
       <div class="apts">${aptCard(o, o.dep, now, true)}${aptCard(o, o.dest, now, true)}${o.altns.map((a) => aptCard(o, a, now)).join("")}${edtoCard(o)}</div>
       <div class="now-card">${c1}${c2}${c3}${c4}</div>
+      ${radioStrip(o, now)}
       ${timesStrip(o, d)}
       ${fuelBox(o, d, false)}
       <div class="card" style="margin-top:14px">${kv([

@@ -1,5 +1,6 @@
 // ASL Pad shell: lock screen, home screen, apps, app switcher (double-tap the home bar), status bar.
 import { bookingClick } from "./booking.js";
+import { handleRedirect } from "./vamsys.js";
 import { $, esc, hhmmz, store } from "./util.js";
 import { S, settings, saveSettings, setTestDemo, onChange, wxOf, startPolling, refreshAll, restart, emit } from "./data.js";
 import { t, setLang, getLang, dateLong } from "./i18n.js";
@@ -17,20 +18,14 @@ import * as Log from "./apps/log.js";
 import * as Settings from "./apps/settings.js";
 import * as Downloads from "./apps/downloads.js";
 import * as Airport from "./apps/airport.js";
+import * as Cabin from "./apps/cabin.js";
 
-const frameApp = (id, name, url) => ({ id, name, frame: true, url, render(body) {
-  if (!body.querySelector("iframe")) body.innerHTML = `<iframe src="${esc(url())}" style="border:0;width:100%;height:100%;display:block;background:#fff" allow="fullscreen; autoplay"></iframe>`;
-}, summary: () => [name, t("Opened in the pad")] });
-const VDGS = "https://sbelic95.github.io/vdgs-slot-board/";
-const cs = () => S.ofp?.callsign || "";
 const APPS = {
-  fly: Fly, ops: Ops, log: Log, settings: Settings, downloads: Downloads, apt: Airport,
-  cabin: frameApp("cabin", "Cabin", () => VDGS + "airserbia/" + (cs() ? "?cs=" + cs() : "")),
-  vdgs: frameApp("vdgs", "VDGS", () => VDGS + (cs() ? "?cs=" + cs() : "")),
+  fly: Fly, ops: Ops, log: Log, settings: Settings, downloads: Downloads, apt: Airport, cabin: Cabin,
 };
 const NAMES = Object.fromEntries(HOME_APPS.map((a) => [a.id, a]));
 
-const ui = { view: "lock", app: null, recent: store.get("asl.recent", []), tab: {}, lastInput: Date.now(), switcher: false };
+const ui = { view: "lock", app: null, recent: store.get("asl.recent", []).filter((id) => APPS[id]), tab: {}, lastInput: Date.now(), switcher: false }; // removed apps (vdgs) drop out
 
 // ---------- URL options: ?app=fly&tab=map, ?unlock, ?lang=de; ?demo / ?demo=ground only on localhost (test) ----------
 const q = new URLSearchParams(location.search);
@@ -274,6 +269,7 @@ loadAirports().then(() => renderAll());
 renderLock($("lock")); renderHome($("home")); renderStatus();
 if (q.has("unlock") || q.get("app")) { $("lock").classList.add("gone"); ui.view = "home"; }
 if (q.get("app")) openApp(q.get("app"), q.get("tab") || undefined);
+handleRedirect().then((back) => { if (back) openApp("settings"); }); // back from the vAMSYS sign-in
 if (ui.view !== "lock") whatsNewOnce();
 startPolling();
 if ("serviceWorker" in navigator && location.protocol === "https:") {

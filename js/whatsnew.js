@@ -7,6 +7,20 @@ import { esc } from "./util.js";
 import { APP_ICONS } from "./icons.js";
 
 export const releases = () => [
+  { v: "1.8", date: "2026-11-20", groups: [
+    { icon: "fly", name: "ASL Fly", items: [
+      t("Radio & ACARS: the frequency now and the next one with the time to the change, all the way to the stand"),
+      t("ACARS and CPDLC over Hoppie: request a PDC, METAR, TAF and ATIS, send telex, log on to CPDLC and answer WILCO or UNABLE"),
+      t("Slot status from vIFF CDM with the start-up window, and reminders for frequency changes and new messages"),
+    ] },
+    { icon: "cabin", name: "Cabin", items: [
+      t("New app for the passengers: flight map, destination with local time and weather, connecting flights and arrivals"),
+    ] },
+    { icon: "pad", name: "ASL Pad", items: [
+      t("Sign in with vAMSYS: your name, rank, hours and your booking come into the pad"),
+      t("The old VDGS app is gone – everything from it now lives in ASL Fly and Cabin"),
+    ] },
+  ] },
   { v: "1.7.2", date: "2026-11-17", groups: [
     { icon: "fly", name: "ASL Fly", items: [
       t("Flight map: countries, coasts and borders from Natural Earth even when the map tiles do not load"),
