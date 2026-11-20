@@ -11,6 +11,8 @@ export const signedIn = () => !!store.get(KEY, null)?.access;
 // Sign-in required (va/vamsys.json "required"): once a pilot has signed in, this device stays unlocked – also when vAMSYS
 // is later unreachable or the sign-in runs out – until the pilot signs out.
 export const unlocked = () => !!store.get(OK, null);
+// the pad's PIN: the digits of the vAMSYS pilot ID (ASL0123 → 0123); none without vAMSYS
+export const pinCode = () => { const d = String(V.data?.pilotId || V.data?.callsign || "").replace(/\D/g, ""); return d.length >= 3 ? d : ""; };
 export async function gateNeeded() { try { return !!(await cfg()).required && !unlocked() && !settings.demo; } catch { return false; } }
 async function cfg() { if (!CFG) CFG = await getJSON("va/vamsys.json", 15000); return CFG; }
 // on GitHub Pages the registered address; elsewhere (tests on localhost) the page itself
@@ -54,6 +56,7 @@ async function access() {
   try { return (await tokenCall({ grant_type: "refresh_token", refresh_token: t.refresh })).access; }
   catch (e) { if (e.message !== "browser") store.del(KEY); throw e; }
 }
+export const accessToken = () => access();
 async function api(path) {
   const c = await cfg(), tok = await access(); if (!tok) throw new Error("signed out");
   let r; try { r = await fetch(c.api + path, { headers: { Accept: "application/json", Authorization: "Bearer " + tok } }); } catch { throw new Error("browser"); }
@@ -81,7 +84,7 @@ export async function loadVamsys() {
     })).filter((b) => b.dep && b.arr); } catch {}
     V.data = {
       name: [pick(user, "first_name"), pick(user, "last_name")].filter(Boolean).join(" ") || pick(user, "name", "username") || "",
-      first: pick(user, "first_name") || "", callsign: pick(prof, "callsign", "pilot_callsign") || "",
+      first: pick(user, "first_name") || "", callsign: pick(prof, "callsign", "pilot_callsign") || "", pilotId: String(pick(prof, "pilot_id", "pilot_number", "username", "id_string") || pick(user, "pilot_id", "username") || ""),
       rank: pick(prof, "rank.name", "rank_name") || "", hours: pick(prof, "statistics.hours", "stats.hours", "total_hours", "hours", "flight_time_hours"),
       flights: pick(prof, "statistics.flights", "stats.flights", "total_flights", "pireps_count"),
       vatsim: String(pick(prof, "vatsim_id", "vatsim.id", "networks.vatsim", "user.vatsim_id") || pick(user, "vatsim_id", "vatsim.id") || ""),

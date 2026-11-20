@@ -12,13 +12,15 @@ Es gibt keinen Demo-Modus: Das Pad zeigt immer den eigenen Flug aus SimBrief und
 | Teil | Inhalt |
 |---|---|
 | **Sperrbildschirm** | Uhr, Flug- und Zeit-Widgets, Hinweise (TSAT, Fuel Check fällig, Stand, ATIS) und die Live-Aktivität des Flugs unten (Strecke, nächster Wegpunkt, FL, FOB, verbleibende NM). Nach oben wischen oder tippen entsperrt. |
-| **Home** | Begrüßung, Widgets, App-Raster und Dock. Rote Badges zeigen offene Punkte. |
+| **Home** | Begrüßung, Widgets (Flug, Zeiten, Wetter, Kalender), drei App-Seiten mit Punkten (Betrieb · Netzwerk & Wetter · Werkzeuge & Gerät; wischen oder Punkte tippen), Board und Dock. Rote Badges zeigen offene Punkte. |
+| **Gerät** | Statusleiste oben rechts herunterziehen/tippen = **Kontrollzentrum** (hell/dunkel, Nicht stören, Mitteilungen, Sprache, Helligkeit, Sperren, Status von VATSIM/SimBrief/vAMSYS/Hoppie). Oben links = **Mitteilungszentrale** (To-do und alle Hinweise der Apps, `js/notify.js`). **PIN** = Ziffern der vAMSYS-Piloten-ID (Einstellungen → PIN), **Face ID** vor ASL Ops und Manuals ist nur gespielt (Animation, 10 Minuten gültig). |
 | **ASL Fly** | Übersicht (Flughäfen mit Wetter und Piste, Phase, nächster Wegpunkt, ETA, OUT/OFF/ON/IN, Treibstoff), Zeiten, Flugplan mit ETA/ATA je Wegpunkt, Karte mit Route, geflogenem Weg und Vertikalprofil, Wetter (METAR, TAF, ATIS), Treibstoff mit Fuel Checks. |
-| **ASL Ops** | Dienst-Leiste, To-do, Abflug (Stand, Piste, SID, vIFF-CDM: EOBT/TOBT/TSAT/TTOT/CTOT, Frequenzen) und Ankunft (Stand-Prognose, Piste, STAR, ATIS, Frequenzen). Reiter **Flotte** mit den SimBrief-Airframes der A319 YU-APA bis YU-APE und eigenen Flugzeugen. |
+| **ASL Ops** | Reiter **Dienstplan** (vAMSYS-Buchungen + OFP zu Diensten: Meldezeit −60 min, Turnaround, Dienstzeit, Dienstende +30 min, Check-in), **Crew Desk** (Posteingang, Vorflug-Liste, Wetter, NOTAMs aus dem OFP), **Bericht** (tatsächliche Zeiten und Sprit der letzten 72 h; „Times missing“ als Hinweis). Reiter Operations: Dienst-Leiste, To-do, Abflug (Stand, Piste, SID, vIFF-CDM: EOBT/TOBT/TSAT/TTOT/CTOT, Frequenzen) und Ankunft (Stand-Prognose, Piste, STAR, ATIS, Frequenzen). Reiter **Flotte** mit den SimBrief-Airframes der A319 YU-APA bis YU-APE und eigenen Flugzeugen. |
 | **Logbuch** | Jeder Flug wird beim On-Block eingetragen. Statistik, Details mit Streckenkarte, Flug von Hand eintragen, CSV-Export, Sicherung und Import (JSON). |
 | **Aerodrom (Airport)** | Rollkarte von LYBE, LYNI und LYKV (Pisten, Rollwege mit Schildern, Stände, Haltepunkte, Hot Spots, VATSIM-Verkehr – unsere in Rot) mit **Rollweg** vom Stand zur Piste bzw. vom Abrollweg zum Stand und den Haltepunkten; **LYBE-Briefing** aus [`va/airports/LYBE.json`](va/airports/LYBE.json); **Stände** mit Spannweite, Einweisung, passt / belegt. |
 | **Preuzimanja (Downloads)** | Links der VA aus [`va/downloads.json`](va/downloads.json): ACARS (Pflicht), Crew Lounge, Liveries, SimBrief, VATSIM, SCG vACC. Reiter **Promene** mit allen Updates. |
-| **Cabin / VDGS** | Öffnet die Air-Serbia-Kabinenanzeige und das VDGS aus `vdgs-slot-board` mit dem Rufzeichen des Flugs. |
+| **Neue Apps (2.0)** | **VATSIM Radar** / **IVAO Radar** (`js/apps/radar.js`, ein Modul, zwei Netze), **Weather** (nur Air-Serbia-Ziele aus `va/routes.json`, Szenen nach METAR), **Calendar**, **Clock** (Zulu, Weltuhr, Stoppuhr, Timer, Wecker), **Calculator**, **Kneeboard** (Freigabe, ATIS, Notizen, Zeichenblock je Flug), **Manuals** (nur Links aus [`va/manuals.json`](va/manuals.json)), **App Store** (Apps ein-/ausblenden, `settings.appsOff`). |
+| **ASL Fly → Runways** | Gegen-/Rücken- und Seitenwind je Piste aus dem aktuellen METAR (Pistenliste aus SimBriefs Runway Analysis; reine Geometrie, keine Performance). |
 | **Zurück** | Das App-Logo oben links (z. B. „‹ ASL Ops“) führt in jeder App zurück zum Home-Bildschirm, wie ein Tipp auf den Home-Balken unten. |
 | **Einstellungen** | SimBrief-Name oder Pilot-ID, VATSIM-CID, Sprache (Englisch, Srpski, Deutsch), kg / t / lb, hell / dunkel, **Hintergrund** für Sperr- und Home-Bildschirm (sechs Vorlagen oder ein eigenes Foto vom Gerät, abdunkelbar), Auto-Sperre. |
 
@@ -121,6 +123,12 @@ Lizenzen der verwendeten Bibliotheken und Daten: [LIZENZEN.md](LIZENZEN.md).
   (auch wenn vAMSYS später nicht erreichbar ist), bis der Pilot sich abmeldet (`asl.vamsys.ok`). Kein Zugang ohne vAMSYS; der Demo-Flug auf localhost ist ausgenommen.
   Erst einschalten, wenn die Anmeldung mit einem echten Konto funktioniert.
   **Ungetestet gegen das echte vAMSYS** (Client muss von der VA aktiviert sein; ob vAMSYS Aufrufe aus dem Browser erlaubt (CORS), ist offen).
+
+## Server (2.0, vorbereitet)
+
+`server/` enthält einen Cloudflare Worker für die Synchronisierung zwischen Geräten (Logbuch, Kalender, Wecker, Check-ins),
+Anmeldung über den vAMSYS-Token. Er ist aus, solange `url` in [`va/server.json`](va/server.json) leer ist. Einschalten: [server/README.md](server/README.md).
+Push an ein geschlossenes Pad und E-Mail brauchen noch VAPID-Schlüssel bzw. einen Mail-Dienst.
 
 ## Datenschutz
 

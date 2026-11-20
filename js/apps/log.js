@@ -89,7 +89,7 @@ function detail(e) {
   sheet(`<div style="display:flex;align-items:baseline;gap:12px"><h2>${esc(e.flightNo)} · ${esc(e.dep)} – ${esc(e.arr)}</h2><span class="dim">${esc(dateShort(e.date))}</span>
       <button class="btn small" style="margin-left:auto" data-close>${t("Close")}</button></div>
     <div class="dim" style="font-size:13px">${esc(e.depName || "")} → ${esc(e.arrName || "")} · ${esc(e.callsign || "")}</div>
-    ${minimap(e)}
+    ${minimap(e)}${profile(e)}
     <div class="kv">${c(t("Off block"), hhmmz(e.offBlock), t("plan") + " " + hhmmz(e.schedOut))}${c(t("Take-off"), hhmmz(e.takeoff))}${c(t("Landing"), hhmmz(e.landing))}${c(t("On block"), hhmmz(e.onBlock), t("plan") + " " + hhmmz(e.schedIn))}
       ${c(t("Block time"), dur(blockOf(e)))}${c(t("Flight time"), airOf(e) ? dur(airOf(e)) : "—")}${c(t("Delay"), delay == null ? "—" : `<span class="${delay > 15 * 60e3 ? "bad" : delay > 0 ? "warn" : "ok"}">${dur(delay, true)}</span>`)}
       ${c(t("Distance"), nf(e.distNm) + "<small>NM</small>")}${c(t("Aircraft"), esc(e.type || "—"), esc(e.reg || ""))}${c(t("Passengers"), e.pax != null ? nf(e.pax) : "—")}
@@ -101,6 +101,17 @@ function detail(e) {
     if (!d.dataset.sure) { d.dataset.sure = "1"; d.textContent = t("Tap again to delete"); d.classList.add("pri"); return; }
     saveLogbook(logbook().filter((x) => x.id !== e.id)); close();
   });
+}
+
+// the altitude profile of the flown track (flights logged from 2.0 on)
+function profile(e) {
+  const p = (e.prof || []).filter((x) => x && x[0] >= -5); if (p.length < 3) return "";
+  const W = 760, H = 130, t1 = Math.max(...p.map((x) => x[0]), 1), a1 = Math.max(...p.map((x) => x[1]), 1000);
+  const X = (m) => 36 + (m / t1) * (W - 46), Y = (a) => H - 18 - (a / a1) * (H - 34);
+  const line = p.map((x) => `${X(Math.max(0, x[0])).toFixed(1)},${Y(x[1]).toFixed(1)}`).join(" ");
+  return `<svg class="log-prof" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><g stroke="var(--line)">${[0, 0.5, 1].map((f) => `<line x1="36" x2="${W - 10}" y1="${Y(a1 * f)}" y2="${Y(a1 * f)}"/>`).join("")}</g>
+    <polygon points="${X(0)},${Y(0)} ${line} ${X(t1)},${Y(0)}" fill="var(--route)" fill-opacity=".15"/><polyline points="${line}" fill="none" stroke="var(--route)" stroke-width="2.5"/>
+    <text x="4" y="${Y(a1) + 4}" fill="var(--dim)" font-size="11">FL${Math.round(a1 / 100)}</text><text x="${W - 10}" y="${H - 3}" fill="var(--dim)" font-size="11" text-anchor="end">${dur(t1 * 6e4)}</text></svg>`;
 }
 
 // the route on a small map of its own (equirectangular, fitted to the flight)

@@ -4,7 +4,7 @@ import { fetchOfp, normOfp } from "./ofp.js";
 import { decodeMetar, atisInfo, loadRunways, runwayFromWind } from "./wx.js";
 import { loadFlight, saveFlight, updateFlight, project, phaseOf, estimates, fuelState, logEntry, flightKey } from "./flight.js";
 import { standsCached, standsGithub, standsOverpass, predictStand } from "./stands.js";
-import { demoSimbrief, demoPilot, demoMetars, demoAtis, demoControllers, demoLogbook, demoEvents, demoTraffic, demoSigmets, demoBoard } from "./demo.js";
+import { demoSimbrief, demoPilot, demoMetars, demoAtis, demoControllers, demoLogbook, demoEvents, demoTraffic, demoSigmets, demoBoard, demoNet } from "./demo.js";
 import { pollAcars } from "./hoppie.js";
 import { loadVamsys } from "./vamsys.js";
 
@@ -21,7 +21,7 @@ export const API = {
   routes: "va/routes.json", // route network for the flight suggestions (a proposal until the VA confirms it)
 };
 
-const DEF = { simbrief: "", cid: "", unit: "kg", theme: "dark", wall: "night", wallDim: 0.3, homeHide: [], homeOrder: [], hoppie: "", lock: 10, demo: "" };
+const DEF = { simbrief: "", cid: "", unit: "kg", theme: "dark", wall: "night", wallDim: 0.3, homeHide: [], homeOrder: [], hoppie: "", ivao: "", appsOff: [], pin: true, dnd: false, push: false, lock: 10, demo: "" };
 export let settings = { ...DEF, ...store.get("asl.settings", {}) };
 // The demo flight is only for the automated test on the developer's own computer (localhost).
 // On the real site it can never be switched on, and a demo saved earlier is switched off.
@@ -110,7 +110,7 @@ export async function pollFeed() {
     S.feedOk = true; S.feedAt = Date.now();
     S.pilot = o ? demoPilot(o, settings.demo === "ground") : null;
     S.atis = demoAtis(); S.ctrl = demoControllers();
-    S.near = { dep: [], arr: [] }; S.traffic = demoTraffic(); S.board = demoBoard(o?.dest); S.inUse = new Set(S.traffic.map((p) => p.callsign).filter((c) => c.startsWith("ASL")));
+    S.near = { dep: [], arr: [] }; S.traffic = demoTraffic(); S.board = demoBoard(o?.dest); S.net = demoNet(o, S.pilot); S.inUse = new Set(S.traffic.map((p) => p.callsign).filter((c) => c.startsWith("ASL")));
     afterPosition(); return;
   }
   try {
@@ -129,6 +129,10 @@ export async function pollFeed() {
     // traffic on and near the ground at both airports and at Belgrade (airport map, stand taken?)
     const centres = [o?.dep?.pos, o?.dest?.pos, HOME_POS].filter(Boolean);
     S.board = boardAt(o?.dest, d);
+    // the whole network for the radar app (slim copy)
+    S.net = { at: Date.now(), pilots: d.pilots.map((p) => ({ cs: p.callsign, cid: p.cid, lat: p.latitude, lon: p.longitude, alt: p.altitude, gs: p.groundspeed, hdg: p.heading,
+      dep: p.flight_plan?.departure || "", arr: p.flight_plan?.arrival || "", type: p.flight_plan?.aircraft_short || "", route: p.flight_plan?.route || "", name: p.name })),
+      ctrl: d.controllers.filter((c) => c.facility > 0 && c.frequency !== "199.998").map((c) => ({ cs: c.callsign, f: c.frequency, fac: c.facility, name: c.name, cid: c.cid })) };
     S.traffic = d.pilots.filter((p) => p.groundspeed < 60 && centres.some((c) => distKm([p.latitude, p.longitude], c) < 10))
       .map((p) => ({ callsign: p.callsign, lat: p.latitude, lon: p.longitude, gs: p.groundspeed, hdg: p.heading, type: p.flight_plan?.aircraft_short || "" }));
   } catch (e) { S.feedOk = false; }

@@ -143,11 +143,12 @@ export function demoPilot(ofp, ground) {
 }
 
 // sample logbook so the logbook app is not empty in the demo
+const demoProf = (air) => { const top = air > 150 ? 37000 : 35000, out = []; for (let m = 0; m <= air; m += Math.max(2, air / 60)) { const a = m < 22 ? top * (m / 22) ** 0.8 : m > air - 28 ? top * ((air - m) / 28) ** 1.1 : top - (m > air / 2 ? 0 : 2000); out.push([Math.round(m), Math.round(a)]); } out.push([Math.round(air), 0]); return out; };
 export function demoLogbook() {
   const day = 864e5, base = Date.now() - 2 * day;
   const mk = (n, dep, arr, depName, arrName, type, reg, out, blk, dist, path) => ({ id: "demo" + n, date: out, callsign: "ASL" + n, flightNo: "JU" + n,
     dep, arr, depName, arrName, type, reg, schedOut: out, schedIn: out + blk, offBlock: out + 4 * 60e3, takeoff: out + 18 * 60e3, landing: out + blk - 7 * 60e3,
-    onBlock: out + blk + 2 * 60e3, distNm: dist, units: "kg", blockFuel: null, landingFuel: null, checks: 2, route: "", path });
+    onBlock: out + blk + 2 * 60e3, distNm: dist, units: "kg", blockFuel: null, landingFuel: null, checks: 2, route: "", path, prof: demoProf((blk - 25 * 60e3) / 6e4) });
   return [
     mk(122, "LYBE", "EDDF", "Belgrade Nikola Tesla", "Frankfurt Main", "A319", "YU-APA", base - day + 6 * 36e5, 125 * 60e3, 563, [[44.82, 20.31], [47.2, 15.5], [50.03, 8.57]]),
     mk(123, "EDDF", "LYBE", "Frankfurt Main", "Belgrade Nikola Tesla", "A319", "YU-APA", base - day + 9.5 * 36e5, 120 * 60e3, 563, [[50.03, 8.57], [47.2, 15.5], [44.82, 20.31]]),
@@ -196,4 +197,14 @@ export function demoBoard(apt) {
       .map(([cs, to, type, m, st]) => ({ cs, to, type, dep: hh(m), st })),
     arr: [["BAW117", "EGLL", "A35K", 180, "enroute"], ["AFR6", "LFPG", "B77W", 60, "approach"], ["THY3", "LTFM", "B789", 0, "landed"], ["SWR16", "LSZH", "A333", 0, "stand"]]
       .map(([cs, from, type, km, st]) => ({ cs, from, type, km, st, eta: km ? now + (km / 800) * 36e5 : null })) };
+}
+
+// a small network for the radar app
+export function demoNet(o, me) {
+  const P = [["ASL218", 44.82, 20.3, 0, 0, 120, "LYBE", "LOWW", "A319"], ["ASL352", 46.9, 17.4, 36000, 450, 300, "LYBE", "EDDF", "A320"], ["DLH1KC", 48.5, 11.2, 24000, 380, 120, "EDDM", "LYBE", "A20N"],
+    ["THY5LV", 42.1, 25.6, 33000, 440, 300, "LTFM", "EDDF", "A321"], ["WZZ4471", 44.83, 20.29, 0, 0, 30, "LYBE", "EGGW", "A21N"], ["BAW117", 50.4, -30.2, 38000, 480, 270, "EGLL", "KJFK", "A35K"],
+    ["AFR6", 49.8, -40.1, 37000, 470, 265, "LFPG", "KJFK", "B77W"], ["UAE139", 41.2, 30.4, 39000, 500, 120, "OMDB", "LYBE", "B77W"]];
+  const pilots = P.map(([cs, lat, lon, alt, gs, hdg, dep, arr, type], i) => ({ cs, cid: 1000000 + i, lat, lon, alt, gs, hdg, dep, arr, type, route: "DCT", name: "Demo" }));
+  if (me && o) pilots.push({ cs: o.callsign, cid: 1234567, lat: me.latitude, lon: me.longitude, alt: me.altitude, gs: me.groundspeed, hdg: me.heading, dep: o.dep.icao, arr: o.dest.icao, type: o.type, route: o.route, name: "Demo" });
+  return { at: Date.now(), pilots, ctrl: demoControllers().map((c) => ({ cs: c.callsign, f: c.frequency, fac: c.facility, name: c.name, cid: 0 })) };
 }

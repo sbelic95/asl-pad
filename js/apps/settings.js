@@ -5,7 +5,7 @@ import { esc, store } from "../util.js";
 import { WALLS, getPhoto, delPhoto, savePhoto } from "../wall.js";
 import { latest } from "../whatsnew.js";
 import { HOME_CARDS, boardOrder } from "../home.js";
-import { V, signedIn, signIn, signOut, loadVamsys } from "../vamsys.js";
+import { V, signedIn, signIn, signOut, loadVamsys, pinCode } from "../vamsys.js";
 
 export const name = "Settings";
 export const tabs = [];
@@ -48,6 +48,7 @@ function page() {
     <div class="card"><div class="lbl" style="margin-bottom:4px">${t("Flight")}</div>
       ${row(t("SimBrief"), t("Username or pilot ID. Your latest OFP is loaded."), `<input data-k="simbrief" value="${esc(settings.simbrief)}" placeholder="${t("e.g. 123456")}" autocomplete="off" autocapitalize="off" spellcheck="false" style="width:240px"> ${st}`)}
       ${row(t("VATSIM CID"), t("Finds your aircraft on the network. Without it the callsign of the OFP is used."), `<input data-k="cid" value="${esc(settings.cid)}" inputmode="numeric" placeholder="1234567" autocomplete="off" style="width:160px"> ${vat}`)}
+      ${row(t("IVAO VID"), t("Marks your own aircraft in the IVAO Radar."), `<input data-k="ivao" value="${esc(settings.ivao || "")}" inputmode="numeric" placeholder="123456" autocomplete="off" style="width:160px">`)}
       ${row(t("Hoppie ACARS"), t("Your personal logon code from hoppie.nl. For ACARS and CPDLC in ASL Fly. Stays on this device."), `<input data-k="hoppie" type="password" value="${esc(settings.hoppie || "")}" placeholder="${t("logon code")}" autocomplete="off" autocapitalize="off" spellcheck="false" style="width:200px"> <a class="btn small" href="https://www.hoppie.nl/acars/system/register.html" target="_blank" rel="noopener">${t("Get a code")}</a>`)}
       ${row("vAMSYS", t("Sign in with your Air Serbia Virtual account: your name, rank, hours and bookings come into the pad. The password stays at vAMSYS."), vamRow())}
     </div>
@@ -59,6 +60,7 @@ function page() {
       ${row(t("Home screen"), t("Cards on the home screen. Tap to show or hide."), `<div class="seg">${HOME_CARDS.map(([k, l]) => `<button data-hc="${k}" class="${(settings.homeHide || []).includes(k) ? "" : "on"}">${esc(t(l))}</button>`).join("")}</div>`)}
       ${row(t("Order of the cards"), t("Which card comes first on the home screen."), `<div class="hc-order">${boardOrder().map((k, i, a) => `<div><span>${esc(t(HOME_CARDS.find((c) => c[0] === k)?.[1] || k))}</span>
         <button class="btn small" data-hco="${k}" data-dir="-1" ${i ? "" : "disabled"} aria-label="up">▲</button><button class="btn small" data-hco="${k}" data-dir="1" ${i < a.length - 1 ? "" : "disabled"} aria-label="down">▼</button></div>`).join("")}</div>`)}
+      ${row(t("PIN"), pinCode() ? t("Unlock with the digits of your pilot ID ({n} digits).", { n: pinCode().length }) : t("Available after signing in with vAMSYS: the PIN is the digits of your pilot ID."), seg("pin", [["1", t("On")], ["0", t("Off")]], settings.pin ? "1" : "0"))}
       ${row(t("Auto-lock"), t("Locks the pad after this time without a touch."), seg("lock", [[0, t("Never")], [5, "5 min"], [10, "10 min"], [30, "30 min"]], settings.lock))}
     </div>
     <div class="card"><div class="lbl" style="margin-bottom:4px">${t("Data")}</div>
@@ -118,6 +120,7 @@ function onClick(e) {
   if (s) {
     const k = s.dataset.seg, v = s.dataset.v;
     if (k === "lang") { setLang(v); C.changed("lang"); return; }
+    if (k === "pin") { saveSettings({ pin: v === "1" }); C.changed("view"); return; }
     if (k === "lock" || k === "wallDim") saveSettings({ [k]: +v });
     else saveSettings({ [k]: v });
     C.changed(k === "theme" || k === "wallDim" ? "theme" : "view");

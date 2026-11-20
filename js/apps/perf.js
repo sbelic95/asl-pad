@@ -129,3 +129,26 @@ function landing(o, L) {
       ${cell(t("Wind now"), windTxt(now), w?.wspd != null ? `${w.vrb ? "VRB" : String(w.wdir).padStart(3, "0")}/${w.wspd}${w.gust ? "G" + w.gust : ""} kt` : "", now && now.hw < -5 ? "warn" : "")}
       ${cell(t("Runway condition"), wet ? `<span class="warn">${t("wet")}</span>` : t("dry"), isWet(w) ? esc(w.wx) : "")}</div></div>`;
 }
+
+// ---------- runways with the wind of now (EFB): head/tail and cross wind from the live METAR for every runway of the
+// departure and destination that SimBrief's runway analysis lists. Pure geometry – no performance is computed here.
+export function windComp(rwyCourse, wdir, wspd) {
+  if (rwyCourse == null || wdir == null || wspd == null) return null;
+  const a = ((wdir - rwyCourse) * Math.PI) / 180;
+  return { hw: Math.round(wspd * Math.cos(a)), xw: Math.round(wspd * Math.sin(a)) };
+}
+export function runwaysView(o) {
+  const card = (kind, apt, list) => {
+    const w = wxOf(apt.icao), plan = kind === "to" ? toPick(o)?.id : ldgPick(o)?.r?.id;
+    if (!list?.length) return `<div class="card"><div class="lbl">${esc(apt.icao)}</div><p class="dim">${t("No runway list in the OFP (SimBrief runway analysis).")}</p></div>`;
+    const rows = list.map((r) => { const c = w && !w.vrb ? windComp(r.course, w.wdir, w.wspd) : null, g = w?.gust && c ? windComp(r.course, w.wdir, w.gust) : null;
+      const len = kind === "to" ? r.tora || r.len : r.lda || r.len;
+      return `<tr class="${r.id === plan ? "plan" : ""}"><td><b>${esc(r.id)}</b>${r.id === plan ? ` <span class="tag">${t("plan")}</span>` : ""}</td><td class="num">${r.course != null ? String(Math.round(r.course)).padStart(3, "0") + "°" : "—"}</td><td class="num">${len ? nf(len) + " m" : "—"}</td>
+        <td class="num ${c ? (c.hw < 0 ? "bad" : "ok") : ""}">${c ? (c.hw < 0 ? "▼ " + -c.hw + " kt " + t("tail") : "▲ " + c.hw + " kt") : "—"}${g ? ` <small>(${g.hw})</small>` : ""}</td>
+        <td class="num ${c && Math.abs(c.xw) > 20 ? "warn" : ""}">${c ? `${Math.abs(c.xw)} kt ${c.xw > 0 ? t("from right") : c.xw < 0 ? t("from left") : ""}` : "—"}${g ? ` <small>(${Math.abs(g.xw)})</small>` : ""}</td><td class="num">${esc(r.ils || "—")}</td></tr>`; }).join("");
+    return `<div class="card"><div style="display:flex;gap:10px;align-items:baseline;margin-bottom:8px"><span class="lbl">${kind === "to" ? t("Departure") : t("Destination")}</span><b style="font:700 20px var(--f-cond)">${esc(apt.icao)}</b>
+        <span class="dim" style="margin-left:auto">${w ? `${t("Wind")} ${w.vrb ? "VRB" : String(w.wdir ?? 0).padStart(3, "0")}/${w.wspd}${w.gust ? "G" + w.gust : ""} kt · METAR ${esc((w.raw || "").split(" ")[1] || "")}` : t("No METAR")}</span></div>
+      <table class="rwy-t"><thead><tr><th>${t("Runway")}</th><th>${t("Course")}</th><th>${kind === "to" ? "TORA" : "LDA"}</th><th>${t("Head/tail")}</th><th>${t("Cross")}</th><th>ILS</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  };
+  return card("to", o.dep, o.tlr?.to?.rwys) + card("ldg", o.dest, o.tlr?.ldg?.rwys) + `<p class="dim" style="font-size:12px">${t("Wind from the live METAR (true north, like the runway course). Gusts in brackets. Speeds and distances stay in the Performance tab.")}</p>`;
+}

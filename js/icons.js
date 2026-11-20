@@ -1,6 +1,30 @@
 // App icons and small UI icons, drawn as SVG (own designs, Air Serbia colours).
 const grad = (id, a, b) => `<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs>`;
 export const APP_ICONS = {
+  radar: `<svg viewBox="0 0 100 100">${grad("gR", "#062a1e", "#01120c")}<rect width="100" height="100" fill="url(#gR)"/>
+    <g fill="none" stroke="#3ddc97" stroke-opacity=".5" stroke-width="2"><circle cx="50" cy="50" r="34"/><circle cx="50" cy="50" r="22"/><circle cx="50" cy="50" r="10"/></g>
+    <path d="M50 50 L50 16 A34 34 0 0 1 80 34 Z" fill="#3ddc97" fill-opacity=".35"/><circle cx="64" cy="30" r="3.5" fill="#fff"/><circle cx="36" cy="62" r="3" fill="#e3001f"/><circle cx="70" cy="64" r="2.5" fill="#fff"/></svg>`,
+  ivao: `<svg viewBox="0 0 100 100">${grad("gI", "#1b2a6b", "#090f33")}<rect width="100" height="100" fill="url(#gI)"/>
+    <g fill="none" stroke="#7fb2ff" stroke-opacity=".55" stroke-width="2"><circle cx="50" cy="50" r="34"/><circle cx="50" cy="50" r="20"/></g>
+    <path d="M50 50 L84 50 A34 34 0 0 0 74 26 Z" fill="#7fb2ff" fill-opacity=".35"/><text x="50" y="57" text-anchor="middle" font-family="Arial" font-weight="700" font-size="17" fill="#fff">IVAO</text></svg>`,
+  weather: `<svg viewBox="0 0 100 100">${grad("gW", "#3d8bf2", "#0b4fae")}<rect width="100" height="100" fill="url(#gW)"/>
+    <circle cx="38" cy="38" r="15" fill="#ffd34d"/><path d="M30 72 h40 a12 12 0 0 0 0 -24 a16 16 0 0 0 -30 4 a10 10 0 0 0 -10 20 z" fill="#fff"/></svg>`,
+  calendar: `<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#fff"/><rect width="100" height="28" fill="#e3001f"/>
+    <text x="50" y="21" text-anchor="middle" font-family="Arial" font-weight="700" font-size="15" fill="#fff">${["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"][new Date().getDay()]}</text>
+    <text x="50" y="80" text-anchor="middle" font-family="Arial" font-weight="700" font-size="46" fill="#002e5d">${new Date().getDate()}</text></svg>`,
+  clock: `<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#0b0f18"/><circle cx="50" cy="50" r="34" fill="#fff"/>
+    ${Array.from({ length: 12 }, (_, i) => `<rect x="49" y="19" width="2" height="6" fill="#002e5d" transform="rotate(${i * 30} 50 50)"/>`).join("")}
+    <path d="M50 50 V28 M50 50 L64 58" stroke="#002e5d" stroke-width="4" stroke-linecap="round"/><circle cx="50" cy="50" r="3" fill="#e3001f"/>
+    <text x="50" y="76" text-anchor="middle" font-family="Arial" font-weight="700" font-size="9" fill="#e3001f">UTC</text></svg>`,
+  calc: `<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#1a1d24"/>${[[0, 0], [1, 0], [2, 0], [0, 1], [1, 1], [2, 1], [0, 2], [1, 2], [2, 2]].map(([x, y]) => `<circle cx="${28 + x * 22}" cy="${30 + y * 22}" r="8" fill="${x === 2 ? "#e3001f" : "#4a4f5c"}"/>`).join("")}</svg>`,
+  kneeboard: `<svg viewBox="0 0 100 100">${grad("gK", "#f6f1e3", "#ddd3b8")}<rect width="100" height="100" fill="url(#gK)"/>
+    <rect x="22" y="16" width="56" height="70" rx="5" fill="#fff" stroke="#8a7d5a" stroke-width="2.5"/><rect x="38" y="11" width="24" height="10" rx="3" fill="#5c5440"/>
+    <path d="M30 34 h40 M30 46 h40 M30 58 h26" stroke="#0059c2" stroke-width="3" stroke-linecap="round"/><path d="M56 74 l14 -14 l5 5 l-14 14 h-5 z" fill="#e3001f"/></svg>`,
+  manuals: `<svg viewBox="0 0 100 100">${grad("gM", "#5a2a14", "#2a1208")}<rect width="100" height="100" fill="url(#gM)"/>
+    <rect x="22" y="22" width="14" height="58" rx="2" fill="#e3001f"/><rect x="38" y="18" width="14" height="62" rx="2" fill="#0059c2"/><rect x="54" y="24" width="12" height="56" rx="2" fill="#f2f5fb"/>
+    <rect x="66" y="28" width="12" height="52" rx="2" transform="rotate(-10 72 54)" fill="#ffd34d"/></svg>`,
+  store: `<svg viewBox="0 0 100 100">${grad("gT", "#1fa2ff", "#0059c2")}<rect width="100" height="100" fill="url(#gT)"/>
+    <path d="M36 70 L56 32 M64 70 L44 32 M30 58 h40" stroke="#fff" stroke-width="6" stroke-linecap="round"/></svg>`,
   fly: `<svg viewBox="0 0 100 100">${grad("gF", "#0b6bdf", "#00306a")}<rect width="100" height="100" fill="url(#gF)"/>
     <path d="M14 70 Q50 18 86 40" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="3" stroke-dasharray="2 6" stroke-linecap="round"/>
     <path d="M14 70 Q34 42 56 34" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>

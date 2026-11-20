@@ -15,6 +15,7 @@ function airport(x, wx = {}) {
     icao: x.icao_code, iata: x.iata_code || "", name: titleCase(x.name || ""), pos: pos(x),
     elev: num(x.elevation), rwy: x.plan_rwy || "", transAlt: num(x.trans_alt), transLevel: num(x.trans_level),
     metar: txt(x.metar || wx.metar), taf: txt(x.taf || wx.taf),
+    notams: arr(x.notam).map((n) => ({ id: txt(n.notam_id), text: txt(n.notam_text || n.notam_raw), from: Date.parse(n.date_effective) || null, to: Date.parse(n.date_expire) || null, cat: txt(n.account_id) })).filter((n) => n.text).slice(0, 80),
     tzH: x.timezone !== undefined && x.timezone !== "" ? Number(x.timezone) : null,
   };
 }

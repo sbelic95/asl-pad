@@ -58,6 +58,13 @@ Keine VDGS-App mehr im Pad (Wunsch des Nutzers): Frequenz-Führer `js/atc.js`, H
 vAMSYS-Anmeldung `js/vamsys.js` + `va/vamsys.json` (nur Client-ID, **nie ein Secret ins Repo**). Feldnamen der Pilot API sind locker gemappt und mit einem echten Konto zu prüfen.
 Pflicht-Anmeldung per Schalter `required` in `va/vamsys.json` (Wunsch des Nutzers: einmal anmelden, Gerät bleibt frei bis zur Abmeldung; keine Ausnahme ohne vAMSYS). Steht auf `false`, bis der Login getestet ist.
 
+## 2.0 (nach dem LH-Virtual-Pad-Guide, eigener Stil)
+
+Apps-Gruppen in `home.js` (`GROUPS`, `HOME_APPS[].g`, `core` = nicht entfernbar), App Store `js/apps/store.js`. Geräte-Oberfläche `js/device.js`
+(PIN = Ziffern der vAMSYS-Piloten-ID, Face ID nur gespielt, Kontroll-/Mitteilungszentrale), Mitteilungen nur über `notify()` aus `js/notify.js`.
+Dienstplan/Crew Desk/Bericht in `js/crew.js`. Namen bewusst eigen: „Crew Desk“ statt „eDesk“. Manuals nur als Links (`va/manuals.json`, kein PDF ins Repo).
+Server `server/worker.js` (Cloudflare) ist vorbereitet, aktiv erst mit `url` in `va/server.json` – braucht das Cloudflare-Konto des Nutzers. Ground (GSX) kommt später.
+
 ## Updates
 
 Jede sichtbare Neuerung als neuer Eintrag oben in `js/whatsnew.js` (nur, was das Pad wirklich kann). Das Pad zeigt ihn einmal

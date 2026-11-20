@@ -7,6 +7,24 @@ import { esc } from "./util.js";
 import { APP_ICONS } from "./icons.js";
 
 export const releases = () => [
+  { v: "2.0", date: "2026-11-20", groups: [
+    { icon: "pad", name: "ASL Pad", items: [
+      t("Home screen with three pages – Operations, Network & weather, Tools & device – plus weather and calendar widgets"),
+      t("App Store: install and remove apps; Control Center and Notification Center from the top edge"),
+      t("PIN with the digits of your vAMSYS pilot ID, and Face ID before ASL Ops and Manuals"),
+    ] },
+    { icon: "ops", name: "ASL Ops", items: [
+      t("Roster from your vAMSYS bookings with report time, turnarounds, duty time and check-in"),
+      t("Crew Desk: inbox, preflight list, weather and the NOTAMs from your OFP; flight report with the actual times"),
+    ] },
+    { icon: "fly", name: "ASL Fly", items: [
+      t("Runways: head, tail and cross wind for every runway from the live METAR"),
+      t("Logbook: every new flight with its altitude profile"),
+    ] },
+    { icon: "radar", name: t("New apps"), items: [
+      t("VATSIM Radar and IVAO Radar, Weather for every Air Serbia destination, Calendar, Clock, Calculator, Kneeboard and Manuals"),
+    ] },
+  ] },
   { v: "1.8", date: "2026-11-20", groups: [
     { icon: "fly", name: "ASL Fly", items: [
       t("Radio & ACARS: the frequency now and the next one with the time to the change, all the way to the stand"),
