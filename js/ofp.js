@@ -96,11 +96,25 @@ export function normOfp(d) {
   };
 }
 
-export async function fetchOfp(id, getJSON) {
-  const q = /^\d+$/.test(id) ? "userid=" + id : "username=" + encodeURIComponent(id);
-  const d = await getJSON(SIMBRIEF + "?" + q + "&json=v2", 20000);
-  if (!d || !String(d.fetch?.status).startsWith("Success")) {
-    throw new Error(/unknown|not found/i.test(d?.fetch?.status || "") ? "user" : "noofp");
-  }
-  return normOfp(d);
+// SimBrief answers errors with HTTP 400 and a JSON body (fetch.status "Error: Unknown UserID" …): read the body anyway.
+// Errors: "user", "noofp", "net:<detail>", "parse:<detail>". A number is tried as pilot ID first, then as user name.
+async function sbGet(q) {
+  const ac = new AbortController(), tm = setTimeout(() => ac.abort(), 30000);
+  let r, txt;
+  try { r = await fetch(SIMBRIEF + "?" + q + "&json=v2&_=" + Date.now(), { cache: "no-store", signal: ac.signal }); txt = await r.text(); }
+  catch (e) { throw new Error("net:" + (e.name === "AbortError" ? "timeout" : e.message || e.name)); }
+  finally { clearTimeout(tm); }
+  let d = null; try { d = JSON.parse(txt); } catch {}
+  if (!d) throw new Error("net:HTTP " + r.status);
+  const st = String(d.fetch?.status || "");
+  if (st.startsWith("Success")) return d;
+  throw new Error(/flight plan|no ofp|no plan/i.test(st) ? "noofp" : /unknown|invalid|not found|user/i.test(st) ? "user" : "noofp");
+}
+export async function fetchOfp(id) {
+  let d;
+  if (/^\d+$/.test(id)) {
+    try { d = await sbGet("userid=" + id); }
+    catch (e) { if (e.message !== "user") throw e; d = await sbGet("username=" + encodeURIComponent(id)); }
+  } else d = await sbGet("username=" + encodeURIComponent(id));
+  try { return normOfp(d); } catch (e) { throw new Error("parse:" + (e.message || e.name)); }
 }

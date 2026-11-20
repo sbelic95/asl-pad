@@ -41,7 +41,8 @@ function vamRow() {
 function page() {
   const st = S.ofp ? `<span class="pill ok">${t("loaded")}: ${esc(S.ofp.callsign)} ${esc(S.ofp.dep.icao)}–${esc(S.ofp.dest.icao)}</span>`
     : S.ofpErr === "user" ? `<span class="pill bad">${t("SimBrief user not found.")}</span>` : S.ofpErr === "noofp" ? `<span class="pill warn">${t("No OFP found at SimBrief.")}</span>`
-    : S.ofpErr === "net" ? `<span class="pill bad">${t("SimBrief not reachable.")}</span>` : "";
+    : S.ofpErr === "net" ? `<span class="pill bad">${t("SimBrief not reachable.")}</span>${S.ofpErrMsg ? `<div class="dim" style="font-size:12px;margin-top:4px">${esc(S.ofpErrMsg)}</div>` : ""}`
+    : S.ofpErr === "parse" ? `<span class="pill bad">${t("The OFP could not be read.")}</span><div class="dim" style="font-size:12px;margin-top:4px">${esc(S.ofpErrMsg || "")}</div>` : "";
   const vat = settings.demo ? "" : S.pilot ? `<span class="pill ok">${t("online")}: ${esc(S.pilot.callsign)}</span>` : S.feedOk ? `<span class="pill">${t("not online")}</span>` : S.feedOk === false ? `<span class="pill bad">${t("VATSIM not reachable")}</span>` : "";
   return `<div style="max-width:860px;margin:0 auto">
     <div class="card"><div class="lbl" style="margin-bottom:4px">${t("Flight")}</div>
