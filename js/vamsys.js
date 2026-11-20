@@ -4,10 +4,14 @@
 import { S, settings, saveSettings, emit } from "./data.js";
 import { store, getJSON } from "./util.js";
 
-const KEY = "asl.vamsys", PKCE = "asl.vamsys.pkce", DATA = "asl.vamsys.data";
+const KEY = "asl.vamsys", PKCE = "asl.vamsys.pkce", DATA = "asl.vamsys.data", OK = "asl.vamsys.ok";
 let CFG = null;
 export const V = { data: store.get(DATA, null), err: "", busy: false };
 export const signedIn = () => !!store.get(KEY, null)?.access;
+// Sign-in required (va/vamsys.json "required"): once a pilot has signed in, this device stays unlocked – also when vAMSYS
+// is later unreachable or the sign-in runs out – until the pilot signs out.
+export const unlocked = () => !!store.get(OK, null);
+export async function gateNeeded() { try { return !!(await cfg()).required && !unlocked() && !settings.demo; } catch { return false; } }
 async function cfg() { if (!CFG) CFG = await getJSON("va/vamsys.json", 15000); return CFG; }
 // on GitHub Pages the registered address; elsewhere (tests on localhost) the page itself
 const redirect = (c) => (location.hostname.endsWith("github.io") ? c.redirect : location.origin + location.pathname);
@@ -39,7 +43,7 @@ export async function handleRedirect() {
   history.replaceState(null, "", location.pathname + (q.get("app") ? "?app=" + q.get("app") : ""));
   if (error) { V.err = q.get("error_description") || error; return true; }
   if (!p || p.state !== state) { V.err = "state"; return true; }
-  try { const c = await cfg(); await tokenCall({ grant_type: "authorization_code", redirect_uri: redirect(c), code, code_verifier: p.verifier }); V.err = ""; await loadVamsys(); }
+  try { const c = await cfg(); await tokenCall({ grant_type: "authorization_code", redirect_uri: redirect(c), code, code_verifier: p.verifier }); store.set(OK, { at: Date.now() }); V.err = ""; await loadVamsys(); }
   catch (e) { V.err = e.message; }
   emit(); return true;
 }
@@ -88,4 +92,4 @@ export async function loadVamsys() {
   } catch (e) { V.err = e.message; }
   V.busy = false; emit();
 }
-export function signOut() { store.del(KEY); store.del(DATA); V.data = null; V.err = ""; emit(); }
+export function signOut() { store.del(KEY); store.del(DATA); store.del(OK); V.data = null; V.err = ""; emit(); }

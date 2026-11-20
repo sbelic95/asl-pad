@@ -56,6 +56,7 @@ mit Sprit ±. Sprit/Gewichte nur als Summen aus dem OFP, keine Performance. Kein
 
 Keine VDGS-App mehr im Pad (Wunsch des Nutzers): Frequenz-Führer `js/atc.js`, Hoppie `js/hoppie.js` → ASL Fly Reiter „radio“; Passagier-Ansicht = App `cabin`.
 vAMSYS-Anmeldung `js/vamsys.js` + `va/vamsys.json` (nur Client-ID, **nie ein Secret ins Repo**). Feldnamen der Pilot API sind locker gemappt und mit einem echten Konto zu prüfen.
+Pflicht-Anmeldung per Schalter `required` in `va/vamsys.json` (Wunsch des Nutzers: einmal anmelden, Gerät bleibt frei bis zur Abmeldung; keine Ausnahme ohne vAMSYS). Steht auf `false`, bis der Login getestet ist.
 
 ## Updates
 
