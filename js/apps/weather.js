@@ -1,7 +1,7 @@
 // Weather: METAR and TAF for the Air Serbia network only (va/routes.json) plus the airports of the current flight.
 // Each airport as a scene built from the live report (sky, cloud, rain, snow, fog, day or night); the raw report one tap below.
-// METAR from VATSIM (one request for all), TAF from aviationweather.gov; refreshed every 10 minutes.
-import { S } from "../data.js";
+// METAR from VATSIM (one request for all), TAF from aviationweather.gov via the wx branch; refreshed every 10 minutes.
+import { S, API } from "../data.js";
 import { t, nf, LOCALE } from "../i18n.js";
 import { esc, getText, getJSON } from "../util.js";
 import { decodeMetar } from "../wx.js";
@@ -27,10 +27,8 @@ export async function loadWeather(force) {
     const txt = await getText("https://metar.vatsim.net/metar.php?id=" + ids.join(","), 20000);
     for (const line of txt.split("\n")) { const m = line.trim().match(/^([A-Z]{4})\s/); if (m) W.metar[m[1]] = line.trim(); }
   } catch {}
-  try {
-    const taf = await getJSON("https://aviationweather.gov/api/data/taf?format=json&ids=" + ids.join(","), 20000);
-    for (const x of taf || []) if (x.icaoId && x.rawTAF) W.taf[x.icaoId] = x.rawTAF;
-  } catch {}
+  try { const d = await getJSON(API.taf, 20000); Object.assign(W.taf, d?.taf || {}); } catch {} // aviationweather.gov via the wx branch (no CORS there)
+  for (const a of [S.ofp?.dep, S.ofp?.dest, ...(S.ofp?.altns || [])]) if (a?.taf && !W.taf[a.icao]) W.taf[a.icao] = a.taf; // the OFP's TAFs
   for (const id of ids) if (!W.metar[id] && S.metar[id]) W.metar[id] = S.metar[id].raw; // the pad's own METARs as a fall-back
   W.at = Date.now(); W.busy = false; C?.changed("view");
 }

@@ -11,9 +11,10 @@ import { renderMap, dropMap } from "./map.js";
 import { perfView, runwaysView, sel as perfSel } from "./perf.js";
 import { routeSigmetsHtml } from "../sigmet.js";
 import { radioView, radioStrip, radioClick } from "./radio.js";
+import { vdgsView, vdgsMini, vdgsTick } from "./vdgs.js";
 
 export const name = "ASL Fly";
-export const tabs = [["overview", "Overview"], ["radio", "Radio & ACARS"], ["times", "Times"], ["plan", "Flight plan"], ["map", "Map"], ["wx", "Weather"], ["fuel", "Fuel"], ["perf", "Performance"], ["rwy", "Runways"]];
+export const tabs = [["overview", "Overview"], ["vdgs", "VDGS"], ["radio", "Radio & ACARS"], ["times", "Times"], ["plan", "Flight plan"], ["map", "Map"], ["wx", "Weather"], ["fuel", "Fuel"], ["perf", "Performance"], ["rwy", "Runways"]];
 
 let C = null, lastTab = "";
 export function render(body, ctx) {
@@ -32,6 +33,8 @@ export function render(body, ctx) {
   }
   lastTab = tab;
 }
+// countdowns of the VDGS tab and the overview line, every second
+export function tick(now) { const b = document.querySelector("#app-fly .app-body"); if (b && (C?.tab === "vdgs")) vdgsTick(b, now); }
 export function summary() {
   const o = S.ofp; if (!o) return [t("ASL Fly"), t("No flight loaded")];
   const d = derived();
@@ -144,6 +147,7 @@ function fuelBar(o, d, legend) {
 const VIEW = {
   perf: (o) => perfView(o),
   rwy: (o) => runwaysView(o),
+  vdgs: (o, d, now) => vdgsView(o, d, now),
   radio: (o, d, now) => radioView(o, d, now),
   overview(o, d, now) {
     const st = S.st, ph = d.phase, pl = S.pilot;
@@ -162,7 +166,7 @@ const VIEW = {
       ${routeLine(o, d)}
       <div class="apts">${aptCard(o, o.dep, now, true)}${aptCard(o, o.dest, now, true)}${o.altns.map((a) => aptCard(o, a, now)).join("")}${edtoCard(o)}</div>
       <div class="now-card">${c1}${c2}${c3}${c4}</div>
-      ${radioStrip(o, now)}
+      ${vdgsMini(o, now)}${radioStrip(o, now)}
       ${timesStrip(o, d)}
       ${fuelBox(o, d, false)}
       <div class="card" style="margin-top:14px">${kv([

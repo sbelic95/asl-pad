@@ -63,6 +63,7 @@ Pflicht-Anmeldung per Schalter `required` in `va/vamsys.json` (Wunsch des Nutzer
 Apps-Gruppen in `home.js` (`GROUPS`, `HOME_APPS[].g`, `core` = nicht entfernbar), App Store `js/apps/store.js`. Geräte-Oberfläche `js/device.js`
 (PIN = Ziffern der vAMSYS-Piloten-ID, Face ID nur gespielt, Kontroll-/Mitteilungszentrale), Mitteilungen nur über `notify()` aus `js/notify.js`.
 Dienstplan/Crew Desk/Bericht in `js/crew.js`. Namen bewusst eigen: „Crew Desk“ statt „eDesk“. Manuals nur als Links (`va/manuals.json`, kein PDF ins Repo).
+Karten: nur OpenStreetMap-Kacheln über `baseLayer()` in `js/apps/map.js` (CARTO braucht seit 11/2026 einen Schlüssel – nicht mehr verwenden). VDGS-Anzeige = ASL Fly Reiter `vdgs` (`js/apps/vdgs.js`).
 Server `server/worker.js` (Cloudflare) ist vorbereitet, aktiv erst mit `url` in `va/server.json` – braucht das Cloudflare-Konto des Nutzers. Ground (GSX) kommt später.
 
 ## Updates

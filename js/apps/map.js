@@ -37,7 +37,16 @@ function routePoints(nl) {
   return pts.length ? pts : nl.map((x) => x.pos);
 }
 
-const tiles = () => (settings.theme === "light" ? "light_all" : "dark_all");
+// Base map for every map of the pad: OpenStreetMap tiles (no key needed – CARTO now answers "API key required"),
+// darkened by a CSS filter in the dark look, over our own Natural Earth layer (drawWorld) that stays visible
+// wherever a tile does not load. Tiles only from zoom 3 on: the world view needs nothing but Natural Earth.
+export const OSM_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · Natural Earth';
+export function baseLayer(map, { dark = settings.theme !== "light", max = 13, min = 3, look = "" } = {}) {
+  map.attributionControl?.setPrefix('<a href="https://leafletjs.com">Leaflet</a>');
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: max, minZoom: min, maxNativeZoom: 19, crossOrigin: false,
+    className: "osm-tiles" + (dark ? " osm-dark" : "") + (look ? " osm-" + look : ""), attribution: OSM_ATTR }).addTo(map);
+  drawWorld(map, !dark);
+}
 // Open map data under the tiles: land, coasts and borders of Natural Earth (public domain, vendor/world.json).
 // It shows when the tiles cannot load (offline, blocked); with tiles it lies hidden underneath.
 let WORLD = null;
@@ -73,11 +82,8 @@ function build(body, o, key) {
     <div class="fixpop" hidden></div><div class="profile"></div>`;
   const el = body.querySelector(".mapbox");
   const map = L.map(el, { zoomControl: false, attributionControl: true, worldCopyJump: false, minZoom: 2, zoomSnap: 0.5 });
-  L.tileLayer(`https://{s}.basemaps.cartocdn.com/${tiles()}/{z}/{x}/{y}{r}.png`, {
-    subdomains: "abcd", maxZoom: 13, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> · Natural Earth',
-  }).addTo(map);
+  baseLayer(map);
   L.control.zoom({ position: "bottomright" }).addTo(map);
-  drawWorld(map);
 
   const nl = o.navlog;
   const fixPts = unwrap(nl.map((x) => x.pos));
