@@ -7,6 +7,12 @@ import { esc } from "./util.js";
 import { APP_ICONS } from "./icons.js";
 
 export const releases = () => [
+  { v: "2.0.2", date: "2026-11-21", groups: [
+    { icon: "fly", name: "ASL Fly", items: [
+      t("VDGS: TOBT, TSAT, TTOT, CTOT and taxi time from VATSIM (vIFF CDM) wherever VATSIM has them, as at Frankfurt and Heathrow – everything else from SimBrief"),
+      t("Frankfurt: the VDGS reminds you to set a TOBT and opens the VATSIM VDGS to set it"),
+    ] },
+  ] },
   { v: "2.0.1", date: "2026-11-21", groups: [
     { icon: "fly", name: "ASL Fly", items: [
       t("New VDGS tab: your stand, the slot from vIFF CDM with a countdown to the start-up window, runway, SID and which frequency to call now and next"),

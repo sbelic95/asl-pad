@@ -7,6 +7,7 @@ import { toPick, ldgPick } from "./apps/perf.js";
 import { freqPlan, atcReady } from "./atc.js";
 import { unread } from "./hoppie.js";
 import { openReports, duties, checkedIn } from "./crew.js";
+import { slotState } from "./apps/vdgs.js";
 
 export function actions(now = Date.now()) {
   const o = S.ofp, out = [];
@@ -25,6 +26,8 @@ export function actions(now = Date.now()) {
   if (!st.offBlock) {
     if (!settings.demo && !S.pilot && !S.prefile && o.times.out && o.times.out - now < 90 * 60e3)
       out.push({ id: "prefile", lv: "info", ic: "plane", title: t("File your flight plan"), text: t("No VATSIM flight plan for {cs} yet.", { cs: o.callsign }), app: "ops", link: o.prefile });
+    const ss = slotState(now);
+    if (ss.k === "tobt" && o.times.out && o.times.out - now < 3 * 36e5) out.push({ id: "tobt", lv: "red", ic: "clock", title: t("TOBT required"), text: t("{apt} sequences departures by TOBT. Set your TOBT in the VATSIM VDGS.", { apt: o.dep.icao }), app: "fly", tab: "vdgs" });
     const c = S.cdm;
     if (c?.tsat) {
       const open = c.tsat - 5 * 60e3, close = c.tsat + 5 * 60e3;

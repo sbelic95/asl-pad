@@ -232,15 +232,18 @@ export async function pollCdm() {
   if (!o || S.st?.takeoff) return;
   if (settings.demo) {
     const T = o.times;
-    S.cdm = { eobt: T.out, tobt: T.out + 5 * 60e3, tsat: T.out + 9 * 60e3, ttot: T.out + 24 * 60e3, ctot: null, rwy: "30L", sid: "OSTOV1D", reason: "" };
+    S.cdm = { src: "vIFF", eobt: T.out, tobt: T.out + 5 * 60e3, tsat: T.out + 9 * 60e3, ttot: T.out + 24 * 60e3, ctot: null, rwy: "30L", sid: "OSTOV1D", reason: "", exot: 15, isCdm: true, tobtSet: true, confirmed: true };
     S.cdmOk = true; emit(); return;
   }
   try {
+    // vIFF CDM (VATSIM Spain) is the CDM system of VATSIM Europe – also Frankfurt and Heathrow. A record exists once the
+    // flight plan is filed; cdmData holds the A-CDM times (TOBT/TSAT/TTOT) where the airport runs A-CDM (isCdm).
     const r = await getJSON(API.viff + "/ifps/callsign?callsign=" + encodeURIComponent(o.callsign));
-    if (r && r.callsign) {
+    if (r && r.callsign && (!r.departure || r.departure === o.dep.icao)) {
       const c = r.cdmData || {}, [rwy, sid] = String(c.depInfo || "").split("/");
-      S.cdm = { eobt: hhmmToMs(r.eobt), tobt: hhmmToMs(c.tobt || r.tobt), tsat: hhmmToMs(c.tsat), ttot: hhmmToMs(c.ttot), ctot: hhmmToMs(c.ctot || r.ctot),
-        aobt: hhmmToMs(r.aobt), atot: hhmmToMs(r.atot), rwy: rwy || "", sid: sid || "", reason: c.reason || r.atfcmData?.mostPenalisingRegulation || "" };
+      S.cdm = { src: "vIFF", eobt: hhmmToMs(r.eobt), tobt: hhmmToMs(c.tobt || r.tobt || c.reqTobt || r.reqTobt), tsat: hhmmToMs(c.tsat), ttot: hhmmToMs(c.ttot), ctot: hhmmToMs(c.ctot || r.ctot),
+        aobt: hhmmToMs(r.aobt), atot: hhmmToMs(r.atot), rwy: rwy || "", sid: sid || "", reason: c.reason || r.atfcmData?.mostPenalisingRegulation || "",
+        exot: Number.isFinite(+r.taxi) && +r.taxi > 0 ? +r.taxi : null, isCdm: !!r.isCdm, tobtSet: !!(c.tobt || r.tobt || c.reqTobt || r.reqTobt), confirmed: !!c.confirmed, rea: !!r.atfcmData?.isRea };
     } else S.cdm = null;
     S.cdmOk = true;
   } catch { S.cdmOk = false; }
