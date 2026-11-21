@@ -6,7 +6,7 @@ import { t, nf, LOCALE } from "../i18n.js";
 import { esc, store, dur, distKm, greatCircle } from "../util.js";
 import { tzOf, cityOf } from "../tz.js";
 import { IATA } from "../ofp.js";
-import { drawWorld } from "./map.js";
+import { baseLayer } from "./map.js";
 
 export const name = "Cabin";
 export const tabs = [["map", "Flight map"], ["dest", "Destination"], ["conn", "Connections"], ["arr", "Arrivals"]];
@@ -75,10 +75,7 @@ function renderMap(body, o, head) {
     body.innerHTML = `<div class="cab cab-mapv"><div class="cab-top">${head}</div><div class="cab-map"></div><div class="cab-info"></div><div class="cab-footw">${footer(o)}</div></div>`;
     const el = body.querySelector(".cab-map");
     const map = L.map(el, { zoomControl: false, attributionControl: true, minZoom: 2, zoomSnap: 0.25, worldCopyJump: false });
-    map.attributionControl.addAttribution("Natural Earth");
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png", { subdomains: "abcd", maxZoom: 9,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>' }).addTo(map);
-    drawWorld(map, true);
+    baseLayer(map, { dark: false, max: 9, look: "cabin" });
     const pts = o.navlog.map((x) => x.pos);
     const unwrap = (l) => { const out = []; let off = 0; l.forEach((p, i) => { if (i) { const dl = p[1] + off - out[i - 1][1]; if (dl > 180) off -= 360; else if (dl < -180) off += 360; } out.push([p[0], p[1] + off]); }); return out; };
     const route = unwrap(pts.length > 1 ? pts : greatCircle(o.dep.pos, o.dest.pos));

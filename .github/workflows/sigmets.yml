@@ -1,6 +1,7 @@
 # Every 30 minutes: the international SIGMETs (thunderstorms, turbulence, icing, volcanic ash …) from
-# aviationweather.gov, made compact for the map of the pad. Published as sigmets.json on the "wx" branch,
-# read via raw.githubusercontent.com.
+# aviationweather.gov, made compact for the map of the pad, and the TAFs of every airport of the Air Serbia network
+# (va/routes.json) for the Weather app – aviationweather.gov does not allow browsers to read it directly.
+# Published as sigmets.json and taf.json on the "wx" branch, read via raw.githubusercontent.com.
 name: SIGMETs
 
 on:
@@ -64,12 +65,29 @@ jobs:
           json.dump({"updated": now, "sigmets": out}, open("pub/sigmets.json", "w"), separators=(",", ":"))
           print(len(out), "SIGMETs with an area")
           PY
+          curl -sSf --max-time 30 "https://raw.githubusercontent.com/${REPO}/main/va/routes.json" -o routes.json || echo '{"airports":{}}' > routes.json
+          python3 - <<'PY'
+          import datetime, json, urllib.request
+          ids = sorted(json.load(open("routes.json")).get("airports", {}).keys())
+          taf = {}
+          for i in range(0, len(ids), 40):
+              url = "https://aviationweather.gov/api/data/taf?format=json&ids=" + ",".join(ids[i:i + 40])
+              try:
+                  req = urllib.request.Request(url, headers={"User-Agent": "asl-pad-taf"})
+                  for x in json.load(urllib.request.urlopen(req, timeout=60)) or []:
+                      if x.get("icaoId") and x.get("rawTAF"): taf[x["icaoId"]] = x["rawTAF"]
+              except Exception as e:
+                  print("TAF batch failed:", e)
+          now = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+          json.dump({"updated": now, "taf": taf}, open("pub/taf.json", "w"), separators=(",", ":"))
+          print(len(taf), "TAFs of", len(ids), "airports")
+          PY
           cd pub
           git init -q -b wx
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add sigmets.json
-          git commit -qm "SIGMETs from aviationweather.gov"
+          git add sigmets.json taf.json
+          git commit -qm "SIGMETs and TAFs from aviationweather.gov"
           for i in 1 2 3 4; do
             git push -qf "https://x-access-token:${TOKEN}@github.com/${REPO}.git" wx && exit 0
             echo "push failed, next try in $((i * 15)) s"; sleep $((i * 15))

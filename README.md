@@ -20,6 +20,7 @@ Es gibt keinen Demo-Modus: Das Pad zeigt immer den eigenen Flug aus SimBrief und
 | **Aerodrom (Airport)** | Rollkarte von LYBE, LYNI und LYKV (Pisten, Rollwege mit Schildern, Stände, Haltepunkte, Hot Spots, VATSIM-Verkehr – unsere in Rot) mit **Rollweg** vom Stand zur Piste bzw. vom Abrollweg zum Stand und den Haltepunkten; **LYBE-Briefing** aus [`va/airports/LYBE.json`](va/airports/LYBE.json); **Stände** mit Spannweite, Einweisung, passt / belegt. |
 | **Preuzimanja (Downloads)** | Links der VA aus [`va/downloads.json`](va/downloads.json): ACARS (Pflicht), Crew Lounge, Liveries, SimBrief, VATSIM, SCG vACC. Reiter **Promene** mit allen Updates. |
 | **Neue Apps (2.0)** | **VATSIM Radar** / **IVAO Radar** (`js/apps/radar.js`, ein Modul, zwei Netze), **Weather** (nur Air-Serbia-Ziele aus `va/routes.json`, Szenen nach METAR), **Calendar**, **Clock** (Zulu, Weltuhr, Stoppuhr, Timer, Wecker), **Calculator**, **Kneeboard** (Freigabe, ATIS, Notizen, Zeichenblock je Flug), **Manuals** (nur Links aus [`va/manuals.json`](va/manuals.json)), **App Store** (Apps ein-/ausblenden, `settings.appsOff`). |
+| **ASL Fly → VDGS** | Standanzeige wie am Gate (`js/apps/vdgs.js`): Stand, Slot aus vIFF CDM mit Countdown bis zum Anlassfenster (TSAT −5/+5 min), EOBT/TOBT/TSAT/TTOT/CTOT, Piste, SID, ATIS und welche Frequenz jetzt und als nächste; in der Luft der Ankunftsstand. Eine Zeile davon steht auch in der Übersicht. |
 | **ASL Fly → Runways** | Gegen-/Rücken- und Seitenwind je Piste aus dem aktuellen METAR (Pistenliste aus SimBriefs Runway Analysis; reine Geometrie, keine Performance). |
 | **Zurück** | Das App-Logo oben links (z. B. „‹ ASL Ops“) führt in jeder App zurück zum Home-Bildschirm, wie ein Tipp auf den Home-Balken unten. |
 | **Einstellungen** | SimBrief-Name oder Pilot-ID, VATSIM-CID, Sprache (Englisch, Srpski, Deutsch), kg / t / lb, hell / dunkel, **Hintergrund** für Sperr- und Home-Bildschirm (sechs Vorlagen oder ein eigenes Foto vom Gerät, abdunkelbar), Auto-Sperre. |
@@ -34,7 +35,8 @@ Einfacher Tipp führt zum Home-Bildschirm.
 - **vIFF CDM** – Slot-Zeiten vor dem Abflug
 - **Standdaten** – aus dem Branch `stands` von `sbelic95/vdgs-slot-board` (OpenStreetMap), sonst direkt über Overpass; Pisten aus dem Branch `atc`
 - **VATSIM UK** – echte Stand-Zuweisungen in Großbritannien (Branch `data`)
-- Karte: CARTO-Kacheln auf OpenStreetMap
+- Karte: OpenStreetMap-Kacheln (`tile.openstreetmap.org`, ohne Schlüssel – CARTO verlangt seit 11/2026 einen API-Schlüssel), im dunklen Look per CSS-Filter abgedunkelt, darunter die eigene Natural-Earth-Karte (`baseLayer` in `js/apps/map.js`)
+- TAF der Wetter-App: aviationweather.gov über den Branch `wx` (`taf.json`, Workflow `sigmets.yml`), weil aviationweather.gov keinen Browserzugriff (CORS) erlaubt
 
 Alles, was die App sich merkt (Einstellungen, Flugzustand, Fuel Checks, Logbuch), liegt nur im Browser des Geräts (`localStorage`).
 Vor einem Gerätewechsel im Logbuch **Sicherung** drücken und auf dem neuen Gerät **Importieren**.

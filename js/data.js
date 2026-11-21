@@ -15,6 +15,7 @@ export const API = {
   ukcp: "https://raw.githubusercontent.com/sbelic95/vdgs-slot-board/data/ukcp.json",
   events: "https://raw.githubusercontent.com/sbelic95/asl-pad/data/events.json", // .github/workflows/vatsim-events.yml
   sigmets: "https://raw.githubusercontent.com/sbelic95/asl-pad/wx/sigmets.json", // .github/workflows/sigmets.yml
+  taf: "https://raw.githubusercontent.com/sbelic95/asl-pad/wx/taf.json", // same workflow: TAFs of the Air Serbia network
   notices: "va/notices.json", // written by the airline's staff on GitHub, like the two below
   downloads: "va/downloads.json",
   ranks: "va/ranks.json",

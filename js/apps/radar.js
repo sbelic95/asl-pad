@@ -5,7 +5,7 @@ import { S, settings } from "../data.js";
 import { t, nf } from "../i18n.js";
 import { esc, getJSON, greatCircle } from "../util.js";
 import { aptDb } from "../tz.js";
-import { drawWorld } from "./map.js";
+import { baseLayer } from "./map.js";
 
 const L = window.L;
 const FAC = { 1: "FSS", 2: "DEL", 3: "GND", 4: "TWR", 5: "APP", 6: "CTR" };
@@ -34,10 +34,8 @@ function make(net) {
     body.innerHTML = `<div class="rad"><div class="rad-map"></div><div class="rad-bar"><input class="rad-q" placeholder="${t("Callsign, airport or ID")}" autocapitalize="characters" spellcheck="false"><span class="rad-n"></span></div><div class="rad-pop" hidden></div></div>`;
     const el = body.querySelector(".rad-map");
     const map = L.map(el, { zoomControl: false, minZoom: 2, zoomSnap: 0.5, worldCopyJump: true, preferCanvas: true });
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png", { subdomains: "abcd", maxZoom: 12,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> · Natural Earth' }).addTo(map);
+    baseLayer(map, { dark: true, max: 12, look: "radar" });
     L.control.zoom({ position: "bottomright" }).addTo(map);
-    drawWorld(map, false);
     const r = L.canvas({ padding: 0.3 }), dots = L.layerGroup().addTo(map), atc = L.layerGroup().addTo(map), route = L.layerGroup().addTo(map);
     map.setView(S.pilot ? [S.pilot.latitude, S.pilot.longitude] : [46, 15], S.pilot ? 6 : 4);
     M = { map, el, body, r, dots, atc, route, key: "" };

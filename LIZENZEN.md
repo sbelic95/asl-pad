@@ -19,7 +19,7 @@ Logo-Dienst (`pics.avs.io`) geladen. Die App-Symbole und Grafiken sind eigene En
 | `airports.json` (Koordinaten, Städte, Zeitzonen) | [mwgg/Airports](https://github.com/mwgg/Airports), MIT |
 | Stände, Gates, Terminals | © OpenStreetMap-Mitwirkende, [ODbL](https://www.openstreetmap.org/copyright) |
 | Pisten | [OurAirports](https://ourairports.com/data/), Public Domain |
-| Kartenkacheln | © OpenStreetMap-Mitwirkende, © [CARTO](https://carto.com/attributions) |
+| Kartenkacheln | © OpenStreetMap-Mitwirkende, [ODbL](https://www.openstreetmap.org/copyright); Kacheln von tile.openstreetmap.org nach der [Tile Usage Policy](https://operations.osmfoundation.org/policies/tiles/) |
 | `vendor/world.json` (Länder, Küsten, Grenzen der Flugkarte) | [Natural Earth](https://www.naturalearthdata.com) 1:50m, Public Domain; umgewandelt aus [world-atlas](https://github.com/topojson/world-atlas) 2.0.2 (ISC) |
 | Flugplan (OFP) | SimBrief (Navigraph) – Daten des eigenen Kontos |
 | Netzwerkdaten, METAR, ATIS | VATSIM |

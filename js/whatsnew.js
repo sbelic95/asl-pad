@@ -7,6 +7,16 @@ import { esc } from "./util.js";
 import { APP_ICONS } from "./icons.js";
 
 export const releases = () => [
+  { v: "2.0.1", date: "2026-11-21", groups: [
+    { icon: "fly", name: "ASL Fly", items: [
+      t("New VDGS tab: your stand, the slot from vIFF CDM with a countdown to the start-up window, runway, SID and which frequency to call now and next"),
+      t("The overview shows the slot in one line"),
+    ] },
+    { icon: "pad", name: "ASL Pad", items: [
+      t("Maps work again: OpenStreetMap instead of the map provider that now asks for a key"),
+      t("Weather: the TAFs of all Air Serbia destinations"),
+    ] },
+  ] },
   { v: "2.0", date: "2026-11-20", groups: [
     { icon: "pad", name: "ASL Pad", items: [
       t("Home screen with three pages – Operations, Network & weather, Tools & device – plus weather and calendar widgets"),
