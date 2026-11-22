@@ -12,18 +12,23 @@ import { planCard, suggestCard, vamBookingCard } from "./booking.js";
 import { V } from "./vamsys.js";
 import { weatherWidget } from "./apps/weather.js";
 import { calendarWidget } from "./apps/calendar.js";
+import { unreadMail } from "./apps/mail.js";
 
 // every app of the pad with its group (the home pages) – "core" apps cannot be removed in the App Store
-export const GROUPS = [["ops", "Operations"], ["net", "Network & weather"], ["tools", "Tools & device"]];
+export const GROUPS = [["ops", "Operations"], ["crew", "Crew & community"], ["net", "Network & weather"], ["tools", "Tools & device"]];
 export const HOME_APPS = [
   { id: "fly", name: "ASL Fly", icon: "fly", g: "ops", core: true }, { id: "ops", name: "ASL Ops", icon: "ops", g: "ops", core: true },
   { id: "apt", name: "Airport", icon: "airport", g: "ops" }, { id: "log", name: "Logbook", icon: "log", g: "ops", core: true },
   { id: "kneeboard", name: "Kneeboard", icon: "kneeboard", g: "ops" }, { id: "manuals", name: "Manuals", icon: "manuals", g: "ops" },
   { id: "calendar", name: "Calendar", icon: "calendar", g: "ops" }, { id: "cabin", name: "Cabin", icon: "cabin", g: "ops" },
   { id: "simbrief", name: "SimBrief", icon: "simbrief", g: "ops" },
+  { id: "mail", name: "Mail", icon: "mail", g: "crew" }, { id: "messages", name: "Messages", icon: "messages", g: "crew" },
+  { id: "academy", name: "Academy", icon: "academy", g: "crew" }, { id: "news", name: "News", icon: "news", g: "crew" },
+  { id: "photos", name: "Photos", icon: "photos", g: "crew" }, { id: "scenery", name: "Scenery", icon: "scenery", g: "crew" },
   { id: "radar", name: "VATSIM Radar", icon: "radar", g: "net" }, { id: "ivao", name: "IVAO Radar", icon: "ivao", g: "net" },
   { id: "weather", name: "Weather", icon: "weather", g: "net" },
   { id: "clock", name: "Clock", icon: "clock", g: "tools" }, { id: "calc", name: "Calculator", icon: "calc", g: "tools" },
+  { id: "reference", name: "Reference", icon: "reference", g: "tools" }, { id: "browser", name: "Browser", icon: "browser", g: "tools" },
   { id: "downloads", name: "Downloads", icon: "downloads", g: "tools" }, { id: "store", name: "App Store", icon: "store", g: "tools", core: true },
   { id: "settings", name: "Settings", icon: "settings", g: "tools", core: true },
 ];
@@ -41,7 +46,7 @@ const icon = (a, badge) => `<button class="app-ic" data-app="${a.id}"><div class
 export function renderHome(el, now = Date.now()) {
   const o = S.ofp, d = derived(now);
   const urgent = actions(now).filter((a) => a.lv === "red" || a.lv === "attn");
-  const badges = { ops: urgent.filter((a) => a.app === "ops").length, fly: urgent.filter((a) => a.app === "fly").length };
+  const badges = { ops: urgent.filter((a) => a.app === "ops").length, fly: urgent.filter((a) => a.app === "fly").length, mail: installed("mail") ? unreadMail() : 0 };
   const sub = o ? t("{f} to {city} today", { f: o.iataNo || o.callsign, city: cityOf(o.dest) || o.dest?.icao }) : t("No flight loaded");
   el.innerHTML = `
     <div class="hm-widgets">

@@ -16,6 +16,10 @@ const ABOUT = {
   cabin: "The passenger screen: flight map, destination, connections.", simbrief: "Opens SimBrief to plan a flight.",
   radar: "All VATSIM flights and stations on one map.", ivao: "All IVAO flights and stations on one map.",
   weather: "METAR and TAF for every Air Serbia destination.", clock: "Zulu, world clock, stopwatch, timer and alarms.",
+  mail: "Your company inbox: notices of the airline and a monthly summary of your flying.", messages: "Notifications and ACARS messages as conversations.",
+  academy: "Short courses with questions, and Serbian for the crew.", news: "Flight-sim headlines from public news sites, every hour.",
+  photos: "Your screenshots, sorted by month and flight – only on this device.", scenery: "Swipe through the network and find sceneries for the airports you like.",
+  reference: "Alphabet, unit converter, transponder codes, light signals and METAR.", browser: "The crew services one tap away.",
   calc: "A simple calculator.", downloads: "Liveries, ACARS and tools for the airline.", store: "Install and remove apps.", settings: "SimBrief, VATSIM, vAMSYS, look and home screen.",
 };
 let C = null;

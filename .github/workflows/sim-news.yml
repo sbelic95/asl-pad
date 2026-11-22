@@ -1,0 +1,86 @@
+# Every hour: headlines from public flight-sim news feeds for the News app of the pad.
+# Only title, a short teaser (max. 160 characters), source and link are kept – the article is read at the source.
+# Published as news.json on the "news" branch (one orphan commit, force-pushed); the pad reads it via raw.githubusercontent.com.
+name: Sim news
+
+on:
+  schedule:
+    - cron: "23 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: news
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch feeds and publish news.json
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -e
+          mkdir pub
+          python3 - <<'PY'
+          import datetime, email.utils, hashlib, html, json, re, urllib.request
+          import xml.etree.ElementTree as ET
+          FEEDS = [
+              ("FSElite", "https://fselite.net/feed/"),
+              ("MSFS Addons", "https://msfsaddons.com/feed/"),
+              ("Threshold", "https://www.thresholdx.net/rss"),
+              ("simFlight", "https://simflight.com/feed/"),
+              ("FSNews", "https://www.fsnews.eu/feed/"),
+          ]
+          now = datetime.datetime.now(datetime.timezone.utc)
+          def clean(s):
+              s = html.unescape(re.sub(r"<[^>]+>", " ", html.unescape(s or "")))
+              return re.sub(r"\s+", " ", s).strip()
+          def teaser(s):
+              s = clean(s)
+              if len(s) <= 160: return s
+              cut = s[:160].rsplit(" ", 1)[0]
+              return cut.rstrip(",;:-–") + " …"
+          def date(s):
+              try:
+                  d = email.utils.parsedate_to_datetime(s)
+              except (TypeError, ValueError):
+                  try: d = datetime.datetime.fromisoformat((s or "").replace("Z", "+00:00"))
+                  except ValueError: return None
+              return d if d.tzinfo else d.replace(tzinfo=datetime.timezone.utc)
+          items = []
+          for name, url in FEEDS:
+              try:
+                  req = urllib.request.Request(url, headers={"User-Agent": "ASLPadNews/1.0 (+https://github.com/sbelic95/asl-pad)"})
+                  root = ET.fromstring(urllib.request.urlopen(req, timeout=30).read())
+              except Exception as e:
+                  print("skip", name, e); continue
+              n = 0
+              for it in root.iter("item"):
+                  title, link = clean(it.findtext("title")), (it.findtext("link") or "").strip()
+                  d = date(it.findtext("pubDate"))
+                  if not title or not link.startswith("https://") or not d or d < now - datetime.timedelta(days=7): continue
+                  items.append({"id": hashlib.sha1(link.encode()).hexdigest()[:12], "source": name, "title": title[:160], "text": teaser(it.findtext("description")),
+                                "link": link, "date": d.astimezone(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")})
+                  n += 1
+                  if n >= 12: break
+              print(name, n)
+          items.sort(key=lambda x: x["date"], reverse=True)
+          json.dump({"updated": now.strftime("%Y-%m-%dT%H:%M:%SZ"), "items": items[:50]}, open("pub/news.json", "w"), separators=(",", ":"), ensure_ascii=False)
+          PY
+          cd pub
+          git init -q -b news
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add news.json
+          git commit -qm "Sim news"
+          for i in 1 2 3 4; do
+            git push -qf "https://x-access-token:${TOKEN}@github.com/${REPO}.git" news && exit 0
+            echo "push failed, next try in $((i * 15)) s"; sleep $((i * 15))
+          done
+          exit 1

@@ -27,6 +27,14 @@ import * as Kneeboard from "./apps/kneeboard.js";
 import * as Manuals from "./apps/manuals.js";
 import * as Store from "./apps/store.js";
 import { Vatsim, Ivao } from "./apps/radar.js";
+import * as Mail from "./apps/mail.js";
+import * as Messages from "./apps/messages.js";
+import * as Academy from "./apps/academy.js";
+import * as Reference from "./apps/reference.js";
+import * as Photos from "./apps/photos.js";
+import * as Browser from "./apps/browser.js";
+import * as Scenery from "./apps/scenery.js";
+import * as News from "./apps/news.js";
 import { notify, N } from "./notify.js";
 import { startSync } from "./sync.js";
 import { initDevice, askPin, pinNeeded, faceId, applyBright, hide as hideDc, isOpen as dcOpen } from "./device.js";
@@ -35,6 +43,7 @@ import { initFrame, applyFrame } from "./frame.js";
 const APPS = {
   fly: Fly, ops: Ops, log: Log, settings: Settings, downloads: Downloads, apt: Airport, cabin: Cabin,
   weather: Weather, clock: Clock, calc: Calc, calendar: Calendar, kneeboard: Kneeboard, manuals: Manuals, store: Store, radar: Vatsim, ivao: Ivao,
+  mail: Mail, messages: Messages, academy: Academy, reference: Reference, photos: Photos, browser: Browser, scenery: Scenery, news: News,
 };
 const NAMES = Object.fromEntries(HOME_APPS.map((a) => [a.id, a]));
 
@@ -319,6 +328,7 @@ if ((q.has("unlock") || q.get("app")) && !pinNeeded()) { $("lock").classList.add
 handleRedirect().then(async (back) => { if (back && !(await gateNeeded())) openApp("settings"); checkGate(); }); // back from the vAMSYS sign-in
 if (ui.view !== "lock") whatsNewOnce();
 startPolling();
+News.pollNews(); setInterval(() => News.pollNews(), 15 * 60e3);
 startSync();
 if ("serviceWorker" in navigator && location.protocol === "https:") {
   // a new version took over (sw.js changed): load it once, so a fix shows up without opening the pad twice
