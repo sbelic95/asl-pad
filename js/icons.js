@@ -60,6 +60,8 @@ export const APP_ICONS = {
     <path d="M24 62 v12 a6 6 0 0 0 6 6 h40 a6 6 0 0 0 6 -6 v-12" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="6" stroke-linecap="round"/></svg>`,
 };
 export const I = {
+  wifi: `<svg viewBox="0 0 20 15" fill="currentColor"><path d="M10 2.2c3.1 0 5.9 1.2 8 3.2l1.4-1.5A13.6 13.6 0 0 0 10 .2 13.6 13.6 0 0 0 .6 3.9L2 5.4c2.1-2 4.9-3.2 8-3.2z"/><path d="M10 6.3c2 0 3.8.8 5.1 2l1.4-1.4A9.3 9.3 0 0 0 10 4.3c-2.5 0-4.8 1-6.5 2.6l1.4 1.4c1.3-1.2 3.1-2 5.1-2z"/><path d="M10 10.3c.9 0 1.7.3 2.3.9L10 13.6l-2.3-2.4c.6-.6 1.4-.9 2.3-.9z"/></svg>`,
+  wifiOff: `<svg viewBox="0 0 20 15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M1.3 4.6A12.4 12.4 0 0 1 10 1.2c3.4 0 6.4 1.3 8.7 3.4M4.2 7.6A8 8 0 0 1 10 5.3c2.3 0 4.3.9 5.8 2.3M10 13.5h0M3 1l14 13" opacity=".8"/></svg>`,
   lock: `<svg viewBox="0 0 18 22" fill="none" stroke="currentColor" stroke-width="2"><rect x="1.5" y="9" width="15" height="11.5" rx="2.5"/><path d="M4.5 9V6a4.5 4.5 0 0 1 9 0v3"/></svg>`,
   plane: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>`,
   back: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>`,

@@ -52,7 +52,7 @@ export function initDevice(c) {
   ctx = c; // { goHome, lock, applyTheme, renderAll, openApp, changed }
   const st = document.getElementById("status");
   let y0 = null, x0 = 0;
-  st.addEventListener("pointerdown", (e) => { y0 = e.clientY; x0 = e.clientX; });
+  st.addEventListener("pointerdown", (e) => { y0 = e.clientY; x0 = e.clientX - st.getBoundingClientRect().left; }); // relative: the pad may sit in a frame
   st.addEventListener("pointerup", (e) => { if (y0 == null) return; const dy = e.clientY - y0; y0 = null; if (dy > 20 || Math.abs(dy) < 6) show(x0 > st.clientWidth * 0.55 ? "cc" : "nc"); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && open) hide(); });
   N.dnd = () => !!settings.dnd; N.system = () => !!settings.push;

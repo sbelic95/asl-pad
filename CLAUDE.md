@@ -66,6 +66,14 @@ Dienstplan/Crew Desk/Bericht in `js/crew.js`. Namen bewusst eigen: „Crew Desk�
 Karten: nur OpenStreetMap-Kacheln über `baseLayer()` in `js/apps/map.js` (CARTO braucht seit 11/2026 einen Schlüssel – nicht mehr verwenden). VDGS-Anzeige = ASL Fly Reiter `vdgs` (`js/apps/vdgs.js`): Zeiten zuerst von VATSIM (vIFF CDM von VATSIM Spain, `viff-system.network/ifps/callsign` – deckt auch EDDF/EGLL ab; vACDM Germany ist eingestellt), sonst aus SimBrief (Wunsch des Nutzers). EDDF verlangt immer eine TOBT (`REQ_TOBT`), gesetzt wird sie im VATSIM-VDGS `vdgs.vatsimspain.es`.
 Server `server/worker.js` (Cloudflare) ist vorbereitet, aktiv erst mit `url` in `va/server.json` – braucht das Cloudflare-Konto des Nutzers. Ground (GSX) kommt später.
 
+## 2.1 Geräterahmen
+
+`js/frame.js`: Auf großen Computer-Bildschirmen (ab 1400×880, nicht als installierte App, nicht auf Touch-Geräten) liegt das Pad als Tablet
+auf einem Tisch: Rahmen `#device` um `#pad`, Sperrtaste oben (`.dv-power`), Helligkeitstasten rechts (`.dv-vol`), Crew-Ausweis `#crewcard`
+links (Name/Rang/ID aus vAMSYS, Flug aus dem OFP). Einstellung `settings.frame` = auto | on | off. Bei 1180×820 (Test) gibt es keinen Rahmen.
+Statusleiste mit Netz und Akku (`navigator.getBattery`, nur wenn der Browser ihn liefert – nie erfinden). Zeigerpositionen immer relativ
+zum Pad rechnen (`getBoundingClientRect`), nicht zum Fenster. Eigenes Design, nicht das Gerät von LH Virtual nachbauen.
+
 ## Updates
 
 Jede sichtbare Neuerung als neuer Eintrag oben in `js/whatsnew.js` (nur, was das Pad wirklich kann). Das Pad zeigt ihn einmal

@@ -60,6 +60,7 @@ function page() {
       ${row(t("Home screen"), t("Cards on the home screen. Tap to show or hide."), `<div class="seg">${HOME_CARDS.map(([k, l]) => `<button data-hc="${k}" class="${(settings.homeHide || []).includes(k) ? "" : "on"}">${esc(t(l))}</button>`).join("")}</div>`)}
       ${row(t("Order of the cards"), t("Which card comes first on the home screen."), `<div class="hc-order">${boardOrder().map((k, i, a) => `<div><span>${esc(t(HOME_CARDS.find((c) => c[0] === k)?.[1] || k))}</span>
         <button class="btn small" data-hco="${k}" data-dir="-1" ${i ? "" : "disabled"} aria-label="up">▲</button><button class="btn small" data-hco="${k}" data-dir="1" ${i < a.length - 1 ? "" : "disabled"} aria-label="down">▼</button></div>`).join("")}</div>`)}
+      ${row(t("Device frame"), t("On a computer the pad lies as a tablet on a desk, with your crew card next to it. Auto: only when the window is big enough."), seg("frame", [["auto", t("Auto")], ["on", t("On")], ["off", t("Off")]], settings.frame || "auto"))}
       ${row(t("PIN"), pinCode() ? t("Unlock with the digits of your pilot ID ({n} digits).", { n: pinCode().length }) : t("Available after signing in with vAMSYS: the PIN is the digits of your pilot ID."), seg("pin", [["1", t("On")], ["0", t("Off")]], settings.pin ? "1" : "0"))}
       ${row(t("Auto-lock"), t("Locks the pad after this time without a touch."), seg("lock", [[0, t("Never")], [5, "5 min"], [10, "10 min"], [30, "30 min"]], settings.lock))}
     </div>

@@ -19,6 +19,9 @@
 <script src="vendor/leaflet.js"></script>
 </head>
 <body>
+<div id="desk" aria-hidden="true"><div id="crewcard" hidden></div></div>
+<div id="device">
+<button class="dv-btn dv-power" aria-label="Lock / wake"></button><button class="dv-btn dv-vol" data-step="1" aria-label="Brighter"></button><button class="dv-btn dv-vol" data-step="-1" aria-label="Darker"></button><span class="dv-cam"></span>
 <div id="pad">
   <div class="wall"></div>
   <div class="status" id="status"></div>
@@ -28,6 +31,7 @@
   <section id="switcher" class="layer gone"></section>
   <div class="toast" id="toast"></div>
   <div class="homebar" id="homebar" role="button" aria-label="Home"></div>
+</div>
 </div>
 <script type="module" src="js/main.js"></script>
 </body>

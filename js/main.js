@@ -30,6 +30,7 @@ import { Vatsim, Ivao } from "./apps/radar.js";
 import { notify, N } from "./notify.js";
 import { startSync } from "./sync.js";
 import { initDevice, askPin, pinNeeded, faceId, applyBright, hide as hideDc, isOpen as dcOpen } from "./device.js";
+import { initFrame, applyFrame } from "./frame.js";
 
 const APPS = {
   fly: Fly, ops: Ops, log: Log, settings: Settings, downloads: Downloads, apt: Airport, cabin: Cabin,
@@ -57,10 +58,16 @@ export function skyNow(now = Date.now()) {
 applyTheme();
 
 // ---------- status bar ----------
+// network and battery like on a real tablet; the battery only where the browser tells it (Chrome, Edge), never made up
+let BAT = null;
+navigator.getBattery?.().then((b) => { const u = () => { BAT = { l: b.level, c: b.charging }; renderStatus(); }; u(); b.addEventListener("levelchange", u); b.addEventListener("chargingchange", u); }).catch(() => {});
+addEventListener("online", () => renderStatus()); addEventListener("offline", () => renderStatus());
+const sysIcons = () => `<span class="sysi" title="${navigator.onLine ? "" : t("Offline")}">${navigator.onLine ? I.wifi : I.wifiOff}</span>`
+  + (BAT ? `<span class="bat${BAT.c ? " chg" : BAT.l <= 0.2 ? " low" : ""}" title="${BAT.c ? t("Charging") : ""}"><span class="num">${Math.round(BAT.l * 100)} %</span><i><b style="width:calc(${Math.max(4, BAT.l * 100)}% - 3px)"></b></i></span>` : "");
 function renderStatus(now = Date.now()) {
   const vat = settings.demo ? `<span class="dot on"></span>DEMO` : S.feedOk == null ? "" : `<span class="dot ${S.pilot ? "on" : S.feedOk ? "" : "off"}"></span>VATSIM${S.pilot ? " · " + esc(S.pilot.callsign) : ""}`;
-  $("status").innerHTML = ui.view === "lock" ? `<span class="sp"></span><span>${vat}</span>`
-    : `<span class="num">${new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit" }).format(now)}</span><span class="dim">${esc(dateLong(now))}</span><span class="sp"></span><span>${vat}</span><span class="num">${hhmmz(now)}</span>`;
+  $("status").innerHTML = ui.view === "lock" ? `<span class="sp"></span><span>${vat}</span>${sysIcons()}`
+    : `<span class="num">${new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit" }).format(now)}</span><span class="dim">${esc(dateLong(now))}</span><span class="sp"></span><span>${vat}</span><span class="num">${hhmmz(now)}</span>${sysIcons()}`;
 }
 
 // ---------- app frames ----------
@@ -280,7 +287,7 @@ setInterval(() => {
 
 // ---------- start ----------
 export function settingsChanged(kind) {
-  applyTheme();
+  applyTheme(); applyFrame();
   if (kind === "lang") { // tab labels are built with the frame: build the frames again
     document.querySelectorAll(".app").forEach((a) => a.remove());
     if (ui.view === "app" && ui.app) { renderApp(ui.app); frameOf(ui.app).classList.add("open"); }
@@ -307,6 +314,7 @@ renderLock($("lock")); renderHome($("home")); renderStatus();
 N.banner = toast;
 initDevice({ goHome, lock: lockPad, applyTheme, renderAll, openApp, changed: settingsChanged, toast });
 applyBright();
+initFrame({ lock: lockPad, unlock, isLocked: () => ui.view === "lock", brighter: (d) => { saveSettings({ bright: Math.min(1, Math.max(0.4, Math.round(((settings.bright ?? 1) + d * 0.1) * 10) / 10)) }); applyBright(); } });
 if ((q.has("unlock") || q.get("app")) && !pinNeeded()) { $("lock").classList.add("gone"); ui.view = "home"; if (q.get("app")) openApp(q.get("app"), q.get("tab") || undefined); }
 handleRedirect().then(async (back) => { if (back && !(await gateNeeded())) openApp("settings"); checkGate(); }); // back from the vAMSYS sign-in
 if (ui.view !== "lock") whatsNewOnce();

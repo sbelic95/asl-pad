@@ -7,6 +7,13 @@ import { esc } from "./util.js";
 import { APP_ICONS } from "./icons.js";
 
 export const releases = () => [
+  { v: "2.1.0", date: "2026-11-22", groups: [
+    { icon: "pad", name: "ASL Pad", items: [
+      t("On a computer the pad now lies as a tablet on a desk: frame, lock button on the top edge, brightness buttons on the side and your crew card next to it"),
+      t("Status bar with network and battery, like on a real tablet"),
+      t("Settings → Device frame: Auto, On or Off. On tablets, phones and as an installed app the pad stays full screen"),
+    ] },
+  ] },
   { v: "2.0.2", date: "2026-11-21", groups: [
     { icon: "fly", name: "ASL Fly", items: [
       t("VDGS: TOBT, TSAT, TTOT, CTOT and taxi time from VATSIM (vIFF CDM) wherever VATSIM has them, as at Frankfurt and Heathrow – everything else from SimBrief"),
