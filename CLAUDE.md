@@ -74,6 +74,15 @@ links (Name/Rang/ID aus vAMSYS, Flug aus dem OFP). Einstellung `settings.frame` 
 Statusleiste mit Netz und Akku (`navigator.getBattery`, nur wenn der Browser ihn liefert – nie erfinden). Zeigerpositionen immer relativ
 zum Pad rechnen (`getBoundingClientRect`), nicht zum Fenster. Eigenes Design, nicht das Gerät von LH Virtual nachbauen.
 
+## 2.2 Neue Apps (Funktionen wie im LH-Virtual-Pad, eigener Stil und eigene Namen)
+
+Startseite „Crew & community“ (`GROUPS` in `home.js`): Mail (`js/apps/mail.js`: nur echte Quellen – `va/notices.json`, Willkommensbrief,
+Monatsübersicht aus dem Logbuch), Messages (Mitteilungen + Hoppie-ACARS als Unterhaltungen, nur lesen), Academy (Kurse dreisprachig im Modul,
+Fortschritt `asl.academy`; kein offizielles VA-Training), News (`sim-news.yml` → Branch `news`, nur Titel, Teaser ≤ 160 Zeichen, Quelle, Link),
+Photos (IndexedDB `asl.photos` – Bilder sind zu groß für localStorage), Scenery (Wischen durch `va/routes.json`, Link zur Suche auf flightsim.to).
+Werkzeuge: Reference (Alphabet, Umrechner, Codes, Lichtsignale, METAR), Browser (Links in neuem Tab – die Dienste erlauben keine Einbettung).
+Home-Spalten scrollen innen (`.hm-widgets`, `.hm-main`), damit das Dock nie abgeschnitten wird. Nicht übernommen: Partner-Apps von LH Virtual.
+
 ## Updates
 
 Jede sichtbare Neuerung als neuer Eintrag oben in `js/whatsnew.js` (nur, was das Pad wirklich kann). Das Pad zeigt ihn einmal

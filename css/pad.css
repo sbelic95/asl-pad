@@ -90,6 +90,7 @@ input, select { font: inherit; color: var(--fg); background: var(--panel2); bord
 /* the two columns scroll inside, so the dock always stays whole on screen */
 .hm-widgets, .hm-main { min-height: 0; max-height: 100%; overflow-y: auto; scrollbar-width: none; overscroll-behavior: contain; padding-bottom: 6px; }
 .hm-widgets::-webkit-scrollbar, .hm-main::-webkit-scrollbar { display: none; }
+.hm-widgets > *, .hm-main > * { flex-shrink: 0; } /* scroll, never squeeze the cards */
 #home.zoom { transform: scale(.94); opacity: 0; pointer-events: none; }
 .hm-widgets { display: flex; flex-direction: column; gap: 14px; align-self: start; }
 .hm-apps { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 28px 18px; align-content: start; justify-items: center; padding-top: 10px; }

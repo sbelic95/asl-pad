@@ -3,7 +3,6 @@
 // headline and a short teaser – the article is read at the source. Independent feed, not written by the VA.
 import { t, LOCALE } from "../i18n.js";
 import { esc, store, getJSON } from "../util.js";
-import { settings } from "../data.js";
 import { notify } from "../notify.js";
 
 export const name = "News";
@@ -15,13 +14,13 @@ export async function pollNews(force) {
   if (busy || (!force && Date.now() - at < 15 * 60e3)) return;
   busy = true; at = Date.now();
   try {
-    const d = settings.demo ? { updated: new Date().toISOString(), items: [] } : await getJSON(NEWS_URL + "?_=" + Math.floor(Date.now() / 6e5));
+    const d = await getJSON(NEWS_URL + "?_=" + Math.floor(Date.now() / 6e5));
     if (d?.items) {
       const old = new Set((N?.items || []).map((x) => x.id)), fresh = N ? d.items.filter((x) => !old.has(x.id)) : [];
       N = d; store.set("asl.news", d);
       if (fresh.length) notify({ app: "news", ic: "info", lv: "info", title: t("News"), text: fresh[0].title + (fresh.length > 1 ? " " + t("(+{n} more)", { n: fresh.length - 1 }) : "") });
     }
-  } catch {}
+  } catch { if (!N) N = { items: [] }; } // offline and nothing kept yet: show "no stories" instead of loading forever
   busy = false;
 }
 const when = (iso) => { const ts = Date.parse(iso); const m = Math.round((Date.now() - ts) / 6e4); return m < 60 ? t("{n} min ago", { n: Math.max(1, m) }) : m < 1440 ? t("{n} h ago", { n: Math.round(m / 60) }) : new Intl.DateTimeFormat(LOCALE(), { day: "2-digit", month: "short" }).format(ts); };

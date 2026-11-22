@@ -2,8 +2,7 @@
 const grad = (id, a, b) => `<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs>`;
 export const APP_ICONS = {
   mail: `<svg viewBox="0 0 100 100">${grad("gMl", "#2f8cff", "#0050b8")}<rect width="100" height="100" fill="url(#gMl)"/>
-    <rect x="18" y="28" width="64" height="46" rx="6" fill="#fff"/><path d="M20 31 L50 54 L80 31" fill="none" stroke="#0059c2" stroke-width="4" stroke-linejoin="round"/>
-    <circle cx="76" cy="28" r="9" fill="#e3001f"/></svg>`,
+    <rect x="18" y="28" width="64" height="46" rx="6" fill="#fff"/><path d="M20 31 L50 54 L80 31" fill="none" stroke="#0059c2" stroke-width="4" stroke-linejoin="round"/></svg>`,
   messages: `<svg viewBox="0 0 100 100">${grad("gMs", "#3fd17a", "#13924a")}<rect width="100" height="100" fill="url(#gMs)"/>
     <path d="M50 22 C30 22 18 34 18 48 C18 57 23 64 31 68 L28 80 L42 72 C45 73 47 73 50 73 C70 73 82 61 82 48 C82 34 70 22 50 22 Z" fill="#fff"/>
     <path d="M36 44 h28 M36 54 h18" stroke="#13924a" stroke-width="4" stroke-linecap="round"/></svg>`,

@@ -20,6 +20,7 @@
 .ac-ans { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
 .ac-a { text-align: left; padding: 14px 18px; border-radius: 14px; background: var(--panel); border: 1px solid var(--line2); font-size: 16px; }
 .ac-a.ok { border-color: var(--ok); } .ac-a.bad { border-color: var(--red); }
+.ac-why { margin-bottom: 14px; }
 .ac-end { max-width: 520px; margin: 30px auto; text-align: center; } .ac-score { font: 300 46px var(--f-ui); margin: 8px 0; }
 .ac-badges { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; } .ac-b { display: flex; gap: 12px; align-items: center; padding: 10px 12px; border-radius: 12px; background: var(--panel2); opacity: .55; } .ac-b.on { opacity: 1; }
 .ref-abc { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; } .ref-abc div { display: flex; gap: 10px; align-items: baseline; padding: 8px 10px; border-radius: 10px; background: var(--panel2); }

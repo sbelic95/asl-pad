@@ -1,6 +1,6 @@
 // Reference: quick look-ups for line flying, offline – phonetic alphabet, a unit converter, transponder codes and
 // light signals, and the METAR abbreviations. Own tables from ICAO standards, no external library.
-import { t, loc } from "../i18n.js";
+import { t, loc, LOCALE } from "../i18n.js";
 import { esc, store } from "../util.js";
 
 export const name = "Reference";
@@ -46,7 +46,7 @@ const METAR = [
 
 let V = store.get("asl.ref.conv", { g: "alt", v: "1000", u: "ft", c: "15" });
 const conv = (g, v, from) => { const G = UNITS.find((x) => x[0] === g)[2], f = G.find((x) => x[0] === from)[2]; return G.map(([k, l, k2]) => [l, (v * f) / k2, k === from]); };
-const fmt = (x) => (Math.abs(x) >= 100 ? Math.round(x).toLocaleString() : x.toFixed(2));
+const fmt = (x) => x.toLocaleString(LOCALE(), { maximumFractionDigits: Math.abs(x) >= 100 ? 0 : 2 });
 
 export function render(body, ctx) {
   if (!body._ref) { body._ref = true;

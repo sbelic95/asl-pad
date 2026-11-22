@@ -7,6 +7,14 @@ import { esc } from "./util.js";
 import { APP_ICONS } from "./icons.js";
 
 export const releases = () => [
+  { v: "2.2.0", date: "2026-11-22", groups: [
+    { icon: "pad", name: "ASL Pad", items: [
+      t("Mail, Messages, Academy, News, Photos, Scenery, Reference and Browser – eight new apps on their own home page and in the App Store"),
+      t("News: flight-sim headlines from five public sites every hour, each with its source"),
+      t("Academy: courses with questions and a Serbian course for the crew, with badges"),
+      t("The dock on the home screen is always fully visible"),
+    ] },
+  ] },
   { v: "2.1.0", date: "2026-11-22", groups: [
     { icon: "pad", name: "ASL Pad", items: [
       t("On a computer the pad now lies as a tablet on a desk: frame, lock button on the top edge, brightness buttons on the side and your crew card next to it"),
