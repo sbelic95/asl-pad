@@ -22,6 +22,7 @@ export const HOME_APPS = [
   { id: "kneeboard", name: "Kneeboard", icon: "kneeboard", g: "ops" }, { id: "manuals", name: "Manuals", icon: "manuals", g: "ops" },
   { id: "calendar", name: "Calendar", icon: "calendar", g: "ops" }, { id: "cabin", name: "Cabin", icon: "cabin", g: "ops" },
   { id: "simbrief", name: "SimBrief", icon: "simbrief", g: "ops" },
+  { id: "turnaround", name: "Turnaround", icon: "turnaround", g: "ops" }, { id: "fenix", name: "Fenix EFB", icon: "fenix", g: "ops" },
   { id: "mail", name: "Mail", icon: "mail", g: "crew" }, { id: "messages", name: "Messages", icon: "messages", g: "crew" },
   { id: "academy", name: "Academy", icon: "academy", g: "crew" }, { id: "news", name: "News", icon: "news", g: "crew" },
   { id: "photos", name: "Photos", icon: "photos", g: "crew" }, { id: "scenery", name: "Scenery", icon: "scenery", g: "crew" },

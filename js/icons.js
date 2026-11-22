@@ -1,6 +1,12 @@
 // App icons and small UI icons, drawn as SVG (own designs, Air Serbia colours).
 const grad = (id, a, b) => `<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs>`;
 export const APP_ICONS = {
+  turnaround: `<svg viewBox="0 0 100 100">${grad("gTa", "#ffb020", "#d46a00")}<rect width="100" height="100" fill="url(#gTa)"/>
+    <rect x="14" y="58" width="44" height="18" rx="4" fill="#fff"/><rect x="46" y="48" width="16" height="12" rx="2" fill="#fff"/><circle cx="24" cy="78" r="6" fill="#2b2f36"/><circle cx="50" cy="78" r="6" fill="#2b2f36"/>
+    <path d="M62 30 h22 l-6 -6 M84 30 l-6 6" fill="none" stroke="#002e5d" stroke-width="4" stroke-linecap="round"/><path d="M60 40 L88 40" stroke="#002e5d" stroke-width="4" stroke-linecap="round" stroke-dasharray="4 5"/></svg>`,
+  fenix: `<svg viewBox="0 0 100 100">${grad("gFx", "#1a1d24", "#05070b")}<rect width="100" height="100" fill="url(#gFx)"/>
+    <rect x="20" y="16" width="60" height="68" rx="8" fill="#2a2f3a" stroke="#4c5566" stroke-width="2"/><rect x="26" y="24" width="48" height="44" rx="3" fill="#0b2a55"/>
+    <path d="M32 56 L44 40 L54 50 L68 32" fill="none" stroke="#5aa2ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="50" cy="76" r="3.5" fill="#e3001f"/></svg>`,
   mail: `<svg viewBox="0 0 100 100">${grad("gMl", "#2f8cff", "#0050b8")}<rect width="100" height="100" fill="url(#gMl)"/>
     <rect x="18" y="28" width="64" height="46" rx="6" fill="#fff"/><path d="M20 31 L50 54 L80 31" fill="none" stroke="#0059c2" stroke-width="4" stroke-linejoin="round"/></svg>`,
   messages: `<svg viewBox="0 0 100 100">${grad("gMs", "#3fd17a", "#13924a")}<rect width="100" height="100" fill="url(#gMs)"/>

@@ -48,3 +48,21 @@
 .nw-i { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border-radius: 14px; background: var(--panel); border: 1px solid var(--line); color: inherit; text-decoration: none; }
 .nw-i.read { opacity: .6; } .nw-i p { margin: 0; color: var(--dim); font-size: 13.5px; } .nw-meta { display: flex; gap: 8px; align-items: center; font-size: 12px; } .nw-go { margin-top: auto; color: var(--accent); font-size: 12.5px; font-weight: 600; }
 @media (max-width: 1000px) { .mail, .msg { grid-template-columns: 1fr; } .ref-row { grid-template-columns: 1fr; } }
+/* 2.3 Turnaround (GSX) and Fenix EFB */
+.ta-top { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 14px; } .ta-top .card + .card { margin-top: 0; }
+.ta-k { display: grid; gap: 4px; } .ta-k b { font-size: 22px; font-weight: 500; } .ta-k small { font-size: 12px; }
+.ta-bar { height: 6px; border-radius: 3px; background: var(--panel2); overflow: hidden; } .ta-bar i { display: block; height: 100%; background: var(--accent); }
+.ta-board { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.ta-row { display: grid; grid-template-columns: 14px 1fr auto auto; gap: 10px; align-items: center; padding: 10px 14px; border-radius: 12px; background: var(--panel); border: 1px solid var(--line); min-height: 52px; }
+.ta-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--faint); } .ta-st { color: var(--dim); font-size: 13px; }
+.ta-row.call .ta-dot { background: var(--accent); } .ta-row.req .ta-dot { background: var(--warn); } .ta-row.act .ta-dot { background: var(--warn); box-shadow: 0 0 0 4px rgba(253,185,19,.2); animation: tapulse 1.2s infinite; }
+.ta-row.done .ta-dot { background: var(--ok); } .ta-row.done .ta-st { color: var(--ok); } .ta-row.na { opacity: .5; }
+@keyframes tapulse { 50% { box-shadow: 0 0 0 7px rgba(253,185,19,.05); } }
+.ta-bill > div:not(.lbl) { display: flex; justify-content: space-between; padding: 5px 0; border-top: 1px solid var(--line); } .ta-bill .tot { font-weight: 700; } .ta-bill small { display: block; margin-top: 8px; }
+.ta-empty { text-align: center; max-width: 520px; margin: 60px auto; } .ta-menu { display: grid; gap: 8px; margin: 10px 0 14px; } .ta-menu .btn { justify-content: flex-start; }
+.ta-setup ol { line-height: 1.8; padding-left: 20px; }
+.fx-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; } .fx-grid .card + .card { margin-top: 0; } .fx-card { display: grid; gap: 10px; align-content: start; }
+.fx-h { display: flex; gap: 10px; align-items: center; } .fx-h h2 { margin: 0; } .fx-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--red); } .fx-dot.on { background: var(--ok); }
+.fx-row { display: grid; grid-template-columns: 130px 1fr auto; gap: 10px; padding: 7px 0; border-top: 1px solid var(--line); }
+.fx-refs > div { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; } .fx-diff { font-weight: 700; } .fx-diff.ok { color: var(--ok); } .fx-diff.warn { color: var(--warn); }
+@media (max-width: 1000px) { .ta-top { grid-template-columns: 1fr 1fr; } .ta-board, .fx-grid { grid-template-columns: 1fr; } }

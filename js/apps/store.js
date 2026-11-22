@@ -20,6 +20,8 @@ const ABOUT = {
   academy: "Short courses with questions, and Serbian for the crew.", news: "Flight-sim headlines from public news sites, every hour.",
   photos: "Your screenshots, sorted by month and flight – only on this device.", scenery: "Swipe through the network and find sceneries for the airports you like.",
   reference: "Alphabet, unit converter, transponder codes, light signals and METAR.", browser: "The crew services one tap away.",
+  turnaround: "GSX Pro on the pad: every ground service with its state, called with one tap (needs the VDGS bridge).",
+  fenix: "Opens the Fenix EFB and compares fuel and weight with your plan (needs the VDGS bridge).",
   calc: "A simple calculator.", downloads: "Liveries, ACARS and tools for the airline.", store: "Install and remove apps.", settings: "SimBrief, VATSIM, vAMSYS, look and home screen.",
 };
 let C = null;

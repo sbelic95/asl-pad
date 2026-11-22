@@ -83,6 +83,17 @@ Photos (IndexedDB `asl.photos` – Bilder sind zu groß für localStorage), Scen
 Werkzeuge: Reference (Alphabet, Umrechner, Codes, Lichtsignale, METAR), Browser (Links in neuem Tab – die Dienste erlauben keine Einbettung).
 Home-Spalten scrollen innen (`.hm-widgets`, `.hm-main`), damit das Dock nie abgeschnitten wird. Nicht übernommen: Partner-Apps von LH Virtual.
 
+## 2.3 Turnaround (GSX) und Fenix EFB
+
+Live-Daten kommen von der VDGS-Bridge (`vdgs-slot-board/bridge/vdgs_bridge.py`): Sie liefert das Pad unter `http://<PC>:8770/pad/`
+aus (von GitHub Pages, mit Offline-Kopie; Test: `--pad-dir`), dann fragt `js/sim.js` `/sim` alle 2 s ab. Von github.io aus geht das
+nur mit Bridge-Adresse in den Einstellungen (`settings.bridge`) und wenn der Browser es erlaubt (https → Heimnetz ist meist blockiert).
+GSX: L:-Variablen `FSDT_GSX_*` (Namen, Status 1–7 und Menünummern wie im freien Fenix2GSX), Dienste rufen über `/gsx/call`
+(Menü öffnen `FSDT_GSX_MENU_OPEN=1`, Auswahl `FSDT_GSX_MENU_CHOICE = Nummer−1`). Fenix: Port 8083 (EFB als Webseite, GraphQL
+`dataRef(name)`; Fenix veröffentlicht die Namen nicht – nur echte, geprüfte Namen in `FENIX_REFS` eintragen).
+Namen bewusst eigen: „Turnaround“ (nicht „Ground“), „Fenix EFB“ (das EFB gehört Fenix Simulations, das Pad öffnet es nur).
+Testen ohne Simulator: Bridge mit `--test-gsx --pad-dir <pad>` starten und `http://localhost:8770/pad/?demo=ground&unlock` öffnen.
+
 ## Updates
 
 Jede sichtbare Neuerung als neuer Eintrag oben in `js/whatsnew.js` (nur, was das Pad wirklich kann). Das Pad zeigt ihn einmal

@@ -7,6 +7,12 @@ import { esc } from "./util.js";
 import { APP_ICONS } from "./icons.js";
 
 export const releases = () => [
+  { v: "2.3.0", date: "2026-11-22", groups: [
+    { icon: "turnaround", name: "ASL Pad", items: [
+      t("Turnaround (GSX) and Fenix EFB: with the VDGS bridge on the simulator PC the pad shows every GSX service live and calls it with one tap"),
+      t("Open the pad from the bridge (…:8770/pad/): live fuel, weight, parking brake and a SIM light in the status bar"),
+    ] },
+  ] },
   { v: "2.2.0", date: "2026-11-22", groups: [
     { icon: "pad", name: "ASL Pad", items: [
       t("Mail, Messages, Academy, News, Photos, Scenery, Reference and Browser – eight new apps on their own home page and in the App Store"),
