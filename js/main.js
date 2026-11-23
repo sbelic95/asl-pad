@@ -44,6 +44,9 @@ import { notify, N } from "./notify.js";
 import { startSync } from "./sync.js";
 import { initDevice, askPin, pinNeeded, faceId, applyBright, hide as hideDc, isOpen as dcOpen } from "./device.js";
 import { initFrame, applyFrame } from "./frame.js";
+import { startAlerts } from "./alerts.js";
+import { applyWake } from "./wake.js";
+import "./sound.js";
 
 const APPS = {
   fly: Fly, ops: Ops, log: Log, settings: Settings, downloads: Downloads, apt: Airport, cabin: Cabin,
@@ -302,7 +305,7 @@ setInterval(() => {
 
 // ---------- start ----------
 export function settingsChanged(kind) {
-  applyTheme(); applyFrame();
+  applyTheme(); applyFrame(); applyWake();
   if (kind === "lang") { // tab labels are built with the frame: build the frames again
     document.querySelectorAll(".app").forEach((a) => a.remove());
     if (ui.view === "app" && ui.app) { renderApp(ui.app); frameOf(ui.app).classList.add("open"); }
@@ -336,6 +339,7 @@ if (ui.view !== "lock") whatsNewOnce();
 startPolling();
 News.pollNews(); setInterval(() => News.pollNews(), 15 * 60e3);
 import("./account.js").then((m) => { m.accLoad(true); setInterval(() => m.accLoad(), 5 * 60e3); });
+startAlerts(); applyWake();
 startSim(); onSim(() => { renderStatus(); if (ui.view === "app" && ["turnaround", "fenix"].includes(ui.app)) renderApp(ui.app); });
 startSync();
 if ("serviceWorker" in navigator && location.protocol === "https:") {

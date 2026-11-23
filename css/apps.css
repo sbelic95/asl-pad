@@ -95,3 +95,4 @@
 .efb-types button.on { background: var(--accent2); border-color: var(--accent2); color: #fff; } .ck-none { max-width: 560px; }
 .ld-perf { display: flex; gap: 12px; justify-content: space-between; align-items: center; font-size: 14px; }
 .ld .rw-chips { margin-bottom: 12px; }
+.snd-test { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }

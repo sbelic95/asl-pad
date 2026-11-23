@@ -104,6 +104,12 @@ Testen ohne Simulator: Bridge mit `--test-gsx --pad-dir <pad>` starten und `http
   `asl.account`); das Profil (SimBrief, CID, IVAO, Hoppie) wird übernommen. Auf localhost zum Testen `asl.dash` = lokales Dashboard.
 - **Nur ASL-Flugpläne**: `pollSimbrief` lädt nur OFPs, deren Callsign mit `ASL` beginnt (`S.ofpErr = "notasl"`).
 
+## 2.5 Bildschirm an, Töne
+
+`js/wake.js`: Screen Wake Lock (iPad ab iOS 16.4), Einstellung `settings.awake` (Standard an), nach Hintergrund/erster Berührung neu holen.
+`js/sound.js`: Töne nur per Web Audio, eigene Klänge (keine Aufnahmen): `cpdlc` (ATC-Gong bei CPDLC aus `js/hoppie.js`), `msg`, `atis`, `slot`;
+iOS braucht die erste Berührung. `js/alerts.js`: Ton + Mitteilung bei Änderung von TSAT/CTOT/TOBT/Off-Block (3 h vor Off-Block) und neuer ATIS.
+
 ## Updates
 
 Jede sichtbare Neuerung als neuer Eintrag oben in `js/whatsnew.js` (nur, was das Pad wirklich kann). Das Pad zeigt ihn einmal

@@ -7,6 +7,12 @@ import { esc } from "./util.js";
 import { APP_ICONS } from "./icons.js";
 
 export const releases = () => [
+  { v: "2.5.0", date: "2026-11-23", groups: [
+    { icon: "settings", name: "ASL Pad", items: [
+      t("The screen stays on while the pad is open (iPad from iOS 16.4)"),
+      t("Sounds: the ATC message chime for CPDLC, a chime for a new ATIS and beeps when TSAT, CTOT or off-block time change"),
+    ] },
+  ] },
   { v: "2.4.0", date: "2026-11-23", groups: [
     { icon: "checklist", name: "ASL Pad", items: [
       t("Checklist and Landing: the A320 normal checklist of Air Serbia Virtual and its Embraer landing data, kept by the airline per aircraft type"),

@@ -4,6 +4,7 @@
 import { S, settings, emit } from "./data.js";
 import { notify } from "./notify.js";
 import { store } from "./util.js";
+import { play } from "./sound.js";
 
 const URL = "https://www.hoppie.nl/acars/system/connect.html";
 export const A = { msgs: [], sent: store.get("asl.acars.sent", []), err: "", maxId: null, seen: new Map(), freq: null, station: store.get("asl.acars.station", ""), at: 0 };
@@ -42,6 +43,7 @@ export async function pollAcars() {
       const f = x.text.match(/\b(CONTACT|MONITOR)\s+(\S+(?:\s+\S+)?)\s+(\d{3}\.\d{1,3})/i);
       if (f) A.freq = { verb: f[1].toUpperCase(), station: f[2], mhz: f[3], from: x.from, at: Date.now() };
       if (x.type === "cpdlc" && /LOGON ACCEPTED|CURRENT ATC UNIT/i.test(x.text)) { A.station = x.from; store.set("asl.acars.station", x.from); }
+      play(x.type === "cpdlc" ? "cpdlc" : "msg"); // the ATC message chime for CPDLC uplinks
       notify({ app: "fly", tab: "radio", ic: "radio", lv: x.type === "cpdlc" ? "attn" : "info", title: `ACARS · ${x.from}`, text: x.text.slice(0, 120) });
     }
   } catch (e) { A.err = e.message === "logon" ? "logon" : "net"; }

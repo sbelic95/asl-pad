@@ -7,6 +7,8 @@ import { latest } from "../whatsnew.js";
 import { HOME_CARDS, boardOrder } from "../home.js";
 import { V, signedIn, signIn, signOut, loadVamsys, pinCode } from "../vamsys.js";
 import { ACC, DASH, accSignIn, accSignOut, accLoad } from "../account.js";
+import { WAKE } from "../wake.js";
+import { play } from "../sound.js";
 
 export const name = "Settings";
 export const tabs = [];
@@ -76,6 +78,9 @@ function page() {
         <button class="btn small" data-hco="${k}" data-dir="-1" ${i ? "" : "disabled"} aria-label="up">▲</button><button class="btn small" data-hco="${k}" data-dir="1" ${i < a.length - 1 ? "" : "disabled"} aria-label="down">▼</button></div>`).join("")}</div>`)}
       ${row(t("Device frame"), t("On a computer the pad lies as a tablet on a desk, with your crew card next to it. Auto: only when the window is big enough."), seg("frame", [["auto", t("Auto")], ["on", t("On")], ["off", t("Off")]], settings.frame || "auto"))}
       ${row(t("PIN"), pinCode() ? t("Unlock with the digits of your pilot ID ({n} digits).", { n: pinCode().length }) : t("Available after signing in with vAMSYS: the PIN is the digits of your pilot ID."), seg("pin", [["1", t("On")], ["0", t("Off")]], settings.pin ? "1" : "0"))}
+      ${row(t("Keep screen on"), WAKE.supported ? (WAKE.on ? t("The screen stays on while the pad is open.") : t("Stays on while the pad is open (after the first touch).")) : t("This browser cannot keep the screen on – on the iPad from iOS 16.4."), seg("awake", [["1", t("On")], ["0", t("Off")]], settings.awake === false ? "0" : "1"))}
+      ${row(t("Sounds"), t("CPDLC and ACARS messages, a new ATIS and changes of TSAT, CTOT or off-block time shortly before departure."), seg("sound", [["1", t("On")], ["0", t("Off")]], settings.sound === false ? "0" : "1")
+        + `<div class="snd-test">${[["cpdlc", "CPDLC"], ["atis", "ATIS"], ["slot", "TSAT/Slot"], ["msg", "ACARS"]].map(([k, l]) => `<button class="btn small" data-snd="${k}">▶ ${l}</button>`).join("")}</div>`)}
       ${row(t("Auto-lock"), t("Locks the pad after this time without a touch."), seg("lock", [[0, t("Never")], [5, "5 min"], [10, "10 min"], [30, "30 min"]], settings.lock))}
     </div>
     <div class="card"><div class="lbl" style="margin-bottom:4px">${t("Data")}</div>
@@ -136,11 +141,13 @@ function onClick(e) {
     const k = s.dataset.seg, v = s.dataset.v;
     if (k === "lang") { setLang(v); C.changed("lang"); return; }
     if (k === "pin") { saveSettings({ pin: v === "1" }); C.changed("view"); return; }
+    if (k === "awake" || k === "sound") { saveSettings({ [k]: v === "1" }); C.changed("view"); return; }
     if (k === "lock" || k === "wallDim") saveSettings({ [k]: +v });
     else saveSettings({ [k]: v });
     C.changed(k === "theme" || k === "wallDim" ? "theme" : "view");
     return;
   }
+  const snd = e.target.closest("[data-snd]"); if (snd) { play(snd.dataset.snd, true); return; }
   const b = e.target.closest("[data-do]"); if (!b) return;
   if (b.dataset.do === "whatsnew") { window.ASL.showWhatsNew(); return; }
   if (b.dataset.do === "acc-in") { const r = b.closest(".set-row"), cid = r?.querySelector("[data-acc=cid]")?.value || "", pin = r?.querySelector("[data-acc=pin]")?.value || ""; b.disabled = true;
