@@ -829,3 +829,17 @@ body.framed #crewcard:not([hidden]) { position: absolute; left: calc((100vw - va
 .lk-brand .vword { font-size: .3em; margin: -.62em 3% 0 0; }
 #crewcard .cc-top .vword { margin: -.3em 9% 0 0; }
 .vbrand.cab .vword { font-size: .38em; margin-top: 3px; }
+
+/* overview of ASL Fly: the radio strip in two halves – now | next frequency change; US airports with their CTAF */
+.rd-strip.halves { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 0; }
+.rd-strip.halves .half { min-width: 0; padding-right: 14px; }
+.rd-strip.halves .half.next { padding: 0 0 0 14px; border-left: 1px solid var(--line2); }
+.rd-strip.halves .rd-new { grid-column: 1 / -1; }
+.rd-strip .ctaf, .rd-row .ctaf { color: var(--fg); font-size: 13px; } .rd-strip .ctaf .num, .rd-row .ctaf .num { color: var(--accent); }
+
+/* VDGS: the pilot's own TOBT */
+.vd-tobt { margin-top: 14px; }
+.vd-tobt-row { display: flex; gap: 8px; align-items: center; justify-content: center; flex-wrap: wrap; margin-top: 6px; }
+.vd-tb { min-width: 52px; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, .25); background: rgba(255, 255, 255, .08); color: inherit; font: 700 16px var(--f-cond); cursor: pointer; }
+.vd-tb.big { min-width: 120px; font-size: 26px; letter-spacing: .04em; background: rgba(255, 196, 0, .14); border-color: rgba(255, 196, 0, .55); }
+.vd-tobt-note { margin-top: 6px; font-size: 12.5px; opacity: .8; }

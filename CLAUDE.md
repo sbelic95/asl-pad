@@ -125,6 +125,12 @@ ASL-Flüge Vorrang vor der allgemeinen Vorhersage (Ankunft überall, Abflug in B
 Login: VATSIM Connect über das Dashboard (`accConnect` in `js/account.js` → `/api/auth/connect?client=pad&return=…`, zurück mit
 `#asv_token=…`, das sofort aus der Adresse entfernt wird). CID+PIN nur, solange das Dashboard `pinLogin` meldet. Nie Passwörter im Pad.
 
+TOBT: vIFF CDM hat **keine offene Schnittstelle** zum Setzen der TOBT (Pilot-Panel vdgs.vatsimspain.es nur mit VATSIM-Login).
+Darum: eigene TOBT im Pad (`ownTobt`/`setOwnTobt` in `js/apps/vdgs.js`, `asl.tobt` je `flightKey`), an CDM-Flughäfen Hinweis + Knopf zum
+VATSIM-VDGS, wenn sie von der vIFF-TOBT abweicht. Funk: Übersichts-Leiste zweigeteilt (jetzt | nächster Wechsel); US-CTAF aus
+`ctaf-us.json` (`stnA` in `js/atc.js`; ohne CTAF die Tower-Frequenz = CTAF bei geschlossenem Tower). Neu bauen:
+`python tools/build-ctaf.py airports.csv airport-frequencies.csv > ctaf-us.json` (OurAirports).
+
 ## Updates
 
 Jede sichtbare Neuerung als neuer Eintrag oben in `js/whatsnew.js` (nur, was das Pad wirklich kann). Das Pad zeigt ihn einmal

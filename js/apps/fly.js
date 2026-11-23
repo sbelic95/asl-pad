@@ -11,7 +11,7 @@ import { renderMap, dropMap } from "./map.js";
 import { perfView, runwaysView, sel as perfSel } from "./perf.js";
 import { routeSigmetsHtml } from "../sigmet.js";
 import { radioView, radioStrip, radioClick } from "./radio.js";
-import { vdgsView, vdgsMini, vdgsTick } from "./vdgs.js";
+import { vdgsView, vdgsMini, vdgsTick, tobtClick } from "./vdgs.js";
 
 export const name = "ASL Fly";
 export const tabs = [["overview", "Overview"], ["vdgs", "VDGS"], ["radio", "Radio & ACARS"], ["times", "Times"], ["plan", "Flight plan"], ["map", "Map"], ["wx", "Weather"], ["fuel", "Fuel"], ["perf", "Performance"], ["rwy", "Runways"]];
@@ -44,6 +44,7 @@ export function summary() {
 function onClick(e) {
   const b = e.target.closest("[data-do]"); if (!b) return;
   if (C.tab === "radio" && b.dataset.do !== "settings" && b.dataset.do !== "tab") { radioClick(e, C); return; }
+  if (b.dataset.do === "tobt") { tobtClick(b, C); return; }
   if (b.dataset.do === "check") fuelCheck();
   if (b.dataset.do === "settings") C.open("settings");
   if (b.dataset.do === "tab") C.setTab(b.dataset.tab);

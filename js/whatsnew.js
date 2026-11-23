@@ -16,6 +16,9 @@ export const releases = () => [
       t("The Hoppie logon code no longer makes the browser offer to save a password"),
       t("No PIN any more: a swipe on the lock screen opens the pad"),
       t("Sounds on the iPad: now also in silent mode and after the iPad was locked"),
+      t("TOBT changeable in the pad (VDGS tab): −15/−5/+5/+15 or an exact time; where VATSIM CDM runs, the pad shows if the VATSIM VDGS still has another TOBT"),
+      t("Overview: the radio strip in two halves – the frequency now and the next frequency change"),
+      t("US airports: the CTAF of each airport next to UNICOM when no controller is online"),
     ] },
   ] },
   { v: "2.5.0", date: "2026-11-23", groups: [

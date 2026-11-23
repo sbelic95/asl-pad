@@ -28,16 +28,16 @@ function freqCard(now) {
   if (!atcReady()) loadAtcData().then(emit);
   const p = freqPlan(); if (!p?.cur) return "";
   const row = (s, cls, lbl, when) => `<div class="rd-row ${cls}${s.st.unicom ? " unicom" : ""}"><span class="lbl">${esc(lbl)} · ${esc(s.role)}</span>
-    <span class="stn">${esc(s.st.name)}<small>${esc(s.st.cs)}</small></span><b class="mhz num">${esc(s.st.mhz)}</b>${when ? `<span class="when">${esc(when)}</span>` : ""}${altTxt(s.st) ? `<span class="when dim">${esc(altTxt(s.st))}</span>` : ""}</div>`;
+    <span class="stn">${esc(s.st.name)}<small>${esc(s.st.cs)}</small></span><b class="mhz num">${esc(s.st.mhz)}</b>${s.st.ctaf ? `<span class="when ctaf">CTAF ${esc(s.st.apt)} <b class="num">${esc(s.st.ctaf)}</b>${s.st.ctafTwr ? " · " + esc(t("tower frequency")) : ""}</span>` : ""}${when ? `<span class="when">${esc(when)}</span>` : ""}${altTxt(s.st) ? `<span class="when dim">${esc(altTxt(s.st))}</span>` : ""}</div>`;
   const cf = A.freq && now - A.freq.at < 15 * 60e3 ? A.freq : null;
   let h = cf ? `<div class="rd-row cpdlc"><span class="lbl">CPDLC · ${esc(cf.verb)} · ${hhmmz(cf.at)}</span><span class="stn">${esc(cf.station)}<small>${esc(cf.from)}</small></span><b class="mhz num">${esc(cf.mhz)}</b></div>` : "";
   h += row(p.cur, "", t("Now"), "");
   if (p.next) h += row(p.next, "next" + (p.soon ? " soon" : ""), p.soon ? t("Change soon") : t("Next"), [p.next.when !== t("now") ? p.next.when : "", kmTxt(p.next)].filter(Boolean).join(" · "));
-  const later = p.later.map((s) => `<div><span class="n"><b>${esc(s.role)}</b>${esc(s.st.name)}</span><span class="tt">${s.km != null && s.km >= 1 ? (s.min != null ? s.min + " min" : nf(Math.round(s.km)) + " km") : ""}</span><span class="f num">${esc(s.st.mhz)}</span></div>`);
+  const later = p.later.map((s) => `<div><span class="n"><b>${esc(s.role)}</b>${esc(s.st.name)}</span><span class="tt">${s.km != null && s.km >= 1 ? (s.min != null ? s.min + " min" : nf(Math.round(s.km)) + " km") : ""}</span><span class="f num">${esc(s.st.ctaf ? "CTAF " + s.st.ctaf : s.st.mhz)}</span></div>`);
   if (p.atisArr) later.unshift(`<div><span class="n"><b>ATIS ${esc(S.ofp.dest.icao)}</b>${t("Listen to information {l} before the approach", { l: p.atisArr.atis_code || "" })}</span><span class="tt"></span><span class="f num">${esc(p.atisArr.frequency)}</span></div>`);
   if (later.length) h += `<div class="rd-later">${later.join("")}</div>`;
   return `<div class="card"><div class="lbl" style="margin-bottom:8px">${t("Frequencies")}${atcReady() ? "" : " · " + t("loading the airspaces…")}</div>${h}
-    <p class="dim" style="font-size:12.5px;margin:10px 0 0">${t("Without a controller: UNICOM 122.800. Who is responsible follows the VATSIM top-down rule; distances are estimates along your route.")}</p></div>`;
+    <p class="dim" style="font-size:12.5px;margin:10px 0 0">${t("Without a controller: UNICOM 122.800. Who is responsible follows the VATSIM top-down rule; distances are estimates along your route.")} ${t("US airports also show their CTAF (from OurAirports; at towered airports the tower frequency, used as CTAF when the tower is closed).")}</p></div>`;
 }
 
 // ---------- ACARS / CPDLC (Hoppie) ----------
@@ -72,9 +72,12 @@ export function radioStrip(o, now) {
   if (!atcReady()) loadAtcData().then(emit);
   const p = freqPlan(), u = unread(now)[0];
   if (!p?.cur) return "";
-  return `<button class="rd-strip${p.soon ? " soon" : ""}" data-do="tab" data-tab="radio">
-    <span><span class="lbl">${t("Now")}</span><b>${esc(p.cur.st.name)}</b> <span class="num">${esc(p.cur.st.mhz)}</span></span>
-    ${p.next ? `<span><span class="lbl">${p.soon ? t("Change soon") : t("Next")}</span><b>${esc(p.next.st.name)}</b> <span class="num">${esc(p.next.st.mhz)}</span> <span class="dim">${esc(kmTxt(p.next))}</span></span>` : ""}
+  const f = (st) => `<span class="num">${esc(st.mhz)}</span>${st.ctaf ? ` <span class="ctaf">CTAF <span class="num">${esc(st.ctaf)}</span></span>` : ""}`;
+  const dest = S.ofp?.dest?.icao || "";
+  return `<button class="rd-strip halves${p.soon ? " soon" : ""}" data-do="tab" data-tab="radio">
+    <span class="half"><span class="lbl">${t("Now")} · ${esc(p.cur.role)}</span><b>${esc(p.cur.st.name)}</b> ${f(p.cur.st)}</span>
+    ${p.next ? `<span class="half next"><span class="lbl">${p.soon ? t("Change soon") : t("Next frequency change")} · ${esc(p.next.role)}</span><b>${esc(p.next.st.name)}</b> ${f(p.next.st)} <span class="dim">${esc(kmTxt(p.next) || p.next.when || "")}</span></span>`
+      : `<span class="half next"><span class="lbl">${t("Next frequency change")}</span><b>${t("No change until {apt}", { apt: dest })}</b> <span class="dim">${t("stay on this frequency")}</span></span>`}
     ${u ? `<span class="rd-new"><span class="lbl">ACARS · ${esc(u.from)}</span>${esc(u.text.slice(0, 80))}</span>` : ""}</button>`;
 }
 
