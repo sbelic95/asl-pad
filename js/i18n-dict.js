@@ -1,5 +1,6 @@
 // Translations, looked up by the English text. SR = Serbian (Latin script), DE = German.
 export const SR = {
+  "Legal notice": "Pravne napomene",
   "Virtual airline for a video game (flight simulation) – not a real airline. Not affiliated with Air Serbia.": "Virtuelna avio-kompanija za video igru (simulacija letenja) – nije prava avio-kompanija. Nije povezana sa Air Serbia.",
   "Sign in with VATSIM": "Prijavi se preko VATSIM-a",
   "You sign in on VATSIM's own page – your password never reaches the pad.": "Prijavljuješ se na VATSIM-ovoj stranici – tvoja lozinka nikad ne stiže do pada.",
@@ -709,6 +710,7 @@ export const SR = {
   "Window missed": "Prozor propušten",
 };
 export const DE = {
+  "Legal notice": "Rechtliche Hinweise",
   "Virtual airline for a video game (flight simulation) – not a real airline. Not affiliated with Air Serbia.": "Virtuelle Airline für ein Videospiel (Flugsimulation) – keine echte Airline. Nicht mit Air Serbia verbunden.",
   "Sign in with VATSIM": "Mit VATSIM anmelden",
   "You sign in on VATSIM's own page – your password never reaches the pad.": "Du meldest dich auf der Seite von VATSIM an – dein Passwort erreicht das Pad nie.",
