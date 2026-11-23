@@ -7,6 +7,12 @@ import { esc } from "./util.js";
 import { APP_ICONS } from "./icons.js";
 
 export const releases = () => [
+  { v: "2.4.0", date: "2026-11-23", groups: [
+    { icon: "checklist", name: "ASL Pad", items: [
+      t("Checklist and Landing: the A320 normal checklist of Air Serbia Virtual and its Embraer landing data, kept by the airline per aircraft type"),
+      t("Wind component calculator for every aircraft type, with the destination's METAR and runways filled in"),
+    ] },
+  ] },
   { v: "2.3.0", date: "2026-11-22", groups: [
     { icon: "turnaround", name: "ASL Pad", items: [
       t("Turnaround (GSX) and Fenix EFB: with the VDGS bridge on the simulator PC the pad shows every GSX service live and calls it with one tap"),

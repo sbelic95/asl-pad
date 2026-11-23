@@ -37,6 +37,8 @@ import * as Scenery from "./apps/scenery.js";
 import * as News from "./apps/news.js";
 import * as Turnaround from "./apps/turnaround.js";
 import * as Fenix from "./apps/fenix.js";
+import * as Checklist from "./apps/checklist.js";
+import * as Landing from "./apps/landing.js";
 import { startSim, onSim, SIM } from "./sim.js";
 import { notify, N } from "./notify.js";
 import { startSync } from "./sync.js";
@@ -46,7 +48,7 @@ import { initFrame, applyFrame } from "./frame.js";
 const APPS = {
   fly: Fly, ops: Ops, log: Log, settings: Settings, downloads: Downloads, apt: Airport, cabin: Cabin,
   weather: Weather, clock: Clock, calc: Calc, calendar: Calendar, kneeboard: Kneeboard, manuals: Manuals, store: Store, radar: Vatsim, ivao: Ivao,
-  mail: Mail, messages: Messages, academy: Academy, reference: Reference, photos: Photos, browser: Browser, scenery: Scenery, news: News, turnaround: Turnaround, fenix: Fenix,
+  mail: Mail, messages: Messages, academy: Academy, reference: Reference, photos: Photos, browser: Browser, scenery: Scenery, news: News, turnaround: Turnaround, fenix: Fenix, checklist: Checklist, landing: Landing,
 };
 const NAMES = Object.fromEntries(HOME_APPS.map((a) => [a.id, a]));
 

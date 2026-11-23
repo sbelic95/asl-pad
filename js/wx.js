@@ -53,6 +53,8 @@ export function loadRunways() {
     .then((d) => { RUNWAYS = d || {}; return RUNWAYS; }).catch(() => { rwyReq = null; return {}; });
   return rwyReq;
 }
+// the runway ends of an airport: [{ id, hdg (true), lenFt }] (empty until the runway file is loaded)
+export const runwaysAt = (icao) => (RUNWAYS?.[icao] || []).flatMap((r) => [{ id: r[0], hdg: r[1], lenFt: r[4] }, { id: r[2], hdg: r[3], lenFt: r[4] }]).filter((e) => e.id && e.hdg != null);
 // runway with the most headwind (from 5 kt), else the longest
 export function runwayFromWind(icao, w) {
   const list = RUNWAYS?.[icao]; if (!list?.length) return "";

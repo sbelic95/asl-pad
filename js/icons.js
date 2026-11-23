@@ -1,6 +1,13 @@
 // App icons and small UI icons, drawn as SVG (own designs, Air Serbia colours).
 const grad = (id, a, b) => `<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs>`;
 export const APP_ICONS = {
+  checklist: `<svg viewBox="0 0 100 100">${grad("gCk", "#0059c2", "#002e5d")}<rect width="100" height="100" fill="url(#gCk)"/>
+    <rect x="22" y="16" width="56" height="70" rx="6" fill="#fff"/>${[30, 46, 62].map((y) => `<path d="M30 ${y} l5 5 l9 -10" fill="none" stroke="#0059c2" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M50 ${y + 1} h20" stroke="#75787b" stroke-width="4" stroke-linecap="round"/>`).join("")}
+    <circle cx="74" cy="78" r="9" fill="#e3001f"/></svg>`,
+  landing: `<svg viewBox="0 0 100 100">${grad("gLd", "#2a7bd4", "#0b3f80")}<rect width="100" height="100" fill="url(#gLd)"/>
+    <path d="M30 92 L46 40 H54 L70 92 Z" fill="#1d2430"/><path d="M50 46 V88" stroke="#fff" stroke-width="2" stroke-dasharray="6 5"/>
+    <path d="M16 26 h34 M24 18 h30 M16 34 h22" stroke="#fff" stroke-width="4" stroke-linecap="round"/><path d="M58 26 l14 -6 l2 4 z" fill="#ffd34d"/><path d="M78 16 v26" stroke="#fff" stroke-width="3"/>
+    <path d="M78 16 l14 5 l-14 5 z" fill="#e3001f"/></svg>`,
   turnaround: `<svg viewBox="0 0 100 100">${grad("gTa", "#ffb020", "#d46a00")}<rect width="100" height="100" fill="url(#gTa)"/>
     <rect x="14" y="58" width="44" height="18" rx="4" fill="#fff"/><rect x="46" y="48" width="16" height="12" rx="2" fill="#fff"/><circle cx="24" cy="78" r="6" fill="#2b2f36"/><circle cx="50" cy="78" r="6" fill="#2b2f36"/>
     <path d="M62 30 h22 l-6 -6 M84 30 l-6 6" fill="none" stroke="#002e5d" stroke-width="4" stroke-linecap="round"/><path d="M60 40 L88 40" stroke="#002e5d" stroke-width="4" stroke-linecap="round" stroke-dasharray="4 5"/></svg>`,

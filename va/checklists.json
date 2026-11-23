@@ -1,0 +1,24 @@
+{
+  "_help": "Checkliste po tipu aviona za aplikaciju Checklist. Svaki tip: name, applies (ICAO tipovi iz SimBrief-a), issue, sections: [naslov, stavke, opciono]. Stavka: [stavka, odgovor, auto (fuel | qnhDep | qnhArr) ili null, memo lista]. Samo prave checkliste kompanije – ništa ne izmišljati. Dodaj tip: kopiraj blok A320 i zameni sadržaj.",
+  "types": {
+    "A320": {
+      "name": "Airbus A319 / A320 / A321",
+      "applies": ["A319", "A320", "A321", "A20N", "A21N"],
+      "issue": "Air Serbia Virtual normal checklist A320 · February 2022",
+      "sections": [
+        ["Cockpit preparation", [["Gear pins & covers", "REMOVED"], ["Fuel quantity", "___ KG/LB", "fuel"], ["Seat belts", "ON"], ["ADIRS", "NAV"], ["Baro ref", "___ (BOTH)", "qnhDep"]]],
+        ["Before start", [["Parking brake", "___"], ["T.O speeds & thrust", "___ (BOTH)"], ["Windows", "CLOSED (BOTH)"], ["Beacon", "ON"]]],
+        ["After start", [["Anti ice", "___"], ["ECAM status", "CHECKED"], ["Pitch trim", "___ %"], ["Rudder trim", "NEUTRAL"]]],
+        ["Taxi", [["Flight control", "CHECKED (BOTH)"], ["Flaps setting", "CONF ___ (BOTH)"], ["Radar & PWS", "ON & AUTO"], ["Eng mode sel", "___"],
+          ["ECAM memo", "T.O NO BLUE", null, ["AUTO BRK MAX", "SIGNS ON", "CABIN READY", "FLAPS T.O", "T.O CONFIG NORM"]]]],
+        ["Lineup", [["T.O RWY", "CONF ___ (BOTH)"], ["TCAS", "___"], ["Pack 1 & 2", "___"]]],
+        ["Departure change", [["RWY & SID", "___"], ["Flaps setting", "CONF ___ (BOTH)"], ["T.O speeds & thrust", "___ (BOTH)"], ["FCU ALT", "___"]], true],
+        ["Approach", [["Baro ref", "___ SET (BOTH)", "qnhArr"], ["Seat belts", "ON"], ["Minimum", "___"], ["Auto brake", "___"], ["Eng mode sel", "___"]]],
+        ["Landing", [["Go-around alt", "___ FT SET"], ["Cabin crew", "ADVISED"], ["ECAM memo", "LDG NO BLUE", null, ["LDG GEAR DN", "SIGNS ON", "CABIN READY", "SPLRS ARM", "FLAPS SET"]]]],
+        ["After landing", [["Radar & PWS", "OFF"]]],
+        ["Parking", [["Park brk or chocks", "SET"], ["Engines", "OFF"], ["Wing lights", "OFF"], ["Fuel pumps", "OFF"]]],
+        ["Securing the aircraft", [["Oxygen", "OFF"], ["Emer exit lt", "OFF"], ["EFBs", "OFF"], ["Batteries", "OFF"]]]
+      ]
+    }
+  }
+}

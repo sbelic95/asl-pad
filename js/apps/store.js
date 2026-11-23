@@ -22,6 +22,8 @@ const ABOUT = {
   reference: "Alphabet, unit converter, transponder codes, light signals and METAR.", browser: "The crew services one tap away.",
   turnaround: "GSX Pro on the pad: every ground service with its state, called with one tap (needs the VDGS bridge).",
   fenix: "Opens the Fenix EFB and compares fuel and weight with your plan (needs the VDGS bridge).",
+  checklist: "The Air Serbia Virtual normal checklists per aircraft type to tick off, with fuel and QNH filled in.",
+  landing: "Wind component calculator for every type and the airline's landing data: wind limits, autobrake and Vapp.",
   calc: "A simple calculator.", downloads: "Liveries, ACARS and tools for the airline.", store: "Install and remove apps.", settings: "SimBrief, VATSIM, vAMSYS, look and home screen.",
 };
 let C = null;

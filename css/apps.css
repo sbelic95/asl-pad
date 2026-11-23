@@ -66,3 +66,32 @@
 .fx-row { display: grid; grid-template-columns: 130px 1fr auto; gap: 10px; padding: 7px 0; border-top: 1px solid var(--line); }
 .fx-refs > div { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; } .fx-diff { font-weight: 700; } .fx-diff.ok { color: var(--ok); } .fx-diff.warn { color: var(--warn); }
 @media (max-width: 1000px) { .ta-top { grid-template-columns: 1fr 1fr; } .ta-board, .fx-grid { grid-template-columns: 1fr; } }
+
+/* 2.4 Checklist and Landing */
+.ck { display: grid; grid-template-columns: 240px 1fr; gap: 16px; align-items: start; } .ck-src { grid-column: 1 / -1; font-size: 12px; }
+.ck-nav { display: grid; gap: 4px; } .ck-nav button:not(.btn) { text-align: left; padding: 9px 12px; border-radius: 10px; font: 600 12px var(--f-cond); letter-spacing: .06em; color: var(--dim); }
+.ck-nav button.on { background: var(--accent2); color: #fff; } .ck-nav button.done { color: var(--ok); } .ck-nav button.on.done { color: #fff; } .ck-nav small { font-weight: 400; opacity: .7; } .ck-nav .btn { margin-top: 8px; }
+.ck-card { background: #f4f6fa; color: #0a2447; border-radius: 16px; padding: 18px 22px; box-shadow: var(--shadow); }
+.ck-h h2 { margin: 2px 0 10px; font: 700 22px var(--f-cond); letter-spacing: .04em; } .ck-h .lbl { color: #4f6584; }
+.ck-i { display: grid; grid-template-columns: 30px auto 1fr auto; gap: 10px; align-items: center; width: 100%; text-align: left; padding: 12px 4px; border-bottom: 1px solid #d6deea; font: 600 16px var(--f-mono); color: #0a2447; }
+.ck-box { width: 24px; height: 24px; border-radius: 6px; border: 2px solid #0059c2; display: grid; place-items: center; color: #fff; font-weight: 700; }
+.ck-i.ok .ck-box { background: #337a4c; border-color: #337a4c; } .ck-i.ok .ck-t, .ck-i.ok .ck-r { color: #337a4c; }
+.ck-dots { border-bottom: 2px dotted #9aa7bb; height: 1px; align-self: end; margin-bottom: 6px; } .ck-r { font-weight: 700; }
+.ck-hint { grid-column: 2 / -1; font: 500 12px var(--f-ui); color: #0059c2; } .ck-memo { grid-column: 2 / -1; font: 500 13px var(--f-mono); color: #4f6584; line-height: 1.5; }
+.ck-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; } .ck-foot .ok { color: #337a4c; }
+.ld { display: grid; gap: 14px; } .ld .card + .card { margin-top: 0; } .ld-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.ld-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; } .ld-f { display: grid; gap: 4px; } .ld-f input { font-size: 18px; width: 100%; }
+.ld-metar { margin-top: 10px; font-size: 12px; color: var(--dim); } .ld-out { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.ld-big { display: grid; gap: 2px; } .ld-big b { font: 300 40px var(--f-ui); } .ld-big.tail b { color: var(--warn); } .ld-big.over { border-color: var(--red); } .ld-big.over b { color: var(--red); }
+.ld-chk.ok { color: var(--ok); } .ld-chk.bad { color: var(--red); font-weight: 700; }
+.ld-list, .ld-notes { margin: 0 0 10px; padding-left: 18px; line-height: 1.6; } .ld-notes { font-size: 13px; color: var(--dim); margin-top: 10px; }
+.ld-lim { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; } .ld-lim div { background: var(--panel2); border-radius: 10px; padding: 8px 12px; } .ld-lim b { display: block; font-size: 20px; }
+.ld-tab { width: 100%; border-collapse: collapse; font-size: 14px; } .ld-tab th { text-align: left; font: 600 11px var(--f-cond); letter-spacing: .08em; text-transform: uppercase; color: var(--dim); padding: 6px 8px; }
+.ld-tab td { padding: 8px; border-top: 1px solid var(--line); cursor: pointer; } .ld-tab tr.on td { background: color-mix(in srgb, var(--accent2) 30%, transparent); }
+.ld-src { font-size: 12px; }
+@media (max-width: 1000px) { .ck { grid-template-columns: 1fr; } .ld-grid { grid-template-columns: 1fr 1fr; } }
+
+.efb-types { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; } .efb-types button { padding: 7px 12px; border-radius: 10px; border: 1px solid var(--line2); font: 600 13px var(--f-ui); color: var(--dim); }
+.efb-types button.on { background: var(--accent2); border-color: var(--accent2); color: #fff; } .ck-none { max-width: 560px; }
+.ld-perf { display: flex; gap: 12px; justify-content: space-between; align-items: center; font-size: 14px; }
+.ld .rw-chips { margin-bottom: 12px; }
