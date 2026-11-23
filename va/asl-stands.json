@@ -75,7 +75,6 @@
         }
       ],
       "stands": [
-        "C14",
         "C13",
         "C12",
         "C11",
@@ -100,7 +99,33 @@
         "A2",
         "A1"
       ],
-      "fallback": "remote stands"
+      "fallback": [
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "E1",
+        "E2",
+        "E3",
+        "E4",
+        "A11",
+        "A12",
+        "A13",
+        "A14",
+        "A15",
+        "W3",
+        "W4",
+        "W5",
+        "N1",
+        "N1A",
+        "C14"
+      ],
+      "note_fallback": "remote stands"
     },
     "arr": {
       "rules": [
@@ -134,6 +159,32 @@
         "C2",
         "C5",
         "C6"
+      ],
+      "fallback": [
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "E1",
+        "E2",
+        "E3",
+        "E4",
+        "A11",
+        "A12",
+        "A13",
+        "A14",
+        "A15",
+        "W3",
+        "W4",
+        "W5",
+        "N1",
+        "N1A",
+        "C14"
       ]
     }
   },
@@ -161,9 +212,22 @@
   "EDDF": {
     "note": "Terminal 3, pier J (non-Schengen, since 5 May 2026)",
     "stands": [
-      "J"
-    ],
-    "prefix": true
+      "J1",
+      "J2",
+      "J3",
+      "J4",
+      "J5",
+      "J6",
+      "J7",
+      "J8",
+      "J9",
+      "J10",
+      "J11",
+      "J12",
+      "J13",
+      "J14",
+      "J15"
+    ]
   },
   "LSZH": {
     "note": "dock E, smaller gates first (E52 takes an A380: last); dock B only when E is full",
@@ -363,9 +427,13 @@
     ]
   },
   "ESSA": {
+    "note": "apron F",
     "stands": [
-      "F37",
       "F35",
+      "F37",
+      "F39L",
+      "F39R",
+      "F33",
       "F31",
       "F38",
       "F34"
@@ -388,6 +456,30 @@
     "stands": [
       "219",
       "220"
+    ]
+  },
+  "EDDM": {
+    "note": "Terminal 1, non-Schengen; gate numbers to follow – remote positions",
+    "stands": [
+      "171",
+      "172",
+      "173",
+      "174",
+      "175",
+      "181",
+      "182",
+      "183",
+      "184",
+      "185",
+      "186",
+      "187",
+      "188",
+      "189",
+      "191",
+      "192",
+      "193",
+      "194",
+      "195"
     ]
   }
 }

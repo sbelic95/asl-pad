@@ -339,8 +339,8 @@ export function aslStand(stands, icao, other, cs, type, side = "arr", pilots = [
     }
     return null;
   };
-  const s = pick(p.list) || pick(p.fallback);
-  if (s) return { ref: s.ref, gate: s.gate, term: p.note, schengen: null, remote: false, pos: [s.lat, s.lon], src: "Air Serbia" };
+  const c = pick(p.list), s = c || pick(p.fallback);
+  if (s) return { ref: s.ref, gate: c ? s.gate : false, term: p.note, schengen: null, remote: !c, pos: [s.lat, s.lon], src: "Air Serbia" };
   // not in the map data (or all taken): still the airline's first choice, without a position on the map
   const first = p.list[0];
   return first ? { ref: p.prefix ? first + "…" : first, gate: true, term: p.note, schengen: null, remote: false, pos: null, src: "Air Serbia" } : null;
