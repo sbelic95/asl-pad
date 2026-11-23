@@ -9,8 +9,6 @@ const LOCAL = typeof location !== "undefined" && ["localhost", "127.0.0.1"].incl
 export const DASH = (LOCAL && store.get("asl.dash", "")) || "https://airserbia-virtual.pages.dev";
 export const ACC = { ...store.get("asl.account", {}), profile: null, me: null, bookings: [], err: "", at: 0 };
 export const signedIn = () => !!ACC.token;
-// the pad's PIN on the lock screen: the pilot ID = the VATSIM CID (none without the account)
-export const pinCode = () => { const d = String(ACC.cid || "").replace(/\D/g, ""); return d.length >= 3 ? d : ""; };
 // the pilot as the pad shows it (crew card, roster, calendar, home): name, CID, VATSIM rating and the bookings – null when signed out
 export function pilot() {
   if (!ACC.token) return null;

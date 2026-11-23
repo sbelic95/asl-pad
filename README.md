@@ -13,7 +13,7 @@ Es gibt keinen Demo-Modus: Das Pad zeigt immer den eigenen Flug aus SimBrief und
 |---|---|
 | **Sperrbildschirm** | Uhr, Flug- und Zeit-Widgets, Hinweise (TSAT, Fuel Check fällig, Stand, ATIS) und die Live-Aktivität des Flugs unten (Strecke, nächster Wegpunkt, FL, FOB, verbleibende NM). Nach oben wischen oder tippen entsperrt. |
 | **Home** | Begrüßung, Widgets (Flug, Zeiten, Wetter, Kalender), drei App-Seiten mit Punkten (Betrieb · Netzwerk & Wetter · Werkzeuge & Gerät; wischen oder Punkte tippen), Board und Dock. Rote Badges zeigen offene Punkte. |
-| **Gerät** | Statusleiste oben rechts herunterziehen/tippen = **Kontrollzentrum** (hell/dunkel, Nicht stören, Mitteilungen, Sprache, Helligkeit, Sperren, Status von VATSIM/SimBrief/Konto/Hoppie). Oben links = **Mitteilungszentrale** (To-do und alle Hinweise der Apps, `js/notify.js`). **PIN** = VATSIM-CID des Kontos (Einstellungen → PIN), **Face ID** vor ASL Ops und Manuals ist nur gespielt (Animation, 10 Minuten gültig). |
+| **Gerät** | Statusleiste oben rechts herunterziehen/tippen = **Kontrollzentrum** (hell/dunkel, Nicht stören, Mitteilungen, Sprache, Helligkeit, Sperren, Status von VATSIM/SimBrief/Konto/Hoppie). Oben links = **Mitteilungszentrale** (To-do und alle Hinweise der Apps, `js/notify.js`). **keine PIN** (Wischen öffnet das Pad), **Face ID** vor ASL Ops und Manuals ist nur gespielt (Animation, 10 Minuten gültig). |
 | **ASL Fly** | Übersicht (Flughäfen mit Wetter und Piste, Phase, nächster Wegpunkt, ETA, OUT/OFF/ON/IN, Treibstoff), Zeiten, Flugplan mit ETA/ATA je Wegpunkt, Karte mit Route, geflogenem Weg und Vertikalprofil, Wetter (METAR, TAF, ATIS), Treibstoff mit Fuel Checks. |
 | **ASL Ops** | Reiter **Dienstplan** (Dashboard-Buchungen + OFP zu Diensten: Meldezeit −60 min, Turnaround, Dienstzeit, Dienstende +30 min, Check-in), **Crew Desk** (Posteingang, Vorflug-Liste, Wetter, NOTAMs aus dem OFP), **Bericht** (tatsächliche Zeiten und Sprit der letzten 72 h; „Times missing“ als Hinweis). Reiter Operations: Dienst-Leiste, To-do, Abflug (Stand, Piste, SID, vIFF-CDM: EOBT/TOBT/TSAT/TTOT/CTOT, Frequenzen) und Ankunft (Stand-Prognose, Piste, STAR, ATIS, Frequenzen). Reiter **Flotte** mit den SimBrief-Airframes der A319 YU-APA bis YU-APE und eigenen Flugzeugen. |
 | **Logbuch** | Jeder Flug wird beim On-Block eingetragen. Statistik, Details mit Streckenkarte, Flug von Hand eintragen, CSV-Export, Sicherung und Import (JSON). |
@@ -121,7 +121,7 @@ Lizenzen der verwendeten Bibliotheken und Daten: [LIZENZEN.md](LIZENZEN.md).
     Anschlussflüge und Ankünfte (VATSIM, `S.board` in `data.js`), Diashow.
 - **Konto** (`js/account.js`, seit 2.4; vAMSYS ist seit 2.6 ganz entfernt): Anmeldung mit VATSIM-CID + PIN gegen das Piloten-Dashboard
   (`https://airserbia-virtual.pages.dev`, Token in `asl.account`). Übernimmt Profil (SimBrief, CID, IVAO, Hoppie), VATSIM-Rating und die Buchungen
-  (`pilot()`: Crew-Ausweis, Dienstplan, Kalender, Home-Karte „Your booking“). Die Sperrbildschirm-PIN ist die CID.
+  (`pilot()`: Crew-Ausweis, Dienstplan, Kalender, Home-Karte „Your booking“). Der Sperrbildschirm hat keine PIN (Wischen öffnet das Pad).
 
 ## Server (2.0, vorbereitet)
 

@@ -59,7 +59,7 @@ Keine VDGS-App mehr im Pad (Wunsch des Nutzers): Frequenz-Führer `js/atc.js`, H
 ## 2.0 (nach dem LH-Virtual-Pad-Guide, eigener Stil)
 
 Apps-Gruppen in `home.js` (`GROUPS`, `HOME_APPS[].g`, `core` = nicht entfernbar), App Store `js/apps/store.js`. Geräte-Oberfläche `js/device.js`
-(PIN = VATSIM-CID des Kontos, Face ID nur gespielt, Kontroll-/Mitteilungszentrale), Mitteilungen nur über `notify()` aus `js/notify.js`.
+(**keine PIN** – Wunsch des Nutzers: Wischen öffnet das Pad; Face ID nur gespielt, Kontroll-/Mitteilungszentrale), Mitteilungen nur über `notify()` aus `js/notify.js`.
 Dienstplan/Crew Desk/Bericht in `js/crew.js`. Namen bewusst eigen: „Crew Desk“ statt „eDesk“. Manuals nur als Links (`va/manuals.json`, kein PDF ins Repo).
 Karten: nur OpenStreetMap-Kacheln über `baseLayer()` in `js/apps/map.js` (CARTO braucht seit 11/2026 einen Schlüssel – nicht mehr verwenden). VDGS-Anzeige = ASL Fly Reiter `vdgs` (`js/apps/vdgs.js`): Zeiten zuerst von VATSIM (vIFF CDM von VATSIM Spain, `viff-system.network/ifps/callsign` – deckt auch EDDF/EGLL ab; vACDM Germany ist eingestellt), sonst aus SimBrief (Wunsch des Nutzers). EDDF verlangt immer eine TOBT (`REQ_TOBT`), gesetzt wird sie im VATSIM-VDGS `vdgs.vatsimspain.es`.
 Server `server/worker.js` (Cloudflare) ist vorbereitet, aktiv erst mit `url` in `va/server.json` – braucht das Cloudflare-Konto des Nutzers. Ground (GSX) kommt später.

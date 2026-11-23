@@ -22,7 +22,7 @@ export const API = {
   routes: "va/routes.json", // route network for the flight suggestions (a proposal until the VA confirms it)
 };
 
-const DEF = { simbrief: "", cid: "", unit: "kg", theme: "dark", wall: "night", wallDim: 0.3, homeHide: [], homeOrder: [], hoppie: "", ivao: "", appsOff: [], pin: true, dnd: false, push: false, lock: 10, frame: "auto", bridge: "", awake: true, sound: true, soundVol: 0.7, demo: "" };
+const DEF = { simbrief: "", cid: "", unit: "kg", theme: "dark", wall: "night", wallDim: 0.3, homeHide: [], homeOrder: [], hoppie: "", ivao: "", appsOff: [], dnd: false, push: false, lock: 10, frame: "auto", bridge: "", awake: true, sound: true, soundVol: 0.7, demo: "" };
 export let settings = { ...DEF, ...store.get("asl.settings", {}) };
 // The demo flight is only for the automated test on the developer's own computer (localhost).
 // On the real site it can never be switched on, and a demo saved earlier is switched off.

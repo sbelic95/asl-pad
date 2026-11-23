@@ -14,6 +14,7 @@ export const releases = () => [
     { icon: "settings", name: "ASL Pad", items: [
       t("Your Air Serbia Virtual account (VATSIM CID + PIN) replaces vAMSYS everywhere: crew card, roster, calendar and your booking on the home screen"),
       t("The Hoppie logon code no longer makes the browser offer to save a password"),
+      t("No PIN any more: a swipe on the lock screen opens the pad"),
     ] },
   ] },
   { v: "2.5.0", date: "2026-11-23", groups: [

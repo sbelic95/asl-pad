@@ -1,4 +1,4 @@
-// The device around the apps: PIN on the lock screen (the VATSIM CID of the account), a played Face ID before ASL Ops
+// The device around the apps (no PIN: the pad opens with a swipe, wish of the user), a played Face ID before ASL Ops
 // and Manuals (once every 10 minutes), the Control Center (pull down at the top right) and the Notification Center
 // (pull down at the top left). Pure pad chrome – no app data is changed here except the pilot's own toggles.
 import { S, settings, saveSettings, refreshAll } from "./data.js";
@@ -6,32 +6,12 @@ import { t, setLang, getLang, LANGS } from "./i18n.js";
 import { esc, store, hhmmz } from "./util.js";
 import { I, APP_ICONS } from "./icons.js";
 import { notes, clearNote, N } from "./notify.js";
-import { pinCode, signedIn, pilot } from "./account.js";
+import { signedIn, pilot } from "./account.js";
 import { actions } from "./actions.js";
 import { SY } from "./sync.js";
 
 const pad = () => document.getElementById("pad");
 const ago = (ts) => { const m = Math.round((Date.now() - ts) / 6e4); return m < 1 ? t("now") : m < 60 ? t("{n} min ago", { n: m }) : m < 1440 ? t("{n} h ago", { n: Math.round(m / 60) }) : new Date(ts).toISOString().slice(5, 10); };
-
-// ---------- PIN ----------
-export const pinNeeded = () => !!(settings.pin && pinCode() && !settings.demo);
-export function askPin(done) {
-  const code = pinCode(); let v = "";
-  const d = document.createElement("div"); d.className = "pin";
-  const draw = (bad) => { d.innerHTML = `<div class="pin-box${bad ? " bad" : ""}"><div class="lock-ic">${I.lock}</div><h3>${t("Enter your PIN")}</h3><p class="dim">${t("The digits of your pilot ID")}${pilot()?.name ? " · " + esc(pilot().name) : ""}</p>
-    <div class="pin-dots">${[...code].map((_, i) => `<i class="${i < v.length ? "on" : ""}"></i>`).join("")}</div>
-    <div class="pin-keys">${[1, 2, 3, 4, 5, 6, 7, 8, 9, "", 0, "⌫"].map((k) => k === "" ? "<span></span>" : `<button data-pk="${k}">${k}</button>`).join("")}</div>
-    <button class="btn small" data-pk="x">${t("Cancel")}</button></div>`; };
-  const key = (k) => {
-    if (k === "x") { d.remove(); document.removeEventListener("keydown", kb); return; }
-    v = k === "⌫" ? v.slice(0, -1) : (v + k).slice(0, code.length); draw();
-    if (v.length === code.length) { if (v === code) { setTimeout(() => { d.remove(); document.removeEventListener("keydown", kb); done(); }, 120); } else { v = ""; draw(true); navigator.vibrate?.(80); } }
-  };
-  const kb = (e) => { if (/^\d$/.test(e.key)) key(e.key); else if (e.key === "Backspace") key("⌫"); else if (e.key === "Escape") key("x"); };
-  d.addEventListener("click", (e) => { const b = e.target.closest("[data-pk]"); if (b) key(b.dataset.pk); });
-  document.addEventListener("keydown", kb);
-  draw(); pad().appendChild(d);
-}
 
 // ---------- Face ID (played: an animation, no camera) ----------
 const FACE = new Set(["ops", "manuals"]);
@@ -82,7 +62,7 @@ function draw() {
       <div class="cc-grid">
         ${tile("theme", light, I.sun, light ? t("Light") : t("Dark"), t("Look"))}${tile("dnd", settings.dnd, "☾", t("Do not disturb"), settings.dnd ? t("On") : t("Off"))}
         ${tile("push", push, "🔔", t("Notifications"), push ? t("On") : t("Off"))}${tile("lang", false, "🌐", LANGS[getLang()], t("Language"))}
-        ${tile("refresh", false, I.refresh, t("Refresh"), t("All data"))}${tile("lock", false, I.lock, t("Lock pad"), pinCode() && settings.pin ? "PIN" : "")}
+        ${tile("refresh", false, I.refresh, t("Refresh"), t("All data"))}${tile("lock", false, I.lock, t("Lock pad"), "")}
       </div>
       <label class="cc-slider"><span class="i">${I.sun}</span><input type="range" min="40" max="100" value="${Math.round((settings.bright ?? 1) * 100)}" data-cc="bright"></label>
       <div class="cc-apps">${["clock", "calc", "kneeboard", "weather", "radar"].map((a) => `<button data-ccapp="${a}">${APP_ICONS[a]}</button>`).join("")}</div>

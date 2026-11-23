@@ -41,7 +41,7 @@ import * as Landing from "./apps/landing.js";
 import { startSim, onSim, SIM } from "./sim.js";
 import { notify, N } from "./notify.js";
 import { startSync } from "./sync.js";
-import { initDevice, askPin, pinNeeded, faceId, applyBright, hide as hideDc, isOpen as dcOpen } from "./device.js";
+import { initDevice, faceId, applyBright, hide as hideDc, isOpen as dcOpen } from "./device.js";
 import { initFrame, applyFrame } from "./frame.js";
 import { startAlerts } from "./alerts.js";
 import { applyWake } from "./wake.js";
@@ -148,7 +148,7 @@ export function goHome() {
   renderHome($("home")); renderStatus();
 }
 function lockPad() { hideSwitcher(); hideDc(true); ui.view = "lock"; renderLock($("lock")); $("lock").classList.remove("gone"); renderStatus(); }
-function unlock() { if (pinNeeded()) { if (!document.querySelector(".pin")) askPin(reallyUnlock); return; } reallyUnlock(); }
+function unlock() { reallyUnlock(); } // no PIN: a swipe opens the pad
 function reallyUnlock() { $("lock").classList.add("gone"); if (ui.app) { ui.view = "app"; renderApp(ui.app); } else goHome(); renderStatus(); whatsNewOnce(); }
 
 // ---------- a new rank: a letter, once ----------
@@ -318,7 +318,7 @@ N.banner = toast;
 initDevice({ goHome, lock: lockPad, applyTheme, renderAll, openApp, changed: settingsChanged, toast });
 applyBright();
 initFrame({ lock: lockPad, unlock, isLocked: () => ui.view === "lock", brighter: (d) => { saveSettings({ bright: Math.min(1, Math.max(0.4, Math.round(((settings.bright ?? 1) + d * 0.1) * 10) / 10)) }); applyBright(); } });
-if ((q.has("unlock") || q.get("app")) && !pinNeeded()) { $("lock").classList.add("gone"); ui.view = "home"; if (q.get("app")) openApp(q.get("app"), q.get("tab") || undefined); }
+if (q.has("unlock") || q.get("app")) { $("lock").classList.add("gone"); ui.view = "home"; if (q.get("app")) openApp(q.get("app"), q.get("tab") || undefined); }
 if (ui.view !== "lock") whatsNewOnce();
 startPolling();
 News.pollNews(); setInterval(() => News.pollNews(), 15 * 60e3);
