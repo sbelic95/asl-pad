@@ -11,6 +11,8 @@ export const releases = () => [
     { icon: "checklist", name: "ASL Pad", items: [
       t("Checklist and Landing: the A320 normal checklist of Air Serbia Virtual and its Embraer landing data, kept by the airline per aircraft type"),
       t("Wind component calculator for every aircraft type, with the destination's METAR and runways filled in"),
+      t("Sign in with your Air Serbia Virtual account (VATSIM CID and PIN): SimBrief, Hoppie and your bookings come from the dashboard"),
+      t("Only Air Serbia flight plans: the pad loads SimBrief plans with an ASL callsign"),
     ] },
   ] },
   { v: "2.3.0", date: "2026-11-22", groups: [

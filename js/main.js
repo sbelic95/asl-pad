@@ -335,6 +335,7 @@ handleRedirect().then(async (back) => { if (back && !(await gateNeeded())) openA
 if (ui.view !== "lock") whatsNewOnce();
 startPolling();
 News.pollNews(); setInterval(() => News.pollNews(), 15 * 60e3);
+import("./account.js").then((m) => { m.accLoad(true); setInterval(() => m.accLoad(), 5 * 60e3); });
 startSim(); onSim(() => { renderStatus(); if (ui.view === "app" && ["turnaround", "fenix"].includes(ui.app)) renderApp(ui.app); });
 startSync();
 if ("serviceWorker" in navigator && location.protocol === "https:") {

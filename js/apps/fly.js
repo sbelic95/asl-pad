@@ -67,7 +67,7 @@ export async function fuelCheck() {
 
 function noFlight() {
   const e = S.ofpErr;
-  const msg = e === "setup" ? t("Enter your SimBrief name in Settings to load your flight.") : e === "user" ? t("SimBrief user not found.") : e === "noofp" ? t("No OFP found at SimBrief.") : e === "net" ? t("SimBrief not reachable.") + (S.ofpErrMsg ? " (" + S.ofpErrMsg + ")" : "") : e === "parse" ? t("The OFP could not be read.") + " " + (S.ofpErrMsg || "") : t("Loading flight plan…");
+  const msg = e === "notasl" ? t("Your newest SimBrief plan ({cs}) is not an Air Serbia flight. Only callsigns starting with ASL are loaded.", { cs: S.ofpErrMsg }) : e === "setup" ? t("Enter your SimBrief name in Settings to load your flight.") : e === "user" ? t("SimBrief user not found.") : e === "noofp" ? t("No OFP found at SimBrief.") : e === "net" ? t("SimBrief not reachable.") + (S.ofpErrMsg ? " (" + S.ofpErrMsg + ")" : "") : e === "parse" ? t("The OFP could not be read.") + " " + (S.ofpErrMsg || "") : t("Loading flight plan…");
   return `<div class="card" style="max-width:560px;margin:8vh auto;text-align:center;padding:30px">
     <div style="width:46px;height:46px;margin:0 auto 12px;color:var(--accent)">${I.plane}</div>
     <h2 style="margin:0 0 6px;font:700 24px var(--f-cond)">${t("No flight loaded")}</h2><p class="dim">${esc(msg)}</p>

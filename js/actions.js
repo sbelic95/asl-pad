@@ -17,7 +17,7 @@ export function actions(now = Date.now()) {
   if (nd && !checkedIn(nd)) out.push({ id: "checkin", lv: now >= nd.report ? "attn" : "info", ic: "check", title: t("Check-in open"), text: t("Report {t} · {f}", { t: hhmmz(nd.report), f: nd.legs.map((l) => l.no).join(" · ") }), app: "ops", tab: "roster" });
   if (!o) {
     if (S.ofpErr === "setup") out.push({ id: "setup", lv: "info", ic: "plane", title: t("Set up your flight"), text: t("Enter your SimBrief name in Settings."), app: "settings" });
-    else if (S.ofpErr) out.push({ id: "ofp", lv: "red", ic: "warn", title: t("No flight plan"), text: S.ofpErr === "user" ? t("SimBrief user not found.") : S.ofpErr === "noofp" ? t("No OFP found at SimBrief.") : S.ofpErr === "parse" ? t("The OFP could not be read.") : t("SimBrief not reachable."), app: "settings" });
+    else if (S.ofpErr) out.push({ id: "ofp", lv: "red", ic: "warn", title: t("No flight plan"), text: S.ofpErr === "notasl" ? t("Your newest SimBrief plan ({cs}) is not an Air Serbia flight. Only callsigns starting with ASL are loaded.", { cs: S.ofpErrMsg }) : S.ofpErr === "user" ? t("SimBrief user not found.") : S.ofpErr === "noofp" ? t("No OFP found at SimBrief.") : S.ofpErr === "parse" ? t("The OFP could not be read.") : t("SimBrief not reachable."), app: "settings" });
     return out;
   }
   const st = S.st, d = derived(now);

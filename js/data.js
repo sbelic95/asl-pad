@@ -65,6 +65,8 @@ export async function pollSimbrief(force) {
   let o = null;
   try { o = await fetchOfp(settings.simbrief.trim()); }
   catch (e) { const m = String(e.message || e); S.ofpErr = m === "user" || m === "noofp" ? m : m.startsWith("parse:") ? "parse" : "net"; S.ofpErrMsg = m.replace(/^(net|parse):/, ""); }
+  // only Air Serbia flights: a plan of another airline is not loaded (the last Air Serbia plan stays)
+  if (o && !/^ASL/.test(o.callsign || "")) { S.ofpErr = "notasl"; S.ofpErrMsg = o.callsign || ""; o = null; }
   if (o) {
     try { setOfp(o); S.ofpErr = ""; S.ofpErrMsg = ""; }
     catch (e) { S.ofpErr = "parse"; S.ofpErrMsg = "pad: " + (e.message || e.name); console.error(e); }

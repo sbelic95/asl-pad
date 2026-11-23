@@ -6,6 +6,7 @@ import { WALLS, getPhoto, delPhoto, savePhoto } from "../wall.js";
 import { latest } from "../whatsnew.js";
 import { HOME_CARDS, boardOrder } from "../home.js";
 import { V, signedIn, signIn, signOut, loadVamsys, pinCode } from "../vamsys.js";
+import { ACC, DASH, accSignIn, accSignOut, accLoad } from "../account.js";
 
 export const name = "Settings";
 export const tabs = [];
@@ -29,6 +30,17 @@ export function summary() { return [t("Settings"), `SimBrief: ${settings.simbrie
 const seg = (key, opts, cur) => `<div class="seg">${opts.map(([v, l]) => `<button data-seg="${key}" data-v="${esc(v)}" class="${String(cur) === String(v) ? "on" : ""}">${esc(l)}</button>`).join("")}</div>`;
 const row = (h, sub, ctl) => `<div class="set-row"><div class="h">${h}${sub ? `<small>${sub}</small>` : ""}</div><div>${ctl}</div></div>`;
 
+function accRow() {
+  if (ACC.token) {
+    const p = ACC.profile;
+    return `<span class="pill ok">${esc(p?.name || "CID " + (ACC.cid || ""))}</span> <span class="pill">CID ${esc(ACC.cid || p?.cid || "")}</span>
+      <button class="btn small" data-do="acc-load">${t("Refresh")}</button> <button class="btn small" data-do="acc-out">${t("Sign out")}</button>
+      <div class="dim" style="font-size:12.5px;margin-top:6px">${t("SimBrief, VATSIM, IVAO and Hoppie come from your profile on the dashboard.")} <a href="${DASH}" target="_blank" rel="noopener">${t("Edit profile")} ↗</a></div>${ACC.err ? `<div class="bad" style="font-size:12.5px;margin-top:6px">${esc(ACC.err)}</div>` : ""}`;
+  }
+  return `<div class="acc-in"><input data-acc="cid" inputmode="numeric" placeholder="VATSIM CID" autocomplete="username" style="width:130px"> <input data-acc="pin" type="password" inputmode="numeric" placeholder="PIN" autocomplete="current-password" style="width:100px">
+    <button class="btn small pri" data-do="acc-in">${t("Sign in")}</button></div>${ACC.err ? `<div class="bad" style="font-size:12.5px;margin-top:6px">${esc(ACC.err)}</div>` : ""}
+    <div class="dim" style="font-size:12.5px;margin-top:6px">${t("No account yet? Sign in once on the dashboard and choose your PIN there.")} <a href="${DASH}" target="_blank" rel="noopener">${DASH.replace("https://", "")} ↗</a></div>`;
+}
 function vamRow() {
   const err = V.err === "browser" ? t("vAMSYS could not be reached from the browser. The airline may first have to activate the pad in vAMSYS.")
     : V.err === "state" ? t("The sign-in was not completed. Please try again.") : V.err === "signed out" ? t("Signed out by vAMSYS. Please sign in again.") : V.err;
@@ -40,6 +52,7 @@ function vamRow() {
 
 function page() {
   const st = S.ofp ? `<span class="pill ok">${t("loaded")}: ${esc(S.ofp.callsign)} ${esc(S.ofp.dep.icao)}–${esc(S.ofp.dest.icao)}</span>`
+    : S.ofpErr === "notasl" ? `<span class="pill warn">${t("Your newest SimBrief plan ({cs}) is not an Air Serbia flight. Only callsigns starting with ASL are loaded.", { cs: esc(S.ofpErrMsg) })}</span>`
     : S.ofpErr === "user" ? `<span class="pill bad">${t("SimBrief user not found.")}</span>` : S.ofpErr === "noofp" ? `<span class="pill warn">${t("No OFP found at SimBrief.")}</span>`
     : S.ofpErr === "net" ? `<span class="pill bad">${t("SimBrief not reachable.")}</span>${S.ofpErrMsg ? `<div class="dim" style="font-size:12px;margin-top:4px">${esc(S.ofpErrMsg)}</div>` : ""}`
     : S.ofpErr === "parse" ? `<span class="pill bad">${t("The OFP could not be read.")}</span><div class="dim" style="font-size:12px;margin-top:4px">${esc(S.ofpErrMsg || "")}</div>` : "";
@@ -49,9 +62,9 @@ function page() {
       ${row(t("SimBrief"), t("Username or pilot ID. Your latest OFP is loaded."), `<input data-k="simbrief" value="${esc(settings.simbrief)}" placeholder="${t("e.g. 123456")}" autocomplete="off" autocapitalize="off" spellcheck="false" style="width:240px"> ${st}`)}
       ${row(t("VATSIM CID"), t("Finds your aircraft on the network. Without it the callsign of the OFP is used."), `<input data-k="cid" value="${esc(settings.cid)}" inputmode="numeric" placeholder="1234567" autocomplete="off" style="width:160px"> ${vat}`)}
       ${row(t("IVAO VID"), t("Marks your own aircraft in the IVAO Radar."), `<input data-k="ivao" value="${esc(settings.ivao || "")}" inputmode="numeric" placeholder="123456" autocomplete="off" style="width:160px">`)}
-      ${row(t("Hoppie ACARS"), t("Your personal logon code from hoppie.nl. For ACARS and CPDLC in ASL Fly. Stays on this device."), `<input data-k="hoppie" type="password" value="${esc(settings.hoppie || "")}" placeholder="${t("logon code")}" autocomplete="off" autocapitalize="off" spellcheck="false" style="width:200px"> <a class="btn small" href="https://www.hoppie.nl/acars/system/register.html" target="_blank" rel="noopener">${t("Get a code")}</a>`)}
+      ${row(t("Hoppie ACARS"), (ACC.token ? t("Your personal logon code from hoppie.nl. For ACARS and CPDLC in ASL Fly. Comes from your profile on the dashboard.") : t("Your personal logon code from hoppie.nl. For ACARS and CPDLC in ASL Fly. Stays on this device.")), `<input data-k="hoppie" type="password" value="${esc(settings.hoppie || "")}" placeholder="${t("logon code")}" autocomplete="off" autocapitalize="off" spellcheck="false" style="width:200px"> <a class="btn small" href="https://www.hoppie.nl/acars/system/register.html" target="_blank" rel="noopener">${t("Get a code")}</a>`)}
       ${row(t("Simulator bridge"), t("Live data from MSFS, GSX and the Fenix through the VDGS bridge on the simulator PC. Opened from the bridge (…:8770/pad/) it connects by itself."), `<input data-k="bridge" value="${esc(settings.bridge || "")}" placeholder="192.168.1.20:8770" autocomplete="off" autocapitalize="off" spellcheck="false" style="width:200px">`)}
-      ${row("vAMSYS", t("Sign in with your Air Serbia Virtual account: your name, rank, hours and bookings come into the pad. The password stays at vAMSYS."), vamRow())}
+      ${row(t("Air Serbia Virtual account"), t("Sign in with your VATSIM CID and the PIN of the pilot dashboard: your SimBrief, VATSIM, IVAO and Hoppie settings and your bookings come into the pad."), accRow())}
     </div>
     <div class="card"><div class="lbl" style="margin-bottom:4px">${t("Display")}</div>
       ${row(t("Language"), "", seg("lang", Object.entries(LANGS), getLang()))}
@@ -130,6 +143,10 @@ function onClick(e) {
   }
   const b = e.target.closest("[data-do]"); if (!b) return;
   if (b.dataset.do === "whatsnew") { window.ASL.showWhatsNew(); return; }
+  if (b.dataset.do === "acc-in") { const r = b.closest(".set-row"), cid = r?.querySelector("[data-acc=cid]")?.value || "", pin = r?.querySelector("[data-acc=pin]")?.value || ""; b.disabled = true;
+    accSignIn(cid, pin).then(() => C.toast({ lv: "ok", ic: "check", title: t("Signed in"), text: t("Profile taken over from the dashboard.") })).catch((e) => { ACC.err = e.message; b.disabled = false; C.changed("view"); }); return; }
+  if (b.dataset.do === "acc-out") { accSignOut(); C.changed("view"); return; }
+  if (b.dataset.do === "acc-load") { accLoad(true); return; }
   if (b.dataset.do === "vam-in") { b.disabled = true; signIn().catch(() => { b.disabled = false; }); return; }
   if (b.dataset.do === "vam-load") { loadVamsys(); return; }
   if (b.dataset.do === "vam-out") { signOut(); return; }

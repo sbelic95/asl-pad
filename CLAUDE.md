@@ -94,6 +94,16 @@ GSX: L:-Variablen `FSDT_GSX_*` (Namen, Status 1–7 und Menünummern wie im frei
 Namen bewusst eigen: „Turnaround“ (nicht „Ground“), „Fenix EFB“ (das EFB gehört Fenix Simulations, das Pad öffnet es nur).
 Testen ohne Simulator: Bridge mit `--test-gsx --pad-dir <pad>` starten und `http://localhost:8770/pad/?demo=ground&unlock` öffnen.
 
+## 2.4 Checklist, Landing, Konto
+
+- **Checklist** (`js/apps/checklist.js`) und **Landing** (`js/apps/landing.js`): Inhalte nur aus Unterlagen der VA, je Typ in `va/checklists.json`
+  (heute A320-Familie, Karte Februar 2022) und `va/landing.json` (heute Embraer E190/E195: Windgrenzen, Autobrake, Vapp). Typauswahl `js/fleet.js`.
+  Für andere Typen nichts erfinden – die VA trägt sie ein. Windrechner (aus der Excel-Tabelle der VA) für alle Typen; Seite über 360° korrekt.
+  Start-/Landeperformance bleibt SimBriefs Runway Analysis (ASL Fly → Performance). Die Embraer-Diagramme (S. 4–9) sind nicht übernommen.
+- **Konto** (`js/account.js`): Anmeldung mit VATSIM-CID + PIN gegen das Pilot-Dashboard (`https://airserbia-virtual.pages.dev`, Token statt Cookie,
+  `asl.account`); das Profil (SimBrief, CID, IVAO, Hoppie) wird übernommen. Auf localhost zum Testen `asl.dash` = lokales Dashboard.
+- **Nur ASL-Flugpläne**: `pollSimbrief` lädt nur OFPs, deren Callsign mit `ASL` beginnt (`S.ofpErr = "notasl"`).
+
 ## Updates
 
 Jede sichtbare Neuerung als neuer Eintrag oben in `js/whatsnew.js` (nur, was das Pad wirklich kann). Das Pad zeigt ihn einmal
