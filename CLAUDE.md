@@ -52,16 +52,14 @@ EOSID/NADP nur echte Verfahren der Airline in `procedures` – nichts erfinden.
 `js/booking.js`: Flugvorschläge aus `va/routes.json` (Vorschlag, bis die VA-Leitung bestätigt – keine Linien erfinden), Buchung → SimBrief → Plan-Karte
 mit Sprit ±. Sprit/Gewichte nur als Summen aus dem OFP, keine Performance. Kein LH-Layout nachbauen, eigener Stil.
 
-## 1.8 Funk, ACARS, Cabin, vAMSYS
+## 1.8 Funk, ACARS, Cabin
 
 Keine VDGS-App mehr im Pad (Wunsch des Nutzers): Frequenz-Führer `js/atc.js`, Hoppie `js/hoppie.js` → ASL Fly Reiter „radio“; Passagier-Ansicht = App `cabin`.
-vAMSYS-Anmeldung `js/vamsys.js` + `va/vamsys.json` (nur Client-ID, **nie ein Secret ins Repo**). Feldnamen der Pilot API sind locker gemappt und mit einem echten Konto zu prüfen.
-Pflicht-Anmeldung per Schalter `required` in `va/vamsys.json` (Wunsch des Nutzers: einmal anmelden, Gerät bleibt frei bis zur Abmeldung; keine Ausnahme ohne vAMSYS). Steht auf `false`, bis der Login getestet ist.
 
 ## 2.0 (nach dem LH-Virtual-Pad-Guide, eigener Stil)
 
 Apps-Gruppen in `home.js` (`GROUPS`, `HOME_APPS[].g`, `core` = nicht entfernbar), App Store `js/apps/store.js`. Geräte-Oberfläche `js/device.js`
-(PIN = Ziffern der vAMSYS-Piloten-ID, Face ID nur gespielt, Kontroll-/Mitteilungszentrale), Mitteilungen nur über `notify()` aus `js/notify.js`.
+(PIN = VATSIM-CID des Kontos, Face ID nur gespielt, Kontroll-/Mitteilungszentrale), Mitteilungen nur über `notify()` aus `js/notify.js`.
 Dienstplan/Crew Desk/Bericht in `js/crew.js`. Namen bewusst eigen: „Crew Desk“ statt „eDesk“. Manuals nur als Links (`va/manuals.json`, kein PDF ins Repo).
 Karten: nur OpenStreetMap-Kacheln über `baseLayer()` in `js/apps/map.js` (CARTO braucht seit 11/2026 einen Schlüssel – nicht mehr verwenden). VDGS-Anzeige = ASL Fly Reiter `vdgs` (`js/apps/vdgs.js`): Zeiten zuerst von VATSIM (vIFF CDM von VATSIM Spain, `viff-system.network/ifps/callsign` – deckt auch EDDF/EGLL ab; vACDM Germany ist eingestellt), sonst aus SimBrief (Wunsch des Nutzers). EDDF verlangt immer eine TOBT (`REQ_TOBT`), gesetzt wird sie im VATSIM-VDGS `vdgs.vatsimspain.es`.
 Server `server/worker.js` (Cloudflare) ist vorbereitet, aktiv erst mit `url` in `va/server.json` – braucht das Cloudflare-Konto des Nutzers. Ground (GSX) kommt später.
@@ -70,7 +68,7 @@ Server `server/worker.js` (Cloudflare) ist vorbereitet, aktiv erst mit `url` in 
 
 `js/frame.js`: Auf großen Computer-Bildschirmen (ab 1400×880, nicht als installierte App, nicht auf Touch-Geräten) liegt das Pad als Tablet
 auf einem Tisch: Rahmen `#device` um `#pad`, Sperrtaste oben (`.dv-power`), Helligkeitstasten rechts (`.dv-vol`), Crew-Ausweis `#crewcard`
-links (Name/Rang/ID aus vAMSYS, Flug aus dem OFP). Einstellung `settings.frame` = auto | on | off. Bei 1180×820 (Test) gibt es keinen Rahmen.
+links (Name/Rating/CID aus dem Konto, Flug aus dem OFP). Einstellung `settings.frame` = auto | on | off. Bei 1180×820 (Test) gibt es keinen Rahmen.
 Statusleiste mit Netz und Akku (`navigator.getBattery`, nur wenn der Browser ihn liefert – nie erfinden). Zeigerpositionen immer relativ
 zum Pad rechnen (`getBoundingClientRect`), nicht zum Fenster. Eigenes Design, nicht das Gerät von LH Virtual nachbauen.
 
@@ -110,6 +108,15 @@ Testen ohne Simulator: Bridge mit `--test-gsx --pad-dir <pad>` starten und `http
 `js/sound.js`: Töne nur per Web Audio, eigene Klänge (keine Aufnahmen): `cpdlc` (ATC-Gong bei CPDLC aus `js/hoppie.js`), `msg`, `atis`, `slot`;
 iOS braucht die erste Berührung. `js/alerts.js`: Ton + Mitteilung bei Änderung von TSAT/CTOT/TOBT/Off-Block (3 h vor Off-Block) und neuer ATIS.
 
+## 2.6 Ohne vAMSYS, echte ATIS
+
+**vAMSYS ist ganz entfernt** (Wunsch des Nutzers, dauerhaft: „es wird nichts über vAMSYS gemacht“). Es gibt nur noch das Konto (`js/account.js`,
+VATSIM-CID + PIN gegen das Dashboard); `pilot()` liefert Name, CID, VATSIM-Rating und die Dashboard-Buchungen für Crew-Ausweis, Dienstplan,
+Kalender und Home. Keine Pflicht-Anmeldung (der alte vAMSYS-Schalter ist weg). Nichts mehr mit vAMSYS einbauen.
+ATIS: VATSIM zuerst; ist keine online, die echte D-ATIS von `atis.info/api/<ICAO>` (nur US-Flughäfen, `realAtis` in `js/data.js`,
+`a.real = true`); sonst die Piste aus dem echten METAR-Wind (`runwayFromWind`). Europa hat keine freie echte ATIS – nicht scrapen.
+Hoppie-Feld ist `type=text` mit `class="masked"` (kein „Passwort speichern?“ des Browsers); nur CID+PIN ist ein echtes Login-Formular.
+
 ## Updates
 
 Jede sichtbare Neuerung als neuer Eintrag oben in `js/whatsnew.js` (nur, was das Pad wirklich kann). Das Pad zeigt ihn einmal
@@ -133,5 +140,4 @@ Autor `sbelic95 <119758002+sbelic95@users.noreply.github.com>`. Nach dem Push pr
 ## Offen
 
 - Feldnamen der SimBrief-Runway-Analysis (`tlr.takeoff.runway[].speeds_v1` usw.) stammen aus einem Forenbeispiel; mit einem echten OFP des Nutzers gegenprüfen (Einheiten: Längen in m?).
-- vAMSYS mit echtem Konto testen (Aktivierung durch die VA, CORS, Feldnamen von /profile und /bookings).
 - Ideen: Live-FOB, Position und COM1 aus dem Simulator über die Bridge des VDGS (`bridge/vdgs_bridge.py`; braucht http im Heimnetz), weitere SimBrief-Airframes (A320, A330, ATR) in `FLEET` in `js/apps/ops.js`, Push-Hinweise.

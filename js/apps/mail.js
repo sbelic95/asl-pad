@@ -12,9 +12,9 @@ const readSet = () => new Set(store.get("asl.mail.read", []));
 const markRead = (id) => { const r = readSet(); if (!r.has(id)) { r.add(id); store.set("asl.mail.read", [...r].slice(-300)); } };
 
 const WELCOME = {
-  en: "Welcome on board! This pad is your crew tablet for Air Serbia Virtual: ASL Fly carries your flight from the OFP, ASL Ops your duty and roster, the logbook keeps every flight. Sign in with vAMSYS in Settings, add your SimBrief ID and VATSIM CID, and the pad fills itself. Have a good flight.",
-  sr: "Dobro došli na brod! Ovaj pad je tvoj tablet posade za Air Serbia Virtual: ASL Fly nosi tvoj let iz OFP-a, ASL Ops dužnost i raspored, a dnevnik čuva svaki let. Prijavi se preko vAMSYS-a u Podešavanjima, upiši SimBrief ID i VATSIM CID i pad se sam popunjava. Srećan let.",
-  de: "Willkommen an Bord! Dieses Pad ist dein Crew-Tablet für Air Serbia Virtual: ASL Fly trägt deinen Flug aus dem OFP, ASL Ops Dienst und Dienstplan, das Logbuch hält jeden Flug fest. Melde dich in den Einstellungen mit vAMSYS an, trag SimBrief-ID und VATSIM-CID ein, dann füllt sich das Pad von selbst. Guten Flug.",
+  en: "Welcome on board! This pad is your crew tablet for Air Serbia Virtual: ASL Fly carries your flight from the OFP, ASL Ops your duty and roster, the logbook keeps every flight. Sign in with your VATSIM CID and PIN in Settings, and the pad takes over your profile (SimBrief, Hoppie) from the dashboard. Have a good flight.",
+  sr: "Dobro došli na brod! Ovaj pad je tvoj tablet posade za Air Serbia Virtual: ASL Fly nosi tvoj let iz OFP-a, ASL Ops dužnost i raspored, a dnevnik čuva svaki let. Prijavi se VATSIM CID-om i PIN-om u Podešavanjima i pad preuzima tvoj profil (SimBrief, Hoppie) sa kontrolne table. Srećan let.",
+  de: "Willkommen an Bord! Dieses Pad ist dein Crew-Tablet für Air Serbia Virtual: ASL Fly trägt deinen Flug aus dem OFP, ASL Ops Dienst und Dienstplan, das Logbuch hält jeden Flug fest. Melde dich in den Einstellungen mit VATSIM-CID und PIN an, dann übernimmt das Pad dein Profil (SimBrief, Hoppie) aus dem Dashboard. Guten Flug.",
 };
 
 function letters() {

@@ -230,7 +230,7 @@ const VIEW = {
           [t("Temp / dew"), w.temp != null ? `${w.temp}° / ${w.dew ?? "—"}°` : "—"], w.wx ? [t("Weather"), esc(w.wx)] : null])}</div>
           <div class="lbl" style="margin-top:12px">METAR <span class="faint">· ${esc(w.src || "")}${age != null ? " · " + t("{n} min ago", { n: age }) : ""}</span></div><div class="wx-raw">${esc(w.raw)}</div>` : `<div class="empty">${t("No weather")}</div>`}
         ${a.taf ? `<div class="lbl" style="margin-top:12px">TAF <span class="faint">· SimBrief</span></div><div class="wx-raw">${esc(a.taf)}</div>` : ""}
-        ${at ? `<div class="lbl" style="margin-top:12px">ATIS ${esc(at.letter || "")} <span class="faint">· ${esc(at.freq || "")}</span></div><div class="wx-raw">${esc(at.list.flatMap((x) => x.text_atis || []).join(" "))}</div>` : ""}</div>`;
+        ${at ? `<div class="lbl" style="margin-top:12px">ATIS ${esc(at.letter || "")} <span class="faint">· ${esc(at.freq || (at.real ? t("real ATIS (not VATSIM)") : ""))}</span></div><div class="wx-raw">${esc(at.list.flatMap((x) => x.text_atis || []).join(" "))}</div>` : ""}</div>`;
     }).join("")}</div>`;
   },
 

@@ -13,9 +13,9 @@ Es gibt keinen Demo-Modus: Das Pad zeigt immer den eigenen Flug aus SimBrief und
 |---|---|
 | **Sperrbildschirm** | Uhr, Flug- und Zeit-Widgets, Hinweise (TSAT, Fuel Check fällig, Stand, ATIS) und die Live-Aktivität des Flugs unten (Strecke, nächster Wegpunkt, FL, FOB, verbleibende NM). Nach oben wischen oder tippen entsperrt. |
 | **Home** | Begrüßung, Widgets (Flug, Zeiten, Wetter, Kalender), drei App-Seiten mit Punkten (Betrieb · Netzwerk & Wetter · Werkzeuge & Gerät; wischen oder Punkte tippen), Board und Dock. Rote Badges zeigen offene Punkte. |
-| **Gerät** | Statusleiste oben rechts herunterziehen/tippen = **Kontrollzentrum** (hell/dunkel, Nicht stören, Mitteilungen, Sprache, Helligkeit, Sperren, Status von VATSIM/SimBrief/vAMSYS/Hoppie). Oben links = **Mitteilungszentrale** (To-do und alle Hinweise der Apps, `js/notify.js`). **PIN** = Ziffern der vAMSYS-Piloten-ID (Einstellungen → PIN), **Face ID** vor ASL Ops und Manuals ist nur gespielt (Animation, 10 Minuten gültig). |
+| **Gerät** | Statusleiste oben rechts herunterziehen/tippen = **Kontrollzentrum** (hell/dunkel, Nicht stören, Mitteilungen, Sprache, Helligkeit, Sperren, Status von VATSIM/SimBrief/Konto/Hoppie). Oben links = **Mitteilungszentrale** (To-do und alle Hinweise der Apps, `js/notify.js`). **PIN** = VATSIM-CID des Kontos (Einstellungen → PIN), **Face ID** vor ASL Ops und Manuals ist nur gespielt (Animation, 10 Minuten gültig). |
 | **ASL Fly** | Übersicht (Flughäfen mit Wetter und Piste, Phase, nächster Wegpunkt, ETA, OUT/OFF/ON/IN, Treibstoff), Zeiten, Flugplan mit ETA/ATA je Wegpunkt, Karte mit Route, geflogenem Weg und Vertikalprofil, Wetter (METAR, TAF, ATIS), Treibstoff mit Fuel Checks. |
-| **ASL Ops** | Reiter **Dienstplan** (vAMSYS-Buchungen + OFP zu Diensten: Meldezeit −60 min, Turnaround, Dienstzeit, Dienstende +30 min, Check-in), **Crew Desk** (Posteingang, Vorflug-Liste, Wetter, NOTAMs aus dem OFP), **Bericht** (tatsächliche Zeiten und Sprit der letzten 72 h; „Times missing“ als Hinweis). Reiter Operations: Dienst-Leiste, To-do, Abflug (Stand, Piste, SID, vIFF-CDM: EOBT/TOBT/TSAT/TTOT/CTOT, Frequenzen) und Ankunft (Stand-Prognose, Piste, STAR, ATIS, Frequenzen). Reiter **Flotte** mit den SimBrief-Airframes der A319 YU-APA bis YU-APE und eigenen Flugzeugen. |
+| **ASL Ops** | Reiter **Dienstplan** (Dashboard-Buchungen + OFP zu Diensten: Meldezeit −60 min, Turnaround, Dienstzeit, Dienstende +30 min, Check-in), **Crew Desk** (Posteingang, Vorflug-Liste, Wetter, NOTAMs aus dem OFP), **Bericht** (tatsächliche Zeiten und Sprit der letzten 72 h; „Times missing“ als Hinweis). Reiter Operations: Dienst-Leiste, To-do, Abflug (Stand, Piste, SID, vIFF-CDM: EOBT/TOBT/TSAT/TTOT/CTOT, Frequenzen) und Ankunft (Stand-Prognose, Piste, STAR, ATIS, Frequenzen). Reiter **Flotte** mit den SimBrief-Airframes der A319 YU-APA bis YU-APE und eigenen Flugzeugen. |
 | **Logbuch** | Jeder Flug wird beim On-Block eingetragen. Statistik, Details mit Streckenkarte, Flug von Hand eintragen, CSV-Export, Sicherung und Import (JSON). |
 | **Aerodrom (Airport)** | Rollkarte von LYBE, LYNI und LYKV (Pisten, Rollwege mit Schildern, Stände, Haltepunkte, Hot Spots, VATSIM-Verkehr – unsere in Rot) mit **Rollweg** vom Stand zur Piste bzw. vom Abrollweg zum Stand und den Haltepunkten; **LYBE-Briefing** aus [`va/airports/LYBE.json`](va/airports/LYBE.json); **Stände** mit Spannweite, Einweisung, passt / belegt. |
 | **Preuzimanja (Downloads)** | Links der VA aus [`va/downloads.json`](va/downloads.json): ACARS (Pflicht), Crew Lounge, Liveries, SimBrief, VATSIM, SCG vACC. Reiter **Promene** mit allen Updates. |
@@ -110,7 +110,7 @@ Lizenzen der verwendeten Bibliotheken und Daten: [LIZENZEN.md](LIZENZEN.md).
   Block Fuel mit + und − (100 kg bzw. 200 lb, nicht unter den Plan ohne Extra) – nur Summen aus dem OFP, keine eigene Performance (`asl.fuelAdj`).
 - Karten des Home-Bildschirms lassen sich in den Einstellungen sortieren (`settings.homeOrder`).
 
-## Funk, ACARS, Cabin und vAMSYS (1.8)
+## Funk, ACARS, Cabin und Konto (1.8, 2.4)
 
 - Die alte eingebettete VDGS-App ist entfernt; ihre Funktionen sind jetzt eigene Module:
   - **ASL Fly → „Radio & ACARS“** (`js/apps/radio.js`): Slot-Status (vIFF CDM) vor dem Off-Block, **Frequenz-Führer** (`js/atc.js`, aus dem VDGS übernommen:
@@ -119,23 +119,20 @@ Lizenzen der verwendeten Bibliotheken und Daten: [LIZENZEN.md](LIZENZEN.md).
     In der Übersicht eine Funk-Zeile; Frequenzwechsel und neue Nachrichten erscheinen als Hinweise (Sperrbildschirm, Badges).
   - **Cabin** (`js/apps/cabin.js`): eigene Passagier-App im Air-Serbia-Look – Flugkarte (km/h, m, Außentemperatur, Ortszeiten), Ziel (Ortszeit, Wetter),
     Anschlussflüge und Ankünfte (VATSIM, `S.board` in `data.js`), Diashow.
-- **vAMSYS** (`js/vamsys.js`, Einstellungen `va/vamsys.json`): OAuth 2.0 mit PKCE, Client-ID 1409, kein Secret. Redirect `https://sbelic95.github.io/asl-pad/`.
-  Liest `/user`, `/profile`, `/bookings` der Pilot API (`vamsys.io/api/v3/pilot`); Name im Home-Bildschirm, Rang/Stunden, VATSIM-ID, Buchung als Home-Karte.
-  **Pflicht-Anmeldung:** `"required": true` in `va/vamsys.json` zeigt vor dem Pad einen Anmelde-Bildschirm. Einmal angemeldet bleibt das Gerät frei
-  (auch wenn vAMSYS später nicht erreichbar ist), bis der Pilot sich abmeldet (`asl.vamsys.ok`). Kein Zugang ohne vAMSYS; der Demo-Flug auf localhost ist ausgenommen.
-  Erst einschalten, wenn die Anmeldung mit einem echten Konto funktioniert.
-  **Ungetestet gegen das echte vAMSYS** (Client muss von der VA aktiviert sein; ob vAMSYS Aufrufe aus dem Browser erlaubt (CORS), ist offen).
+- **Konto** (`js/account.js`, seit 2.4; vAMSYS ist seit 2.6 ganz entfernt): Anmeldung mit VATSIM-CID + PIN gegen das Piloten-Dashboard
+  (`https://airserbia-virtual.pages.dev`, Token in `asl.account`). Übernimmt Profil (SimBrief, CID, IVAO, Hoppie), VATSIM-Rating und die Buchungen
+  (`pilot()`: Crew-Ausweis, Dienstplan, Kalender, Home-Karte „Your booking“). Die Sperrbildschirm-PIN ist die CID.
 
 ## Server (2.0, vorbereitet)
 
 `server/` enthält einen Cloudflare Worker für die Synchronisierung zwischen Geräten (Logbuch, Kalender, Wecker, Check-ins),
-Anmeldung über den vAMSYS-Token. Er ist aus, solange `url` in [`va/server.json`](va/server.json) leer ist. Einschalten: [server/README.md](server/README.md).
+Anmeldung über den Konto-Token (der Worker fragt das Dashboard, wer es ist → VATSIM-CID). Er ist aus, solange `url` in [`va/server.json`](va/server.json) leer ist. Einschalten: [server/README.md](server/README.md).
 Push an ein geschlossenes Pad und E-Mail brauchen noch VAPID-Schlüssel bzw. einen Mail-Dienst.
 
 ## Datenschutz
 
 [`privacy.html`](privacy.html) (EN/SR/DE, Sprache per `?lang=` oder wie im Pad): was das Pad speichert (nur im Browser), welche Dienste es abfragt
-und was die geplante vAMSYS-Anmeldung liest. Link in den Einstellungen unter „About“. Bei neuer Datennutzung zuerst diese Seite anpassen.
+und was die Konto-Anmeldung (Dashboard) liest. Link in den Einstellungen unter „About“. Bei neuer Datennutzung zuerst diese Seite anpassen.
 
 ## Ein Update machen
 

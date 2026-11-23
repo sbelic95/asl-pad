@@ -1,10 +1,10 @@
-// Crew side of ASL Ops: the roster (vAMSYS bookings and the loaded OFP, put together into duties), check-in,
+// Crew side of ASL Ops: the roster (dashboard bookings and the loaded OFP, put together into duties), check-in,
 // the crew desk (inbox, preflight list, weather, NOTAMs) and the report after the flight (actual times and fuel, 72 h).
 import { S, settings, logbook, saveLogbook, wxOf } from "./data.js";
 import { t, nf, loc, LOCALE } from "./i18n.js";
 import { esc, store, hhmmz, localHM, dur, distNm } from "./util.js";
 import { tzOf, cityOf, aptDb } from "./tz.js";
-import { V } from "./vamsys.js";
+import { pilot } from "./account.js";
 import { A } from "./hoppie.js";
 import { notes } from "./notify.js";
 import { notify } from "./notify.js";
@@ -18,9 +18,9 @@ const estBlock = (dep, arr) => { const a = aptDb(dep), b = aptDb(arr); return a 
 export function legs() {
   const o = S.ofp, out = [];
   if (o?.times?.out) out.push({ src: "OFP", cs: o.callsign, no: o.iataNo || o.callsign, dep: o.dep.icao, arr: o.dest.icao, std: o.times.out, sta: o.times.in || o.times.out + estBlock(o.dep.icao, o.dest.icao), type: o.type, reg: o.reg });
-  for (const b of V.data?.bookings || []) {
+  for (const b of pilot()?.bookings || []) {
     if (!b.at || (o && b.dep === o.dep.icao && b.arr === o.dest.icao && Math.abs(b.at - o.times.out) < 6 * 36e5)) continue;
-    out.push({ src: "vAMSYS", cs: b.callsign || "", no: b.number || b.callsign || "", dep: b.dep, arr: b.arr, std: b.at, sta: b.at + estBlock(b.dep, b.arr), type: b.type || "", reg: b.reg || "", est: true });
+    out.push({ src: "Booking", cs: b.callsign || "", no: b.number || b.callsign || "", dep: b.dep, arr: b.arr, std: b.at, sta: b.at + estBlock(b.dep, b.arr), type: b.type || "", reg: b.reg || "", est: true });
   }
   if (settings.demo && o?.times?.in && o.dest.icao === "KJFK") out.push({ src: "demo", cs: "ASL501", no: "JU501", dep: "KJFK", arr: "LYBE", std: o.times.in + 2.5 * 36e5, sta: o.times.in + 2.5 * 36e5 + 9 * 36e5, type: o.type, reg: o.reg, est: true });
   return out.sort((a, b) => a.std - b.std);
@@ -57,16 +57,16 @@ export function rosterView(now) {
       <div class="rs-ci">${ci ? `<span class="ok">✓ ${t("Checked in {t}", { t: hhmmz(ci) })}</span>` : open ? `<button class="btn pri" data-do="checkin" data-key="${esc(d.key)}">${t("Check in")}</button><span class="dim">${t("Check-in is open until the departure.")}</span>`
         : now < d.report - 3 * 36e5 ? `<span class="dim">${t("Check-in opens {t}", { t: hhmmz(d.report - 3 * 36e5) })}</span>` : ""}</div></div>`;
   };
-  return `<div class="rs-cols"><div>${ds.length ? ds.map(duty).join("") : `<div class="card"><div class="lbl">${t("Roster")}</div><p class="dim">${t("No duties yet. Book a flight in vAMSYS or load an OFP from SimBrief.")}</p></div>`}
-      <p class="dim" style="font-size:12px">* ${t("estimated from the distance – vAMSYS bookings have no arrival time.")} ${t("All times UTC.")}</p></div>
+  return `<div class="rs-cols"><div>${ds.length ? ds.map(duty).join("") : `<div class="card"><div class="lbl">${t("Roster")}</div><p class="dim">${t("No duties yet. Book a flight on the dashboard or load an OFP from SimBrief.")}</p></div>`}
+      <p class="dim" style="font-size:12px">* ${t("estimated from the distance – bookings have no arrival time.")} ${t("All times UTC.")}</p></div>
     <div>${profileCard()}</div></div>`;
 }
 function profileCard() {
-  const d = V.data, kv = (l, v) => `<div><span class="lbl">${l}</span><b>${v}</b></div>`;
+  const d = pilot(), kv = (l, v) => `<div><span class="lbl">${l}</span><b>${v}</b></div>`;
   return `<div class="card rs-prof"><div class="lbl">${t("Profile")}</div><h3>${esc(d?.name || t("Captain"))}</h3>
-    <div class="rs-kv">${kv(t("Pilot ID"), esc(d?.pilotId || d?.callsign || "—"))}${kv(t("Rank"), esc(d?.rank || "—"))}${kv(t("Hours"), d?.hours != null ? nf(+d.hours) + " h" : "—")}${kv(t("Flights"), d?.flights != null ? esc(String(d.flights)) : "—")}
+    <div class="rs-kv">${kv(t("Pilot ID"), esc(d?.pilotId || d?.callsign || "—"))}${kv(t("Rank"), esc(d?.rank || "—"))}
       ${kv("VATSIM", esc(settings.cid || "—"))}${kv("SimBrief", esc(settings.simbrief || "—"))}</div>
-    ${d ? "" : `<p class="dim" style="font-size:12.5px">${t("Sign in with vAMSYS in Settings to see your airline profile.")}</p>`}
+    ${d ? "" : `<p class="dim" style="font-size:12.5px">${t("Sign in with your VATSIM CID and PIN in Settings to see your profile.")}</p>`}
     <div style="margin-top:12px">${careerHtml(career())}</div></div>`;
 }
 

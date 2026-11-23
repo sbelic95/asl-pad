@@ -5,7 +5,7 @@
 import { S, settings } from "./data.js";
 import { t } from "./i18n.js";
 import { esc } from "./util.js";
-import { V } from "./vamsys.js";
+import { pilot } from "./account.js";
 
 const RATIO = 1180 / 820, BEZEL = 16;
 const standalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
@@ -36,7 +36,7 @@ function renderCard(room) {
   if (!c) return;
   c.hidden = room < 250;
   if (c.hidden) return;
-  const d = V.data, o = S.ofp;
+  const d = pilot(), o = S.ofp;
   const name = d?.name || t("Crew"), id = d?.pilotId || d?.callsign || "";
   c.innerHTML = `<div class="cc-strap"></div><div class="cc-clip"></div><div class="cc-card">
     <div class="cc-top"><img src="https://pics.avs.io/240/80/JU.png" alt="" referrerpolicy="no-referrer" onerror="this.remove()"><span>${t("Air Serbia Virtual crew")}</span></div>

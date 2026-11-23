@@ -1,4 +1,4 @@
-// The device around the apps: PIN on the lock screen (digits of the vAMSYS pilot ID), a played Face ID before ASL Ops
+// The device around the apps: PIN on the lock screen (the VATSIM CID of the account), a played Face ID before ASL Ops
 // and Manuals (once every 10 minutes), the Control Center (pull down at the top right) and the Notification Center
 // (pull down at the top left). Pure pad chrome – no app data is changed here except the pilot's own toggles.
 import { S, settings, saveSettings, refreshAll } from "./data.js";
@@ -6,7 +6,7 @@ import { t, setLang, getLang, LANGS } from "./i18n.js";
 import { esc, store, hhmmz } from "./util.js";
 import { I, APP_ICONS } from "./icons.js";
 import { notes, clearNote, N } from "./notify.js";
-import { pinCode, signedIn, V } from "./vamsys.js";
+import { pinCode, signedIn, pilot } from "./account.js";
 import { actions } from "./actions.js";
 import { SY } from "./sync.js";
 
@@ -18,7 +18,7 @@ export const pinNeeded = () => !!(settings.pin && pinCode() && !settings.demo);
 export function askPin(done) {
   const code = pinCode(); let v = "";
   const d = document.createElement("div"); d.className = "pin";
-  const draw = (bad) => { d.innerHTML = `<div class="pin-box${bad ? " bad" : ""}"><div class="lock-ic">${I.lock}</div><h3>${t("Enter your PIN")}</h3><p class="dim">${t("The digits of your pilot ID")}${V.data?.name ? " · " + esc(V.data.name) : ""}</p>
+  const draw = (bad) => { d.innerHTML = `<div class="pin-box${bad ? " bad" : ""}"><div class="lock-ic">${I.lock}</div><h3>${t("Enter your PIN")}</h3><p class="dim">${t("The digits of your pilot ID")}${pilot()?.name ? " · " + esc(pilot().name) : ""}</p>
     <div class="pin-dots">${[...code].map((_, i) => `<i class="${i < v.length ? "on" : ""}"></i>`).join("")}</div>
     <div class="pin-keys">${[1, 2, 3, 4, 5, 6, 7, 8, 9, "", 0, "⌫"].map((k) => k === "" ? "<span></span>" : `<button data-pk="${k}">${k}</button>`).join("")}</div>
     <button class="btn small" data-pk="x">${t("Cancel")}</button></div>`; };
@@ -89,7 +89,7 @@ function draw() {
       <div class="cc-st">
         <div>${dot(S.feedOk == null ? null : !!S.feedOk)}<b>VATSIM</b><span>${S.pilot ? esc(S.pilot.callsign) : S.feedOk ? t("not connected") : S.feedOk === false ? t("not reachable") : "…"}</span></div>
         <div>${dot(S.ofp ? true : S.ofpErr ? false : null)}<b>SimBrief</b><span>${S.ofp ? esc(S.ofp.callsign + " " + S.ofp.dep.icao + "–" + S.ofp.dest.icao) : S.ofpErr ? t("no OFP") : "…"}</span></div>
-        <div>${dot(signedIn() ? true : null)}<b>vAMSYS</b><span>${signedIn() ? esc(V.data?.name || t("signed in")) : t("not signed in")}</span></div>
+        <div>${dot(signedIn() ? true : null)}<b>${t("Account")}</b><span>${signedIn() ? esc(pilot()?.name || "CID " + pilot()?.pilotId) : t("not signed in")}</span></div>
         <div>${dot(settings.hoppie ? true : null)}<b>Hoppie ACARS</b><span>${settings.hoppie ? t("ready") : t("no logon code")}</span></div>
         ${SY.on ? `<div>${dot(SY.err ? false : SY.at ? true : null)}<b>${t("Server sync")}</b><span>${SY.err ? esc(SY.err) : SY.at ? hhmmz(SY.at) : "…"}</span></div>` : ""}
         <div>${dot(null)}<b>Zulu</b><span class="num">${hhmmz(Date.now())}</span></div>

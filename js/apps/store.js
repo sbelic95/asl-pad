@@ -24,7 +24,7 @@ const ABOUT = {
   fenix: "Opens the Fenix EFB and compares fuel and weight with your plan (needs the VDGS bridge).",
   checklist: "The Air Serbia Virtual normal checklists per aircraft type to tick off, with fuel and QNH filled in.",
   landing: "Wind component calculator for every type and the airline's landing data: wind limits, autobrake and Vapp.",
-  calc: "A simple calculator.", downloads: "Liveries, ACARS and tools for the airline.", store: "Install and remove apps.", settings: "SimBrief, VATSIM, vAMSYS, look and home screen.",
+  calc: "A simple calculator.", downloads: "Liveries, ACARS and tools for the airline.", store: "Install and remove apps.", settings: "SimBrief, VATSIM, account, look and home screen.",
 };
 let C = null;
 export function render(body, ctx) {

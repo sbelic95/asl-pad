@@ -1,9 +1,9 @@
-// Calendar: one month at a glance with the pilot's flights (vAMSYS bookings and the loaded OFP), VATSIM events at
+// Calendar: one month at a glance with the pilot's flights (dashboard bookings and the loaded OFP), VATSIM events at
 // Air Serbia airports and the pilot's own entries with a reminder. Everything in UTC like an airline roster.
 import { S } from "../data.js";
 import { t, LOCALE } from "../i18n.js";
 import { esc, store, hhmmz, p2 } from "../util.js";
-import { V } from "../vamsys.js";
+import { pilot } from "../account.js";
 import { notify } from "../notify.js";
 import { sheet } from "../sheet.js";
 
@@ -24,8 +24,8 @@ export function entries() {
   const net = new Set(Object.keys(S.routes?.airports || {})), out = [];
   const o = S.ofp;
   if (o?.times?.out) out.push({ k: "flight", at: o.times.out, end: o.times.in, title: `${o.iataNo || o.callsign} ${o.dep.icao}–${o.dest.icao}`, sub: "OFP" + (o.type ? " · " + o.type : "") });
-  for (const b of V.data?.bookings || []) if (b.at && !(o && b.dep === o.dep.icao && b.arr === o.dest.icao && Math.abs(b.at - o.times.out) < 6 * 36e5))
-    out.push({ k: "flight", at: b.at, title: `${b.callsign || b.number || "ASL"} ${b.dep}–${b.arr}`, sub: "vAMSYS" + (b.type ? " · " + b.type : "") });
+  for (const b of pilot()?.bookings || []) if (b.at && !(o && b.dep === o.dep.icao && b.arr === o.dest.icao && Math.abs(b.at - o.times.out) < 6 * 36e5))
+    out.push({ k: "flight", at: b.at, title: `${b.callsign || b.number || "ASL"} ${b.dep}–${b.arr}`, sub: "Booking" + (b.type ? " · " + b.type : "") });
   for (const e of S.vatEvents || []) { const ap = (e.airports || []).filter((a) => net.has(a)); if (ap.length) out.push({ k: "event", at: Date.parse(e.start), end: Date.parse(e.end), title: e.name, sub: "VATSIM · " + ap.slice(0, 4).join(" "), link: e.link }); }
   own().forEach((e, i) => out.push({ k: "own", at: e.at, title: e.title, sub: e.note || "", i }));
   return out.filter((e) => Number.isFinite(e.at)).sort((a, b) => a.at - b.at);

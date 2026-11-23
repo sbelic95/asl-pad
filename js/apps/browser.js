@@ -7,7 +7,7 @@ export const name = "Browser";
 export const tabs = [];
 const LINKS = [
   ["Air Serbia Virtual", "https://airserbiavirtual.online", "The airline's website", "#002e5d"],
-  ["vAMSYS", "https://vamsys.io", "Bookings, PIREPs and your pilot profile", "#2b59c3"],
+  ["Pilot dashboard", "https://airserbia-virtual.pages.dev", "Booking, roster, fleet and your profile", "#2b59c3"],
   ["SimBrief", "https://dispatch.simbrief.com/home", "Plan the flight and print the OFP", "#24406b"],
   ["VATSIM", "https://my.vatsim.net", "Your VATSIM account and events", "#1a8a5a"],
   ["IVAO", "https://www.ivao.aero", "The IVAO network", "#0d2c99"],

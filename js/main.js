@@ -1,6 +1,5 @@
 // ASL Pad shell: lock screen, home screen, apps, app switcher (double-tap the home bar), status bar.
 import { bookingClick } from "./booking.js";
-import { handleRedirect, gateNeeded, signIn, V } from "./vamsys.js";
 import { $, esc, hhmmz, store } from "./util.js";
 import { S, settings, saveSettings, setTestDemo, onChange, wxOf, startPolling, refreshAll, restart, emit } from "./data.js";
 import { t, setLang, getLang, dateLong } from "./i18n.js";
@@ -313,20 +312,6 @@ export function settingsChanged(kind) {
   if (kind === "data") restart();
   renderAll();
 }
-// ---------- sign-in with vAMSYS before the pad can be used (switch "required" in va/vamsys.json) ----------
-async function checkGate() {
-  const need = await gateNeeded();
-  let g = $("gate");
-  if (!need) { g?.remove(); return; }
-  if (!g) { g = Object.assign(document.createElement("section"), { id: "gate", className: "layer" }); $("pad").appendChild(g);
-    g.addEventListener("click", (e) => { const b = e.target.closest("[data-gate]"); if (b) { b.disabled = true; signIn().catch(() => { b.disabled = false; }); } }); }
-  const err = V.err === "browser" ? t("vAMSYS could not be reached from the browser. The airline may first have to activate the pad in vAMSYS.") : V.err === "state" ? t("The sign-in was not completed. Please try again.") : V.err;
-  g.innerHTML = `<div class="gate-box"><img class="gate-logo" src="https://pics.avs.io/240/80/JU.png" alt="" referrerpolicy="no-referrer" onerror="this.remove()">
-    <h1>ASL Pad</h1><p>${t("The crew pad of Air Serbia Virtual. Sign in once with your Air Serbia Virtual account to use it on this device.")}</p>
-    <button class="btn pri gate-btn" data-gate>${t("Sign in with vAMSYS")}</button>${err ? `<div class="gate-err">${esc(err)}</div>` : ""}
-    <p class="gate-note">${t("The password stays at vAMSYS. Unofficial fan project for flight simulation.")} · <a href="privacy.html" target="_blank" rel="noopener">${t("Privacy")}</a></p></div>`;
-}
-onChange(() => { if ($("gate") || V.err) checkGate(); });
 loadAirports().then(() => renderAll());
 renderLock($("lock")); renderHome($("home")); renderStatus();
 N.banner = toast;
@@ -334,7 +319,6 @@ initDevice({ goHome, lock: lockPad, applyTheme, renderAll, openApp, changed: set
 applyBright();
 initFrame({ lock: lockPad, unlock, isLocked: () => ui.view === "lock", brighter: (d) => { saveSettings({ bright: Math.min(1, Math.max(0.4, Math.round(((settings.bright ?? 1) + d * 0.1) * 10) / 10)) }); applyBright(); } });
 if ((q.has("unlock") || q.get("app")) && !pinNeeded()) { $("lock").classList.add("gone"); ui.view = "home"; if (q.get("app")) openApp(q.get("app"), q.get("tab") || undefined); }
-handleRedirect().then(async (back) => { if (back && !(await gateNeeded())) openApp("settings"); checkGate(); }); // back from the vAMSYS sign-in
 if (ui.view !== "lock") whatsNewOnce();
 startPolling();
 News.pollNews(); setInterval(() => News.pollNews(), 15 * 60e3);

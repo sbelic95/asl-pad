@@ -25,7 +25,7 @@ Logo-Dienst (`pics.avs.io`) geladen. Die App-Symbole und Grafiken sind eigene En
 | Netzwerkdaten, METAR, ATIS | VATSIM |
 | Luftraumgrenzen und Center-Präfixe (Frequenz-Führer) | [VATSpy Data Project](https://github.com/vatsimnetwork/vatspy-data-project), SimAware TRACON Project (über `vdgs-slot-board`, Zweig `atc`) – jeweilige Projektlizenz |
 | ACARS / CPDLC | [Hoppie ACARS](https://www.hoppie.nl/acars/) – mit dem eigenen Logon-Code |
-| Pilotendaten (nach Anmeldung) | vAMSYS Pilot API – Konto bei Air Serbia Virtual |
+| Pilotendaten (nach Anmeldung) | Piloten-Dashboard von Air Serbia Virtual (eigenes Projekt) |
 | IVAO-Radar | IVAO Tracker API (`api.ivao.aero/v2/tracker/whazzup`), öffentliche Daten |
 | TAF der Wetter-App | [aviationweather.gov](https://aviationweather.gov/data/api/) (NOAA), gemeinfrei |
 | NOTAMs im Crew Desk | Aus dem SimBrief-OFP des Piloten |

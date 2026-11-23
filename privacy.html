@@ -49,35 +49,32 @@
 <section><h2>In short</h2>
 <ul>
   <li>ASL Pad runs entirely in your browser. There is <b>no server and no database</b> of ours behind it.</li>
-  <li>Everything the pad keeps (settings, your flights, your logbook, your vAMSYS sign-in) stays <b>on your own device</b>.</li>
+  <li>Everything the pad keeps (settings, your flights, your logbook) stays <b>on your own device</b>. Only if you sign in with your Air Serbia Virtual account, your profile comes from the pilot dashboard.</li>
   <li>We do <b>not</b> collect, sell or share your data. No analytics, no advertising, no tracking cookies.</li>
-  <li>You can delete everything at any time: sign out of vAMSYS in the settings of the pad, or clear the website data of the pad in your browser.</li>
+  <li>You can delete everything at any time: sign out of your account in the settings of the pad, or clear the website data of the pad in your browser.</li>
 </ul></section>
 
 <section><h2>Who runs ASL Pad</h2>
 <p>ASL Pad is an unofficial fan project for the pilots of Air Serbia Virtual, made by the GitHub user <b>sbelic95</b>. It is not affiliated with or endorsed by Air Serbia. The source code is public: <a href="https://github.com/sbelic95/asl-pad">github.com/sbelic95/asl-pad</a>.</p>
 <p>Questions about privacy: open an issue on GitHub or ask in the Discord of Air Serbia Virtual.</p></section>
 
-<section><h2>Signing in with vAMSYS</h2>
-<p class="dim">The sign-in only works once Air Serbia Virtual has activated ASL Pad in vAMSYS. Without a sign-in the pad does not connect to vAMSYS at all.</p>
-<p>If you choose to sign in with your Air Serbia Virtual account on vAMSYS, you sign in on the vAMSYS website itself – ASL Pad never sees your password. vAMSYS then gives the pad an access token for your account. The pad keeps this token only on your device and uses it to read the following, depending on what you allow:</p>
+<section><h2>Signing in with your Air Serbia Virtual account</h2>
+<p>If you choose to, you sign in with your VATSIM CID and the PIN you chose on the Air Serbia Virtual pilot dashboard (airserbia-virtual.pages.dev). Never enter your VATSIM password. The dashboard gives the pad a token for your account; the pad keeps it only on your device and uses it to read:</p>
 <table>
-  <tr><th>Permission</th><th>What the pad does with it</th></tr>
-  <tr><td>Name and e-mail address</td><td>Shows your name in the pad. The e-mail address is not shown or used.</td></tr>
-  <tr><td>Network IDs (VATSIM, IVAO …)</td><td>Fills in your VATSIM ID so the pad can find your aircraft on the VATSIM network.</td></tr>
-  <tr><td>Pilot profile, rank, stats, badges</td><td>Shows your official rank and hours.</td></tr>
-  <tr><td>Bookings, PIREPs, logbook</td><td>Shows your booked flight and your logbook of the airline.</td></tr>
-  <tr><td>Activities (events, tours, rosters)</td><td>Shows the events and tours of the airline; with your permission you can register for them.</td></tr>
+  <tr><th>Data</th><th>What the pad does with it</th></tr>
+  <tr><td>Your profile: name, SimBrief ID, VATSIM CID, IVAO VID, Hoppie logon code</td><td>Fills in the settings of the pad, so you do not have to type them on every device.</td></tr>
+  <tr><td>Your VATSIM pilot rating</td><td>Shows it on the crew card and the home screen.</td></tr>
+  <tr><td>Your bookings on the dashboard</td><td>Shows them in the roster, the calendar and on the home screen.</td></tr>
 </table>
-<p class="dim">The pad only reads and shows this data on your device. It does not send it anywhere else. Signing out deletes the token and the copied data from the device. You can also withdraw the access of ASL Pad at any time in your vAMSYS account.</p></section>
+<p class="dim">The pad does not send this data anywhere else. Signing out deletes the token and the copied data from the device. What the dashboard itself keeps is described in its own privacy page.</p></section>
 
 <section><h2>What is stored on your device</h2>
 <ul>
   <li>Settings: language, units, look, wallpaper (also a photo you choose), home screen cards, your SimBrief user name or ID, your VATSIM ID and your Hoppie logon code.</li>
   <li>Your flights: times, track and fuel checks of the current flight, and your logbook.</li>
-  <li>Bookings made in the pad, fuel changes on the plan card, and the vAMSYS sign-in (if used).</li>
+  <li>Bookings made in the pad, fuel changes on the plan card, and the token of your account sign-in (if used).</li>
   <li>Copies of public data for offline use (airline notices, events, weather, ground maps).</li>
-  <li>What you enter in the apps: calendar entries, alarms and timer, kneeboard notes and drawings, check-ins, flight reports, the preflight list and the notifications of the pad. The PIN is not stored: it is the digits of your vAMSYS pilot ID.</li>
+  <li>What you enter in the apps: calendar entries, alarms and timer, kneeboard notes and drawings, check-ins, flight reports, the preflight list and the notifications of the pad. The lock screen PIN is not stored: it is your VATSIM CID.</li>
 </ul>
 <p class="dim">All of this is kept in the browser storage of this website on your device. It never leaves the device unless you export your logbook yourself.</p></section>
 
@@ -86,7 +83,8 @@
 <table>
   <tr><th>Service</th><th>What for, and what is sent</th></tr>
   <tr><td>GitHub Pages / GitHub</td><td>Hosts the pad and its data files (notices, events, weather, ground maps).</td></tr>
-  <tr><td>vAMSYS</td><td>Only if you sign in: your access token, to read the data listed above.</td></tr>
+  <tr><td>Air Serbia Virtual pilot dashboard (Cloudflare)</td><td>Only if you sign in: your CID and PIN once, then the token, to read the data listed above.</td></tr>
+  <tr><td>atis.info</td><td>The real ATIS of US airports of your flight, when no VATSIM ATIS is online; only airport codes are sent.</td></tr>
   <tr><td>SimBrief (Navigraph)</td><td>Your SimBrief user name or ID, to load your latest flight plan.</td></tr>
   <tr><td>VATSIM</td><td>Public network data and weather; nothing personal is sent.</td></tr>
   <tr><td>vIFF CDM</td><td>The callsign of your flight, to read your slot times.</td></tr>
@@ -96,11 +94,11 @@
   <tr><td>pics.avs.io</td><td>The airline logo.</td></tr>
   <tr><td>IVAO (api.ivao.aero)</td><td>Only while the IVAO Radar is open: the public list of flights and stations; nothing personal is sent. Your IVAO VID stays on the device.</td></tr>
   <tr><td>aviationweather.gov, metar.vatsim.net</td><td>Weather (METAR, TAF) for the Air Serbia destinations; only airport codes are sent.</td></tr>
-  <tr><td>ASL Pad server (Cloudflare)</td><td>Not switched on yet. If the airline switches it on, your logbook, calendar entries, alarms and check-ins are kept under your vAMSYS pilot ID so that your devices show the same data. This page will be updated before that happens.</td></tr>
+  <tr><td>ASL Pad server (Cloudflare)</td><td>Not switched on yet. If the airline switches it on, your logbook, calendar entries, alarms and check-ins are kept under your VATSIM CID so that your devices show the same data. This page will be updated before that happens.</td></tr>
 </table></section>
 
 <section><h2>Your rights</h2>
-<p>As all data stays on your device, you are in full control of it: you can view it in the pad, change it in the settings and delete it at any time. For the data held by vAMSYS or Air Serbia Virtual, please contact the airline or vAMSYS directly.</p></section>
+<p>As all data stays on your device, you are in full control of it: you can view it in the pad, change it in the settings and delete it at any time. For the data held by the pilot dashboard of Air Serbia Virtual, see its privacy page or contact the airline.</p></section>
 
 <section><h2>Changes</h2>
 <p>If ASL Pad starts to use data in a new way, this page will be updated first. Last updated: <b>20 November 2026</b>.</p></section>
@@ -111,35 +109,32 @@
 <section><h2>Ukratko</h2>
 <ul>
   <li>ASL Pad radi potpuno u tvom pretraživaču. Iza njega <b>nema našeg servera ni baze podataka</b>.</li>
-  <li>Sve što pad čuva (podešavanja, tvoji letovi, dnevnik letenja, prijava na vAMSYS) ostaje <b>na tvom uređaju</b>.</li>
+  <li>Sve što pad čuva (podešavanja, tvoji letovi, dnevnik letenja) ostaje <b>na tvom uređaju</b>. Samo ako se prijaviš nalogom Air Serbia Virtual, tvoj profil dolazi sa kontrolne table pilota.</li>
   <li><b>Ne</b> prikupljamo, ne prodajemo i ne delimo tvoje podatke. Bez analitike, reklama i kolačića za praćenje.</li>
-  <li>Sve možeš obrisati u svakom trenutku: odjavi se sa vAMSYS-a u podešavanjima pada ili obriši podatke sajta u pretraživaču.</li>
+  <li>Sve možeš obrisati u svakom trenutku: odjavi se sa naloga u podešavanjima pada ili obriši podatke sajta u pretraživaču.</li>
 </ul></section>
 
 <section><h2>Ko stoji iza ASL Pada</h2>
 <p>ASL Pad je nezvanični projekat zaljubljenika za pilote Air Serbia Virtual, autor je GitHub korisnik <b>sbelic95</b>. Nije povezan sa kompanijom Air Serbia niti ga ona podržava. Izvorni kod je javan: <a href="https://github.com/sbelic95/asl-pad">github.com/sbelic95/asl-pad</a>.</p>
 <p>Pitanja o privatnosti: otvori „issue“ na GitHubu ili pitaj na Discordu Air Serbia Virtual.</p></section>
 
-<section><h2>Prijava preko vAMSYS-a</h2>
-<p class="dim">Prijava radi tek kad Air Serbia Virtual aktivira ASL Pad u vAMSYS-u. Bez prijave pad se uopšte ne povezuje sa vAMSYS-om.</p>
-<p>Ako se prijaviš svojim nalogom Air Serbia Virtual na vAMSYS-u, prijavljuješ se na samom sajtu vAMSYS-a – ASL Pad nikad ne vidi tvoju lozinku. vAMSYS zatim padu daje pristupni token za tvoj nalog. Pad čuva taj token samo na tvom uređaju i koristi ga da pročita sledeće, u zavisnosti od onoga što dozvoliš:</p>
+<section><h2>Prijava nalogom Air Serbia Virtual</h2>
+<p>Ako želiš, prijavljuješ se svojim VATSIM CID-om i PIN-om koji si izabrao na kontrolnoj tabli pilota Air Serbia Virtual (airserbia-virtual.pages.dev). Nikad ne upisuj svoju VATSIM lozinku. Kontrolna tabla daje padu token za tvoj nalog; pad ga čuva samo na tvom uređaju i njime čita:</p>
 <table>
-  <tr><th>Dozvola</th><th>Šta pad radi sa njom</th></tr>
-  <tr><td>Ime i e-adresa</td><td>Prikazuje tvoje ime u padu. E-adresa se ne prikazuje i ne koristi.</td></tr>
-  <tr><td>ID-jevi mreža (VATSIM, IVAO …)</td><td>Upisuje tvoj VATSIM ID da bi pad našao tvoj avion na mreži.</td></tr>
-  <tr><td>Profil pilota, čin, statistika, značke</td><td>Prikazuje tvoj zvanični čin i sate.</td></tr>
-  <tr><td>Rezervacije, PIREP-ovi, dnevnik</td><td>Prikazuje tvoj rezervisani let i dnevnik letenja kompanije.</td></tr>
-  <tr><td>Aktivnosti (događaji, ture, rasporedi)</td><td>Prikazuje događaje i ture kompanije; uz tvoju dozvolu možeš se prijaviti na njih.</td></tr>
+  <tr><th>Podaci</th><th>Šta pad radi sa njima</th></tr>
+  <tr><td>Tvoj profil: ime, SimBrief ID, VATSIM CID, IVAO VID, Hoppie logon kod</td><td>Popunjava podešavanja pada, da ih ne moraš kucati na svakom uređaju.</td></tr>
+  <tr><td>Tvoj VATSIM rejting pilota</td><td>Prikazuje ga na kartici posade i na početnom ekranu.</td></tr>
+  <tr><td>Tvoje rezervacije na kontrolnoj tabli</td><td>Prikazuje ih u rasporedu, kalendaru i na početnom ekranu.</td></tr>
 </table>
-<p class="dim">Pad ove podatke samo čita i prikazuje na tvom uređaju i ne šalje ih nigde dalje. Odjava briše token i kopirane podatke sa uređaja. Pristup ASL Pada možeš u svakom trenutku ukinuti i u svom vAMSYS nalogu.</p></section>
+<p class="dim">Pad ove podatke ne šalje nigde dalje. Odjava briše token i kopirane podatke sa uređaja. Šta čuva sama kontrolna tabla opisano je na njenoj stranici o privatnosti.</p></section>
 
 <section><h2>Šta se čuva na tvom uređaju</h2>
 <ul>
   <li>Podešavanja: jezik, jedinice, izgled, pozadina (i fotografija koju izabereš), kartice početnog ekrana, SimBrief korisničko ime ili ID, VATSIM ID i Hoppie logon kod.</li>
   <li>Tvoji letovi: vremena, putanja i provere goriva tekućeg leta, i dnevnik letenja.</li>
-  <li>Rezervacije napravljene u padu, izmene goriva na kartici plana i prijava na vAMSYS (ako je koristiš).</li>
+  <li>Rezervacije napravljene u padu, izmene goriva na kartici plana i token prijave na nalog (ako je koristiš).</li>
   <li>Kopije javnih podataka za rad bez interneta (obaveštenja, događaji, vreme, mape aerodroma).</li>
-  <li>Ono što uneseš u aplikacije: unosi u kalendaru, alarmi i tajmer, beleške i crteži u Kneeboardu, prijave na dužnost, izveštaji o letu, lista pre leta i obaveštenja pada. PIN se ne čuva: to su cifre tvog vAMSYS ID-a pilota.</li>
+  <li>Ono što uneseš u aplikacije: unosi u kalendaru, alarmi i tajmer, beleške i crteži u Kneeboardu, prijave na dužnost, izveštaji o letu, lista pre leta i obaveštenja pada. PIN zaključanog ekrana se ne čuva: to je tvoj VATSIM CID.</li>
 </ul>
 <p class="dim">Sve se čuva u memoriji pretraživača za ovaj sajt na tvom uređaju i ne napušta uređaj, osim ako sam izvezeš dnevnik letenja.</p></section>
 
@@ -148,7 +143,8 @@
 <table>
   <tr><th>Servis</th><th>Za šta i šta se šalje</th></tr>
   <tr><td>GitHub Pages / GitHub</td><td>Hostuje pad i njegove datoteke (obaveštenja, događaji, vreme, mape aerodroma).</td></tr>
-  <tr><td>vAMSYS</td><td>Samo ako se prijaviš: tvoj pristupni token, za čitanje gore navedenih podataka.</td></tr>
+  <tr><td>Kontrolna tabla pilota Air Serbia Virtual (Cloudflare)</td><td>Samo ako se prijaviš: jednom CID i PIN, zatim token, za čitanje gore navedenih podataka.</td></tr>
+  <tr><td>atis.info</td><td>Stvarni ATIS aerodroma u SAD na tvom letu, kad nema VATSIM ATIS-a; šalju se samo kodovi aerodroma.</td></tr>
   <tr><td>SimBrief (Navigraph)</td><td>Tvoje SimBrief korisničko ime ili ID, za učitavanje poslednjeg plana leta.</td></tr>
   <tr><td>VATSIM</td><td>Javni podaci mreže i vreme; ništa lično se ne šalje.</td></tr>
   <tr><td>vIFF CDM</td><td>Pozivni znak tvog leta, za vremena slota.</td></tr>
@@ -158,11 +154,11 @@
   <tr><td>pics.avs.io</td><td>Logo kompanije.</td></tr>
   <tr><td>IVAO (api.ivao.aero)</td><td>Samo dok je IVAO radar otvoren: javna lista letova i stanica; ništa lično se ne šalje. Tvoj IVAO VID ostaje na uređaju.</td></tr>
   <tr><td>aviationweather.gov, metar.vatsim.net</td><td>Vreme (METAR, TAF) za destinacije Air Serbie; šalju se samo oznake aerodroma.</td></tr>
-  <tr><td>ASL Pad server (Cloudflare)</td><td>Još nije uključen. Ako ga kompanija uključi, tvoj dnevnik letenja, unosi u kalendaru, alarmi i prijave čuvaju se pod tvojim vAMSYS ID-em pilota, da bi tvoji uređaji imali iste podatke. Ova stranica biće ažurirana pre toga.</td></tr>
+  <tr><td>ASL Pad server (Cloudflare)</td><td>Još nije uključen. Ako ga kompanija uključi, tvoj dnevnik letenja, unosi u kalendaru, alarmi i prijave čuvaju se pod tvojim VATSIM CID-om, da bi tvoji uređaji imali iste podatke. Ova stranica biće ažurirana pre toga.</td></tr>
 </table></section>
 
 <section><h2>Tvoja prava</h2>
-<p>Pošto svi podaci ostaju na tvom uređaju, ti imaš potpunu kontrolu: možeš ih videti u padu, promeniti u podešavanjima i obrisati u svakom trenutku. Za podatke koje čuvaju vAMSYS ili Air Serbia Virtual obrati se direktno kompaniji ili vAMSYS-u.</p></section>
+<p>Pošto svi podaci ostaju na tvom uređaju, ti imaš potpunu kontrolu: možeš ih videti u padu, promeniti u podešavanjima i obrisati u svakom trenutku. Za podatke koje čuva kontrolna tabla pilota Air Serbia Virtual pogledaj njenu stranicu o privatnosti ili se obrati kompaniji.</p></section>
 
 <section><h2>Izmene</h2>
 <p>Ako ASL Pad počne da koristi podatke na nov način, prvo će se ažurirati ova stranica. Poslednja izmena: <b>20. novembar 2026.</b></p></section>
@@ -173,35 +169,32 @@
 <section><h2>Kurz gesagt</h2>
 <ul>
   <li>ASL Pad läuft vollständig in deinem Browser. Dahinter steht <b>kein Server und keine Datenbank</b> von uns.</li>
-  <li>Alles, was das Pad speichert (Einstellungen, deine Flüge, dein Logbuch, deine vAMSYS-Anmeldung), bleibt <b>auf deinem Gerät</b>.</li>
+  <li>Alles, was das Pad speichert (Einstellungen, deine Flüge, dein Logbuch), bleibt <b>auf deinem Gerät</b>. Nur wenn du dich mit deinem Air-Serbia-Virtual-Konto anmeldest, kommt dein Profil aus dem Piloten-Dashboard.</li>
   <li>Wir sammeln, verkaufen und teilen deine Daten <b>nicht</b>. Keine Analyse, keine Werbung, keine Tracking-Cookies.</li>
-  <li>Du kannst jederzeit alles löschen: dich in den Einstellungen des Pads von vAMSYS abmelden oder die Websitedaten des Pads im Browser löschen.</li>
+  <li>Du kannst jederzeit alles löschen: dich in den Einstellungen des Pads von deinem Konto abmelden oder die Websitedaten des Pads im Browser löschen.</li>
 </ul></section>
 
 <section><h2>Wer ASL Pad betreibt</h2>
 <p>ASL Pad ist ein inoffizielles Fanprojekt für die Piloten von Air Serbia Virtual, gemacht vom GitHub-Nutzer <b>sbelic95</b>. Es steht in keiner Verbindung zu Air Serbia und wird von Air Serbia nicht unterstützt. Der Quellcode ist öffentlich: <a href="https://github.com/sbelic95/asl-pad">github.com/sbelic95/asl-pad</a>.</p>
 <p>Fragen zum Datenschutz: ein Issue auf GitHub eröffnen oder im Discord von Air Serbia Virtual fragen.</p></section>
 
-<section><h2>Anmeldung mit vAMSYS</h2>
-<p class="dim">Die Anmeldung funktioniert erst, wenn Air Serbia Virtual ASL Pad in vAMSYS freigeschaltet hat. Ohne Anmeldung verbindet sich das Pad überhaupt nicht mit vAMSYS.</p>
-<p>Wenn du dich mit deinem Konto von Air Serbia Virtual bei vAMSYS anmeldest, geschieht das auf der Website von vAMSYS selbst – ASL Pad sieht dein Passwort nie. vAMSYS gibt dem Pad danach einen Zugangstoken für dein Konto. Das Pad speichert ihn nur auf deinem Gerät und liest damit, je nachdem was du erlaubst:</p>
+<section><h2>Anmeldung mit deinem Air-Serbia-Virtual-Konto</h2>
+<p>Wenn du möchtest, meldest du dich mit deiner VATSIM-CID und der PIN an, die du im Piloten-Dashboard von Air Serbia Virtual (airserbia-virtual.pages.dev) gewählt hast. Gib nie dein VATSIM-Passwort ein. Das Dashboard gibt dem Pad einen Token für dein Konto; das Pad speichert ihn nur auf deinem Gerät und liest damit:</p>
 <table>
-  <tr><th>Berechtigung</th><th>Was das Pad damit macht</th></tr>
-  <tr><td>Name und E-Mail-Adresse</td><td>Zeigt deinen Namen im Pad. Die E-Mail-Adresse wird weder angezeigt noch verwendet.</td></tr>
-  <tr><td>Netzwerk-IDs (VATSIM, IVAO …)</td><td>Trägt deine VATSIM-ID ein, damit das Pad dein Flugzeug im Netzwerk findet.</td></tr>
-  <tr><td>Pilotenprofil, Rang, Statistik, Abzeichen</td><td>Zeigt deinen offiziellen Rang und deine Stunden.</td></tr>
-  <tr><td>Buchungen, PIREPs, Logbuch</td><td>Zeigt deinen gebuchten Flug und das Logbuch der Airline.</td></tr>
-  <tr><td>Aktivitäten (Events, Touren, Dienstpläne)</td><td>Zeigt Events und Touren der Airline; mit deiner Erlaubnis kannst du dich dafür anmelden.</td></tr>
+  <tr><th>Daten</th><th>Was das Pad damit macht</th></tr>
+  <tr><td>Dein Profil: Name, SimBrief-ID, VATSIM-CID, IVAO-VID, Hoppie-Logon-Code</td><td>Füllt die Einstellungen des Pads aus, damit du sie nicht auf jedem Gerät eintippen musst.</td></tr>
+  <tr><td>Dein VATSIM-Pilotenrating</td><td>Zeigt es auf dem Crew-Ausweis und dem Home-Bildschirm.</td></tr>
+  <tr><td>Deine Buchungen im Dashboard</td><td>Zeigt sie im Dienstplan, im Kalender und auf dem Home-Bildschirm.</td></tr>
 </table>
-<p class="dim">Das Pad liest und zeigt diese Daten nur auf deinem Gerät und schickt sie nirgendwohin weiter. Abmelden löscht den Token und die kopierten Daten vom Gerät. Den Zugriff von ASL Pad kannst du außerdem jederzeit in deinem vAMSYS-Konto entziehen.</p></section>
+<p class="dim">Das Pad schickt diese Daten nirgendwohin weiter. Abmelden löscht den Token und die kopierten Daten vom Gerät. Was das Dashboard selbst speichert, steht auf seiner eigenen Datenschutzseite.</p></section>
 
 <section><h2>Was auf deinem Gerät gespeichert wird</h2>
 <ul>
   <li>Einstellungen: Sprache, Einheiten, Aussehen, Hintergrund (auch ein eigenes Foto), Karten des Home-Bildschirms, dein SimBrief-Benutzername oder deine ID, deine VATSIM-ID und dein Hoppie-Logon-Code.</li>
   <li>Deine Flüge: Zeiten, Flugweg und Spritkontrollen des aktuellen Flugs sowie dein Logbuch.</li>
-  <li>Buchungen im Pad, Sprit-Änderungen auf der Plan-Karte und die vAMSYS-Anmeldung (falls genutzt).</li>
+  <li>Buchungen im Pad, Sprit-Änderungen auf der Plan-Karte und der Token deiner Konto-Anmeldung (falls genutzt).</li>
   <li>Kopien öffentlicher Daten für die Nutzung ohne Internet (Mitteilungen, Events, Wetter, Rollkarten).</li>
-  <li>Was du in den Apps einträgst: Kalendereinträge, Wecker und Timer, Notizen und Zeichnungen im Kniebrett, Check-ins, Flugberichte, die Vorflug-Liste und die Mitteilungen des Pads. Die PIN wird nicht gespeichert: Sie besteht aus den Ziffern deiner vAMSYS-Piloten-ID.</li>
+  <li>Was du in den Apps einträgst: Kalendereinträge, Wecker und Timer, Notizen und Zeichnungen im Kniebrett, Check-ins, Flugberichte, die Vorflug-Liste und die Mitteilungen des Pads. Die PIN des Sperrbildschirms wird nicht gespeichert: Es ist deine VATSIM-CID.</li>
 </ul>
 <p class="dim">All das liegt im Browserspeicher dieser Website auf deinem Gerät und verlässt es nicht, außer du exportierst dein Logbuch selbst.</p></section>
 
@@ -210,7 +203,8 @@
 <table>
   <tr><th>Dienst</th><th>Wofür, und was gesendet wird</th></tr>
   <tr><td>GitHub Pages / GitHub</td><td>Hostet das Pad und seine Datendateien (Mitteilungen, Events, Wetter, Rollkarten).</td></tr>
-  <tr><td>vAMSYS</td><td>Nur wenn du dich anmeldest: dein Zugangstoken, um die oben genannten Daten zu lesen.</td></tr>
+  <tr><td>Piloten-Dashboard von Air Serbia Virtual (Cloudflare)</td><td>Nur wenn du dich anmeldest: einmal CID und PIN, danach der Token, um die oben genannten Daten zu lesen.</td></tr>
+  <tr><td>atis.info</td><td>Die echte ATIS von US-Flughäfen deines Flugs, wenn keine VATSIM-ATIS online ist; nur Flughafencodes werden gesendet.</td></tr>
   <tr><td>SimBrief (Navigraph)</td><td>Dein SimBrief-Benutzername oder deine ID, um deinen letzten Flugplan zu laden.</td></tr>
   <tr><td>VATSIM</td><td>Öffentliche Netzwerkdaten und Wetter; nichts Persönliches wird gesendet.</td></tr>
   <tr><td>vIFF CDM</td><td>Das Rufzeichen deines Flugs, für deine Slot-Zeiten.</td></tr>
@@ -220,11 +214,11 @@
   <tr><td>pics.avs.io</td><td>Das Logo der Airline.</td></tr>
   <tr><td>IVAO (api.ivao.aero)</td><td>Nur solange das IVAO-Radar offen ist: die öffentliche Liste der Flüge und Stationen; nichts Persönliches wird gesendet. Deine IVAO-VID bleibt auf dem Gerät.</td></tr>
   <tr><td>aviationweather.gov, metar.vatsim.net</td><td>Wetter (METAR, TAF) für die Air-Serbia-Ziele; gesendet werden nur Flughafen-Codes.</td></tr>
-  <tr><td>ASL-Pad-Server (Cloudflare)</td><td>Noch nicht eingeschaltet. Schaltet die Airline ihn ein, werden dein Logbuch, Kalendereinträge, Wecker und Check-ins unter deiner vAMSYS-Piloten-ID gespeichert, damit deine Geräte dieselben Daten zeigen. Diese Seite wird vorher angepasst.</td></tr>
+  <tr><td>ASL-Pad-Server (Cloudflare)</td><td>Noch nicht eingeschaltet. Schaltet die Airline ihn ein, werden dein Logbuch, Kalendereinträge, Wecker und Check-ins unter deiner VATSIM-CID gespeichert, damit deine Geräte dieselben Daten zeigen. Diese Seite wird vorher angepasst.</td></tr>
 </table></section>
 
 <section><h2>Deine Rechte</h2>
-<p>Da alle Daten auf deinem Gerät bleiben, hast du die volle Kontrolle: Du kannst sie im Pad ansehen, in den Einstellungen ändern und jederzeit löschen. Für Daten, die vAMSYS oder Air Serbia Virtual speichern, wende dich bitte direkt an die Airline oder an vAMSYS.</p></section>
+<p>Da alle Daten auf deinem Gerät bleiben, hast du die volle Kontrolle: Du kannst sie im Pad ansehen, in den Einstellungen ändern und jederzeit löschen. Für Daten, die das Piloten-Dashboard von Air Serbia Virtual speichert, siehe dessen Datenschutzseite oder wende dich an die Airline.</p></section>
 
 <section><h2>Änderungen</h2>
 <p>Wenn ASL Pad Daten auf eine neue Art nutzt, wird zuerst diese Seite angepasst. Stand: <b>20. November 2026</b>.</p></section>

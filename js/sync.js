@@ -1,9 +1,9 @@
 // Sync with the ASL Pad server (server/worker.js), only when va/server.json has a url and the pilot is signed in
-// with vAMSYS. Lists are joined, never overwritten: logbook by flight id, calendar entries and alarms by content,
+// with the Air Serbia Virtual account (CID + PIN). Lists are joined, never overwritten: logbook by flight id, calendar entries and alarms by content,
 // check-ins by duty. So two devices can be used side by side and nothing a pilot entered gets lost.
 import { settings, logbook, saveLogbook } from "./data.js";
 import { store, getJSON } from "./util.js";
-import { signedIn, accessToken } from "./vamsys.js";
+import { signedIn, ACC } from "./account.js";
 
 let URL_ = null, busy = false;
 export const SY = { at: store.get("asl.sync.at", 0), err: "", on: false };
@@ -14,7 +14,7 @@ export async function sync() {
   const url = await cfg(); SY.on = !!url; if (!url) return;
   busy = true;
   try {
-    const tok = await accessToken(); if (!tok) throw new Error("signed out");
+    const tok = ACC.token; if (!tok) throw new Error("signed out");
     const h = { Authorization: "Bearer " + tok, "Content-Type": "application/json" };
     const r = await fetch(url + "/sync", { headers: h }); if (!r.ok) throw new Error("server " + r.status);
     const remote = (await r.json())?.data || {};

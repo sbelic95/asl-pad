@@ -9,7 +9,7 @@ import { APP_ICONS, I } from "./icons.js";
 import { flightWidget, timesWidget, todayWidget, liveHtml } from "./lock.js";
 import { cityOf } from "./tz.js";
 import { planCard, suggestCard, vamBookingCard } from "./booking.js";
-import { V } from "./vamsys.js";
+import { pilot } from "./account.js";
 import { weatherWidget } from "./apps/weather.js";
 import { calendarWidget } from "./apps/calendar.js";
 import { unreadMail } from "./apps/mail.js";
@@ -52,7 +52,7 @@ export function renderHome(el, now = Date.now()) {
   const sub = o ? t("{f} to {city} today", { f: o.iataNo || o.callsign, city: cityOf(o.dest) || o.dest?.icao }) : t("No flight loaded");
   el.innerHTML = `
     <div class="hm-widgets">
-      <div><p class="hm-greet">${esc(greeting(now))}, ${V.data?.first ? esc(V.data.first) : t("Captain")}</p><div class="hm-sub">${esc(sub)}</div>${show("wx") ? wxHere(o, d) : ""}${show("career") ? careerHtml(career()) + (V.data?.rank ? `<div class="hm-vam"><span class="lbl">vAMSYS</span> <b>${esc(V.data.rank)}</b>${V.data.hours != null ? ` · ${Math.round(+V.data.hours)} h` : ""}${V.data.flights != null ? ` · ${esc(String(V.data.flights))} ${t("flights")}` : ""}</div>` : "") : ""}</div>
+      <div><p class="hm-greet">${esc(greeting(now))}, ${pilot()?.first ? esc(pilot().first) : t("Captain")}</p><div class="hm-sub">${esc(sub)}</div>${show("wx") ? wxHere(o, d) : ""}${show("career") ? careerHtml(career()) + (pilot()?.rank ? `<div class="hm-vam"><span class="lbl">VATSIM</span> <b>${esc(pilot().rank)}</b></div>` : "") : ""}</div>
       ${flightWidget(o, d, now)}${timesWidget(o, now)}${todayWidget(now)}${show("wwx") ? weatherWidget() : ""}${show("wcal") ? calendarWidget() : ""}
     </div>
     <div class="hm-main">
@@ -65,7 +65,7 @@ export function renderHome(el, now = Date.now()) {
 }
 
 // cards the pilot can hide (Settings → Home screen); the cards of the board can also be sorted
-export const HOME_CARDS = [["wwx", "Weather widget"], ["wcal", "Calendar widget"], ["wx", "Weather here"], ["career", "Career"], ["vbook", "vAMSYS booking"], ["plan", "Flight plan"], ["suggest", "Suggested for you"], ["notices", "Notices"], ["events", "Network events"]];
+export const HOME_CARDS = [["wwx", "Weather widget"], ["wcal", "Calendar widget"], ["wx", "Weather here"], ["career", "Career"], ["vbook", "Your booking"], ["plan", "Flight plan"], ["suggest", "Suggested for you"], ["notices", "Notices"], ["events", "Network events"]];
 const BOARD = { vbook: (o, now) => vamBookingCard(now), plan: (o, now) => planCard(o, now), suggest: (o, now) => suggestCard(now), notices: (o, now, d) => noticesCard(now, d), events: (o, now) => eventsCard(o, now) };
 export const BOARD_DEFAULT = ["vbook", "plan", "suggest", "notices", "events"];
 export function boardOrder() { const o = (settings.homeOrder || []).filter((k) => BOARD[k]); return [...o, ...BOARD_DEFAULT.filter((k) => !o.includes(k))]; }

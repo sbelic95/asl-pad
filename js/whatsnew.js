@@ -7,6 +7,15 @@ import { esc } from "./util.js";
 import { APP_ICONS } from "./icons.js";
 
 export const releases = () => [
+  { v: "2.6.0", date: "2026-11-23", groups: [
+    { icon: "fly", name: "ASL Fly", items: [
+      t("No VATSIM ATIS online? ASL Fly shows the airport's real ATIS (US airports) – otherwise the runway from the real METAR wind"),
+    ] },
+    { icon: "settings", name: "ASL Pad", items: [
+      t("Your Air Serbia Virtual account (VATSIM CID + PIN) replaces vAMSYS everywhere: crew card, roster, calendar and your booking on the home screen"),
+      t("The Hoppie logon code no longer makes the browser offer to save a password"),
+    ] },
+  ] },
   { v: "2.5.0", date: "2026-11-23", groups: [
     { icon: "settings", name: "ASL Pad", items: [
       t("The screen stays on while the pad is open (iPad from iOS 16.4)"),
@@ -62,10 +71,8 @@ export const releases = () => [
     { icon: "pad", name: "ASL Pad", items: [
       t("Home screen with three pages – Operations, Network & weather, Tools & device – plus weather and calendar widgets"),
       t("App Store: install and remove apps; Control Center and Notification Center from the top edge"),
-      t("PIN with the digits of your vAMSYS pilot ID, and Face ID before ASL Ops and Manuals"),
     ] },
     { icon: "ops", name: "ASL Ops", items: [
-      t("Roster from your vAMSYS bookings with report time, turnarounds, duty time and check-in"),
       t("Crew Desk: inbox, preflight list, weather and the NOTAMs from your OFP; flight report with the actual times"),
     ] },
     { icon: "fly", name: "ASL Fly", items: [
@@ -86,7 +93,6 @@ export const releases = () => [
       t("New app for the passengers: flight map, destination with local time and weather, connecting flights and arrivals"),
     ] },
     { icon: "pad", name: "ASL Pad", items: [
-      t("Sign in with vAMSYS: your name, rank, hours and your booking come into the pad"),
       t("The old VDGS app is gone – everything from it now lives in ASL Fly and Cabin"),
     ] },
   ] },
