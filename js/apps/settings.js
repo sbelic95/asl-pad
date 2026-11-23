@@ -5,7 +5,7 @@ import { esc, store } from "../util.js";
 import { WALLS, getPhoto, delPhoto, savePhoto } from "../wall.js";
 import { latest } from "../whatsnew.js";
 import { HOME_CARDS, boardOrder } from "../home.js";
-import { ACC, DASH, accSignIn, accSignOut, accLoad } from "../account.js";
+import { ACC, DASH, accSignIn, accSignOut, accLoad, accConnect, accConfig } from "../account.js";
 import { WAKE } from "../wake.js";
 import { play } from "../sound.js";
 
@@ -31,6 +31,7 @@ export function summary() { return [t("Settings"), `SimBrief: ${settings.simbrie
 const seg = (key, opts, cur) => `<div class="seg">${opts.map(([v, l]) => `<button data-seg="${key}" data-v="${esc(v)}" class="${String(cur) === String(v) ? "on" : ""}">${esc(l)}</button>`).join("")}</div>`;
 const row = (h, sub, ctl) => `<div class="set-row"><div class="h">${h}${sub ? `<small>${sub}</small>` : ""}</div><div>${ctl}</div></div>`;
 
+let cfgAsked = false;
 function accRow() {
   if (ACC.token) {
     const p = ACC.profile;
@@ -38,9 +39,14 @@ function accRow() {
       <button class="btn small" data-do="acc-load">${t("Refresh")}</button> <button class="btn small" data-do="acc-out">${t("Sign out")}</button>
       <div class="dim" style="font-size:12.5px;margin-top:6px">${t("SimBrief, VATSIM, IVAO and Hoppie come from your profile on the dashboard.")} <a href="${DASH}" target="_blank" rel="noopener">${t("Edit profile")} ↗</a></div>${ACC.err ? `<div class="bad" style="font-size:12.5px;margin-top:6px">${esc(ACC.err)}</div>` : ""}`;
   }
-  return `<div class="acc-in"><input data-acc="cid" inputmode="numeric" placeholder="VATSIM CID" autocomplete="username" style="width:130px"> <input data-acc="pin" type="password" inputmode="numeric" placeholder="PIN" autocomplete="current-password" style="width:100px">
-    <button class="btn small pri" data-do="acc-in">${t("Sign in")}</button></div>${ACC.err ? `<div class="bad" style="font-size:12.5px;margin-top:6px">${esc(ACC.err)}</div>` : ""}
+  if (!cfgAsked) { cfgAsked = true; accConfig(); }
+  const c = ACC.cfg || {}, err = ACC.err ? `<div class="bad" style="font-size:12.5px;margin-top:6px">${esc(ACC.err)}</div>` : "";
+  const vatsim = c.connect ? `<button class="btn small pri" data-do="acc-connect">${t("Sign in with VATSIM")}</button>
+    <div class="dim" style="font-size:12.5px;margin-top:6px">${t("You sign in on VATSIM's own page – your password never reaches the pad.")}</div>` : "";
+  const pin = c.pinLogin === false ? "" : `<div class="acc-in"${c.connect ? ' style="margin-top:8px"' : ""}><input data-acc="cid" inputmode="numeric" placeholder="VATSIM CID" autocomplete="username" style="width:130px"> <input data-acc="pin" type="password" inputmode="numeric" placeholder="PIN" autocomplete="current-password" style="width:100px">
+    <button class="btn small${c.connect ? "" : " pri"}" data-do="acc-in">${t("Sign in")}</button></div>
     <div class="dim" style="font-size:12.5px;margin-top:6px">${t("No account yet? Sign in once on the dashboard and choose your PIN there.")} <a href="${DASH}" target="_blank" rel="noopener">${DASH.replace("https://", "")} ↗</a></div>`;
+  return vatsim + pin + err;
 }
 
 function page() {
@@ -142,6 +148,7 @@ function onClick(e) {
   if (b.dataset.do === "acc-in") { const r = b.closest(".set-row"), cid = r?.querySelector("[data-acc=cid]")?.value || "", pin = r?.querySelector("[data-acc=pin]")?.value || ""; b.disabled = true;
     accSignIn(cid, pin).then(() => C.toast({ lv: "ok", ic: "check", title: t("Signed in"), text: t("Profile taken over from the dashboard.") })).catch((e) => { ACC.err = e.message; b.disabled = false; C.changed("view"); }); return; }
   if (b.dataset.do === "acc-out") { accSignOut(); C.changed("view"); return; }
+  if (b.dataset.do === "acc-connect") { accConnect(); return; }
   if (b.dataset.do === "acc-load") { accLoad(true); return; }
   if (b.dataset.do === "delphoto") { delPhoto(); if (settings.wall === "photo") saveSettings({ wall: "night" }); C.changed("theme"); return; }
   if (sure !== b.dataset.do) { sure = b.dataset.do; b.textContent = t("Tap again to delete"); b.classList.add("pri"); setTimeout(() => { if (sure === b.dataset.do) { sure = null; C.changed("view"); } }, 3500); return; }

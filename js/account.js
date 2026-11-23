@@ -22,6 +22,23 @@ const call = async (path, opts = {}) => {
   if (!r.ok) throw Object.assign(new Error(d.error || "HTTP " + r.status), { status: r.status });
   return d;
 };
+// how the dashboard lets pilots sign in: { connect: VATSIM Connect is set up, pinLogin: CID + PIN still allowed }
+ACC.cfg = store.get("asl.dashcfg", { connect: false, pinLogin: true });
+export async function accConfig() {
+  try { const c = await call("config"); ACC.cfg = { connect: !!c.connect, pinLogin: c.pinLogin !== false }; store.set("asl.dashcfg", ACC.cfg); emit(); } catch {}
+}
+// "Sign in with VATSIM": the dashboard sends the pilot to VATSIM and back here with the token after # (never sent to a server)
+export function accConnect() {
+  location.href = DASH + "/api/auth/connect?client=pad&return=" + encodeURIComponent(location.origin + location.pathname + location.search);
+}
+function takeTokenFromAddress() {
+  const m = typeof location !== "undefined" && location.hash.match(/asv_token=([A-Za-z0-9_.-]+)/); if (!m) return;
+  history.replaceState(null, "", location.pathname + location.search); // the token leaves the address bar at once
+  let cid = ""; try { cid = String(JSON.parse(atob(m[1].split(".")[0].replace(/-/g, "+").replace(/_/g, "/"))).cid || ""); } catch {}
+  ACC.token = m[1]; ACC.cid = cid; store.set("asl.account", { token: ACC.token, cid }); ACC.err = "";
+  setTimeout(() => accLoad(true), 0);
+}
+takeTokenFromAddress();
 export async function accSignIn(cid, pin) {
   const d = await call("auth/vatsim", { method: "POST", body: JSON.stringify({ cid: String(cid).trim(), pin: String(pin).trim(), client: "pad" }) });
   ACC.token = d.token; ACC.cid = String(cid).trim(); store.set("asl.account", { token: ACC.token, cid: ACC.cid });

@@ -1,5 +1,7 @@
 // Translations, looked up by the English text. SR = Serbian (Latin script), DE = German.
 export const SR = {
+  "Sign in with VATSIM": "Prijavi se preko VATSIM-a",
+  "You sign in on VATSIM's own page – your password never reaches the pad.": "Prijavljuješ se na VATSIM-ovoj stranici – tvoja lozinka nikad ne stiže do pada.",
   "No PIN any more: a swipe on the lock screen opens the pad": "Nema više PIN-a: prevlačenje na zaključanom ekranu otvara pad",
   "No duties yet. Book a flight on the dashboard or load an OFP from SimBrief.": "Još nema dužnosti. Rezerviši let na kontrolnoj tabli ili učitaj OFP iz SimBrief-a.",
   "estimated from the distance – bookings have no arrival time.": "procenjeno prema udaljenosti – rezervacije nemaju vreme dolaska.",
@@ -706,6 +708,8 @@ export const SR = {
   "Window missed": "Prozor propušten",
 };
 export const DE = {
+  "Sign in with VATSIM": "Mit VATSIM anmelden",
+  "You sign in on VATSIM's own page – your password never reaches the pad.": "Du meldest dich auf der Seite von VATSIM an – dein Passwort erreicht das Pad nie.",
   "No PIN any more: a swipe on the lock screen opens the pad": "Keine PIN mehr: Wischen auf dem Sperrbildschirm öffnet das Pad",
   "No duties yet. Book a flight on the dashboard or load an OFP from SimBrief.": "Noch keine Dienste. Buche einen Flug im Dashboard oder lade ein OFP aus SimBrief.",
   "estimated from the distance – bookings have no arrival time.": "aus der Entfernung geschätzt – Buchungen haben keine Ankunftszeit.",
