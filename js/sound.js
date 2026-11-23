@@ -1,22 +1,37 @@
-// Sounds of the pad, made in the browser (Web Audio) – no recordings. iPad/Safari only plays sound after the first touch,
-// so the audio is unlocked on the first tap. Tones (own designs):
+// Sounds of the pad, made in the browser (Web Audio) – no recordings. iPad/Safari only plays sound after a tap,
+// so the audio is unlocked on the first tap (and again after the iPad was locked). Tones (own designs):
 //   cpdlc – the ATC message chime: a bright two-tone chime, twice (CPDLC uplink from Hoppie)
 //   msg   – one soft chime (telex / other ACARS message)
 //   atis  – rising double chime (new ATIS letter)
 //   slot  – three short beeps (TSAT, CTOT, TOBT or off-block time changed shortly before departure)
 import { settings } from "./data.js";
 
-let ctx = null;
+let ctx = null, unlocked = false, silent = null;
+const SILENT = "data:audio/wav;base64,UklGRrQBAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YZABAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA";
+// iPad: Web Audio follows the ring/silent switch and the mute in Control Center. As a "playback" audio session (Safari's
+// Audio Session API) the pad's tones play like media – also in silent mode, at the media volume.
+function session() { try { if (navigator.audioSession && navigator.audioSession.type !== "playback") navigator.audioSession.type = "playback"; } catch {} }
 function audio() {
-  if (!ctx) { const A = window.AudioContext || window.webkitAudioContext; if (!A) return null; ctx = new A(); }
-  if (ctx.state === "suspended") ctx.resume().catch(() => {});
+  if (!ctx) { const A = window.AudioContext || window.webkitAudioContext; if (!A) return null; session(); ctx = new A(); }
+  if (ctx.state !== "running") ctx.resume().catch(() => {}); // "suspended" before the first tap, "interrupted" after locking the iPad
   return ctx;
 }
-// first touch anywhere: unlock the audio (iOS needs a sound started inside a user gesture)
-if (typeof window !== "undefined") {
-  const unlock = () => { const a = audio(); if (a) { const o = a.createOscillator(), g = a.createGain(); g.gain.value = 0; o.connect(g).connect(a.destination); o.start(); o.stop(a.currentTime + 0.01); } };
-  addEventListener("pointerdown", unlock, { once: true, capture: true });
+// unlock inside a real tap (iPadOS counts the end of a touch or a click, not the start): a silent buffer through Web Audio,
+// plus a short silent HTML audio for older iPadOS without the Audio Session API. Tried again on every tap until it runs.
+function unlock() {
+  session();
+  const a = audio(); if (!a) return;
+  try { if (!silent) { silent = new Audio(SILENT); silent.setAttribute("playsinline", ""); } silent.currentTime = 0; silent.play().catch(() => {}); } catch {}
+  try { const s = a.createBufferSource(); s.buffer = a.createBuffer(1, 1, 22050); s.connect(a.destination); s.start(0); } catch {}
+  if (a.state === "running") unlocked = true;
 }
+if (typeof window !== "undefined") {
+  for (const ev of ["touchend", "click", "keydown"]) addEventListener(ev, () => { if (!unlocked || !ctx || ctx.state !== "running") { unlocked = false; unlock(); } }, { capture: true, passive: true });
+  // back from the lock screen or another app: iPadOS has stopped the audio – start it again
+  document.addEventListener("visibilitychange", () => { if (!document.hidden && ctx && ctx.state !== "running") ctx.resume().catch(() => { unlocked = false; }); });
+}
+// "running" = sound works; "suspended"/"interrupted" = waits for the next tap; "off" = not started yet
+export const soundState = () => (ctx ? ctx.state : "off");
 function tone(a, t, freq, dur, vol, type = "sine") {
   const o = a.createOscillator(), g = a.createGain();
   o.type = type; o.frequency.value = freq;

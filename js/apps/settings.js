@@ -7,7 +7,7 @@ import { latest } from "../whatsnew.js";
 import { HOME_CARDS, boardOrder } from "../home.js";
 import { ACC, DASH, accSignIn, accSignOut, accLoad, accConnect, accConfig } from "../account.js";
 import { WAKE } from "../wake.js";
-import { play } from "../sound.js";
+import { play, soundState } from "../sound.js";
 
 export const name = "Settings";
 export const tabs = [];
@@ -76,7 +76,8 @@ function page() {
       ${row(t("Device frame"), t("On a computer the pad lies as a tablet on a desk, with your crew card next to it. Auto: only when the window is big enough."), seg("frame", [["auto", t("Auto")], ["on", t("On")], ["off", t("Off")]], settings.frame || "auto"))}
       ${row(t("Keep screen on"), WAKE.supported ? (WAKE.on ? t("The screen stays on while the pad is open.") : t("Stays on while the pad is open (after the first touch).")) : t("This browser cannot keep the screen on – on the iPad from iOS 16.4."), seg("awake", [["1", t("On")], ["0", t("Off")]], settings.awake === false ? "0" : "1"))}
       ${row(t("Sounds"), t("CPDLC and ACARS messages, a new ATIS and changes of TSAT, CTOT or off-block time shortly before departure."), seg("sound", [["1", t("On")], ["0", t("Off")]], settings.sound === false ? "0" : "1")
-        + `<div class="snd-test">${[["cpdlc", "CPDLC"], ["atis", "ATIS"], ["slot", "TSAT/Slot"], ["msg", "ACARS"]].map(([k, l]) => `<button class="btn small" data-snd="${k}">▶ ${l}</button>`).join("")}</div>`)}
+        + `<div class="snd-test">${[["cpdlc", "CPDLC"], ["atis", "ATIS"], ["slot", "TSAT/Slot"], ["msg", "ACARS"]].map(([k, l]) => `<button class="btn small" data-snd="${k}">▶ ${l}</button>`).join("")}</div>
+        <div class="dim" style="font-size:12.5px;margin-top:6px">${soundState() === "running" ? t("Sound is ready.") : t("Sound starts with your next tap on the pad.")} ${t("On the iPad the tones play at the media volume – also in silent mode. Turn the volume up with the buttons on the side.")}</div>`)}
       ${row(t("Auto-lock"), t("Locks the pad after this time without a touch."), seg("lock", [[0, t("Never")], [5, "5 min"], [10, "10 min"], [30, "30 min"]], settings.lock))}
     </div>
     <div class="card"><div class="lbl" style="margin-bottom:4px">${t("Data")}</div>

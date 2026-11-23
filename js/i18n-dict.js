@@ -1,5 +1,9 @@
 // Translations, looked up by the English text. SR = Serbian (Latin script), DE = German.
 export const SR = {
+  "Sounds on the iPad: now also in silent mode and after the iPad was locked": "Zvuk na iPadu: sada i u nečujnom režimu i posle zaključavanja iPada",
+  "Sound is ready.": "Zvuk je spreman.",
+  "Sound starts with your next tap on the pad.": "Zvuk se uključuje sledećim dodirom pada.",
+  "On the iPad the tones play at the media volume – also in silent mode. Turn the volume up with the buttons on the side.": "Na iPadu se tonovi čuju jačinom medija – i u nečujnom režimu. Pojačaj zvuk dugmadima sa strane.",
   "Legal notice": "Pravne napomene",
   "Virtual airline for a video game (flight simulation) – not a real airline. Not affiliated with Air Serbia.": "Virtuelna avio-kompanija za video igru (simulacija letenja) – nije prava avio-kompanija. Nije povezana sa Air Serbia.",
   "Sign in with VATSIM": "Prijavi se preko VATSIM-a",
@@ -710,6 +714,10 @@ export const SR = {
   "Window missed": "Prozor propušten",
 };
 export const DE = {
+  "Sounds on the iPad: now also in silent mode and after the iPad was locked": "Töne auf dem iPad: jetzt auch im Stummmodus und nach dem Sperren des iPads",
+  "Sound is ready.": "Ton ist bereit.",
+  "Sound starts with your next tap on the pad.": "Der Ton startet mit deinem nächsten Tippen auf das Pad.",
+  "On the iPad the tones play at the media volume – also in silent mode. Turn the volume up with the buttons on the side.": "Auf dem iPad laufen die Töne mit der Medienlautstärke – auch im Stummmodus. Lauter stellen mit den Tasten an der Seite.",
   "Legal notice": "Rechtliche Hinweise",
   "Virtual airline for a video game (flight simulation) – not a real airline. Not affiliated with Air Serbia.": "Virtuelle Airline für ein Videospiel (Flugsimulation) – keine echte Airline. Nicht mit Air Serbia verbunden.",
   "Sign in with VATSIM": "Mit VATSIM anmelden",
