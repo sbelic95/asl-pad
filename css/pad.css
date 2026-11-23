@@ -817,3 +817,15 @@ body.framed #crewcard:not([hidden]) { position: absolute; left: calc((100vw - va
 .status .bat i::after { content: ""; position: absolute; right: -4px; top: 3px; width: 2px; height: 4px; border-radius: 0 1px 1px 0; background: currentColor; }
 .status .bat i b { position: absolute; left: 1.5px; top: 1.5px; bottom: 1.5px; border-radius: 1.5px; background: currentColor; }
 .status .bat.low i b { background: var(--red); } .status .bat.chg i b { background: var(--ok); }
+
+/* "Virtual" under the Air Serbia logo (it is a virtual airline) and the note at the bottom: not a real airline */
+.vbrand { display: inline-flex; flex-direction: column; align-items: flex-end; line-height: 1; }
+.vword { font: italic 500 .42em/1 var(--f-ui, "Roboto", system-ui, sans-serif); letter-spacing: .02em; color: inherit; text-transform: none; margin-top: 2px; }
+.lk-brand .vbrand { font-size: clamp(46px, 6vw, 70px); color: #fff; } :root[data-theme="light"] .lk-brand .vbrand { color: #002E5D; }
+#crewcard .cc-top .vbrand { font-size: 22px; color: #002E5D; } .vbrand.cab { font-size: 34px; color: #fff; }
+.vdisc { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); z-index: 9999; max-width: calc(100% - 16px); background: #000; color: #fff;
+  font: 500 9.5px/1.3 var(--f-ui, "Roboto", system-ui, sans-serif); padding: 1px 10px; border-radius: 5px 5px 0 0; text-align: center; pointer-events: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* the pics.avs.io logo has empty space around the word mark: tuck "Virtual" under "SERBIA" */
+.lk-brand .vword { font-size: .3em; margin: -.62em 3% 0 0; }
+#crewcard .cc-top .vword { margin: -.3em 9% 0 0; }
+.vbrand.cab .vword { font-size: .38em; margin-top: 3px; }

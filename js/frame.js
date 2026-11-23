@@ -39,7 +39,7 @@ function renderCard(room) {
   const d = pilot(), o = S.ofp;
   const name = d?.name || t("Crew"), id = d?.pilotId || d?.callsign || "";
   c.innerHTML = `<div class="cc-strap"></div><div class="cc-clip"></div><div class="cc-card">
-    <div class="cc-top"><img src="https://pics.avs.io/240/80/JU.png" alt="" referrerpolicy="no-referrer" onerror="this.remove()"><span>${t("Air Serbia Virtual crew")}</span></div>
+    <div class="cc-top"><span class="vbrand"><img src="https://pics.avs.io/240/80/JU.png" alt="" referrerpolicy="no-referrer" onerror="this.remove()"><span class="vword">Virtual</span></span><span>${t("Air Serbia Virtual crew")}</span></div>
     <div class="cc-photo">${esc(initials(name))}</div>
     <div class="cc-name">${esc(name)}</div>
     <div class="cc-rank">${esc(d?.rank || "")}</div>

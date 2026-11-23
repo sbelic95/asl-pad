@@ -312,6 +312,13 @@ export function settingsChanged(kind) {
   if (kind === "data") restart();
   renderAll();
 }
+// the note at the bottom: a virtual airline for a video game, not a real airline (always visible)
+function renderDisclaimer() {
+  let d = $("vdisc"); if (!d) { d = Object.assign(document.createElement("div"), { id: "vdisc", className: "vdisc" }); d.setAttribute("role", "note"); $("pad").appendChild(d); }
+  const txt = t("Virtual airline for a video game (flight simulation) – not a real airline. Not affiliated with Air Serbia.");
+  if (d.textContent !== txt) d.textContent = txt;
+}
+renderDisclaimer(); onChange(renderDisclaimer);
 loadAirports().then(() => renderAll());
 renderLock($("lock")); renderHome($("home")); renderStatus();
 N.banner = toast;
