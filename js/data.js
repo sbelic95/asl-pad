@@ -3,7 +3,7 @@ import { getJSON, getText, store, distKm, greatCircle } from "./util.js";
 import { fetchOfp, normOfp } from "./ofp.js";
 import { decodeMetar, atisInfo, loadRunways, runwayFromWind } from "./wx.js";
 import { loadFlight, saveFlight, updateFlight, project, phaseOf, estimates, fuelState, logEntry, flightKey } from "./flight.js";
-import { standsCached, standsGithub, standsOverpass, predictStand } from "./stands.js";
+import { standsCached, standsGithub, standsOverpass, predictStand, aslStand, setAslStands } from "./stands.js";
 import { demoSimbrief, demoPilot, demoMetars, demoAtis, demoControllers, demoLogbook, demoEvents, demoTraffic, demoSigmets, demoBoard, demoNet } from "./demo.js";
 import { pollAcars } from "./hoppie.js";
 
@@ -279,7 +279,14 @@ export async function loadStandsFor(a) {
   if (list) { S.stands[a.icao] = list; emit(); }
 }
 // notices and tips of the airline (va/notices.json) and the coming VATSIM events
+// Air Serbia's own stands (va/asl-stands.json), loaded with the notices
+let aslStandsAt = 0;
+async function loadAslStands() {
+  if (Date.now() - aslStandsAt < 3600e3) return;
+  try { setAslStands(await getJSON("va/asl-stands.json", 15000)); aslStandsAt = Date.now(); fixedArr = null; } catch {}
+}
 export async function pollNotices() {
+  loadAslStands();
   await Promise.all(["notices", "downloads", "ranks", "routes"].map(async (k) => {
     try { const n = await getJSON(API[k]); if (n) { S[k] = n; store.set("asl." + k, n); } } catch {}
   }));
@@ -315,7 +322,7 @@ export function arrivalStand() {
   if (!S.stands[icao]) return { state: S.stands[icao] === undefined ? "loading" : "none" };
   const key = o.callsign + icao;
   if (!fixedArr || fixedArr.key !== key) {
-    const p = predictStand(S.stands[icao], icao, o.dep?.icao, o.callsign, o.type, S.near.arr);
+    const p = aslStand(S.stands[icao], icao, o.dep?.icao, o.callsign, o.type, "arr", S.near.arr) || predictStand(S.stands[icao], icao, o.dep?.icao, o.callsign, o.type, S.near.arr);
     fixedArr = p ? { key, ...p, state: "forecast" } : null;
   }
   return fixedArr || { state: "none" };
@@ -324,6 +331,7 @@ export function departureStand() {
   const o = S.ofp; if (!o?.dep) return null;
   const s = !S.st?.offBlock ? standAt(o.dep.icao, S.pilot) : null;
   if (s) return { ...s, state: "parked" };
+  if (!S.st?.offBlock) { const a = aslStand(S.stands[o.dep.icao], o.dep.icao, o.dest?.icao, o.callsign, o.type, "dep", S.near.dep); if (a) return { ...a, state: "forecast" }; }
   return { state: S.stands[o.dep.icao] ? "unknown" : "loading" };
 }
 

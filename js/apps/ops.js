@@ -92,6 +92,7 @@ function ops(now) {
   const ds = departureStand(), rd = runwayOf(o.dep.icao, "dep"), c = S.cdm;
   const depStand = st.offBlock ? `<div class="stand-big">${t("OUT")} ${hhmmz(st.offBlock)}</div><div class="dim">${st.takeoff ? t("Airborne {t}", { t: hhmmz(st.takeoff) }) : t("Taxiing")}</div>`
     : ds?.state === "parked" ? `<div class="stand-big">${esc(ds.ref)}</div><div class="dim">${ds.gate ? t("Gate") : t("Stand")}${ds.t ? " · " + esc(ds.t) : ""}</div>`
+    : ds?.state === "forecast" ? `<div class="stand-big">${esc(ds.ref)}</div><div class="dim">${[ds.gate ? t("Gate") : t("Stand"), ds.term, t("forecast")].filter(Boolean).map(esc).join(" · ")}</div>`
     : `<div class="stand-big wait">—</div><div class="dim">${S.pilot ? t("Not at a known stand") : t("Connect to VATSIM to see your stand")}</div>`;
   const tsatState = c?.tsat ? (now < c.tsat - 5 * 60e3 ? "" : now <= c.tsat + 5 * 60e3 ? "ok" : "bad") : "";
   const cdm = c ? `<div class="kv" style="margin-top:12px">${cell("EOBT", hhmmz(c.eobt))}${cell("TOBT", hhmmz(c.tobt))}${cell("TSAT", hhmmz(c.tsat), tsatState === "ok" ? t("window open") : tsatState === "bad" ? t("expired") : c.tsat ? t("in {t}", { t: dur(c.tsat - now) }) : "", tsatState)}

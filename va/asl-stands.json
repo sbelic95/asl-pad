@@ -3,43 +3,391 @@
   "LYBE": {
     "dep": {
       "rules": [
-        { "note": "Russia (SVO, LED, KZN, GOJ, AER)", "to": ["UUEE", "ULLI", "UWKD", "UWGG", "URSS"], "stands": ["A1", "C3", "C4", "C11", "C12"] },
-        { "note": "North America", "to": ["KJFK", "KORD", "CYYZ", "KMIA"], "stands": ["C3A", "C11A"] },
-        { "note": "China, mostly C9A and C11A", "to": ["ZSPD", "ZGGG"], "stands": ["C9A", "C11A", "C3A", "C5A", "C7A"] },
-        { "note": "ATR 72", "type": ["AT76"], "stands": ["E1", "E2", "E3", "E4", "A11", "A12", "A13", "A14", "A15", "B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B9"] }
+        {
+          "note": "Russia (SVO, LED, KZN, GOJ, AER)",
+          "to": [
+            "UUEE",
+            "ULLI",
+            "UWKD",
+            "UWGG",
+            "URSS"
+          ],
+          "stands": [
+            "A1",
+            "C3",
+            "C4",
+            "C11",
+            "C12"
+          ]
+        },
+        {
+          "note": "North America",
+          "to": [
+            "KJFK",
+            "KORD",
+            "CYYZ",
+            "KMIA"
+          ],
+          "stands": [
+            "C3A",
+            "C11A"
+          ]
+        },
+        {
+          "note": "China, mostly C9A and C11A",
+          "to": [
+            "ZSPD",
+            "ZGGG"
+          ],
+          "stands": [
+            "C9A",
+            "C11A",
+            "C3A",
+            "C5A",
+            "C7A"
+          ]
+        },
+        {
+          "note": "ATR 72",
+          "type": [
+            "AT76"
+          ],
+          "stands": [
+            "E1",
+            "E2",
+            "E3",
+            "E4",
+            "A11",
+            "A12",
+            "A13",
+            "A14",
+            "A15",
+            "B1",
+            "B2",
+            "B3",
+            "B4",
+            "B5",
+            "B6",
+            "B7",
+            "B8",
+            "B9"
+          ]
+        }
       ],
-      "stands": ["C14", "C13", "C12", "C11", "C10", "C9", "C8", "C7", "C6", "C5", "C4", "C3", "C2", "C1", "A10", "A9", "A8", "A7", "A6", "A5", "A4", "A3", "A2", "A1"],
+      "stands": [
+        "C14",
+        "C13",
+        "C12",
+        "C11",
+        "C10",
+        "C9",
+        "C8",
+        "C7",
+        "C6",
+        "C5",
+        "C4",
+        "C3",
+        "C2",
+        "C1",
+        "A10",
+        "A9",
+        "A8",
+        "A7",
+        "A6",
+        "A5",
+        "A4",
+        "A3",
+        "A2",
+        "A1"
+      ],
       "fallback": "remote stands"
     },
     "arr": {
       "rules": [
-        { "note": "domestic arrivals", "from": ["LYNI", "LYKV", "LYUZ", "LYVR"], "stands": ["A3", "A4", "A5", "C5", "C6", "B3", "B4", "B5"] }
+        {
+          "note": "domestic arrivals",
+          "from": [
+            "LYNI",
+            "LYKV",
+            "LYUZ",
+            "LYVR"
+          ],
+          "stands": [
+            "A3",
+            "A4",
+            "A5",
+            "C5",
+            "C6",
+            "B3",
+            "B4",
+            "B5"
+          ]
+        }
       ],
-      "stands": ["A1", "A2", "A3", "A4", "A5", "C1", "C2", "C5", "C6"]
+      "stands": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "C1",
+        "C2",
+        "C5",
+        "C6"
+      ]
     }
   },
-  "UUEE": { "note": "Terminal C", "stands": ["143", "142", "141", "146", "148", "150", "149", "134", "133", "132", "135", "136", "137", "138", "139", "140"] },
-  "EDDF": { "note": "Terminal 3, pier J", "stands": ["J"], "prefix": true },
-  "LSZH": { "note": "about 90 % dock E, smaller gates first; dock B only when E is full", "stands": ["E52", "E48", "E44", "E42", "E34", "E26", "E62"], "fallback": ["B38", "B43", "B41", "B39", "B35", "B33", "B31", "B37", "B32"] },
-  "EDDV": { "note": "Terminal C", "stands": ["C15", "C16", "C17"] },
-  "EBBR": { "stands": ["207", "209", "215", "227", "229L", "229R", "231"] },
-  "EHAM": { "stands": ["G2", "G4", "G6", "G8", "E2", "E4", "E6", "E8"] },
-  "LOWW": { "stands": ["F26", "F32", "F36", "F13", "F23", "D21", "D22", "D23", "D28"] },
-  "LDZA": { "stands": ["E1", "E2", "E3", "E4", "E6"] },
-  "LCLK": { "stands": ["32", "33", "31"] },
-  "EKCH": { "stands": ["C28", "C30", "C32", "C27", "C29"] },
-  "LFPG": { "stands": ["C8", "C10", "C12", "B2", "B8", "B14", "E42", "E44"] },
-  "EDDB": { "stands": ["B09", "B10", "B11", "B12", "B13", "B14", "B15"] },
-  "EDDL": { "stands": ["C02", "C03", "C05", "C06", "C07"] },
-  "EDDS": { "stands": ["11", "12", "13", "40", "41", "42", "43", "45", "46"] },
-  "LGAV": { "stands": ["A01", "A03", "A05", "A07"] },
-  "LIMC": { "stands": ["513", "512", "510", "508", "507"] },
-  "LIRF": { "stands": ["703", "702", "701", "704"] },
-  "LYPG": { "stands": ["3", "4", "5"] },
-  "LYTV": { "stands": ["3", "4", "5", "6"] },
-  "LROP": { "stands": ["111", "110", "109", "108"] },
-  "ULLI": { "stands": ["A101", "A105", "A107", "B103", "B105", "B107", "131", "132"] },
-  "ESSA": { "stands": ["F37", "F35", "F31", "F38", "F34"] },
-  "LTFM": { "stands": ["C4", "C3", "C2", "D8", "D6", "D4", "D2", "E1", "E2"] },
-  "EGLL": { "stands": ["219", "220"] }
+  "UUEE": {
+    "note": "Terminal C",
+    "stands": [
+      "143",
+      "142",
+      "141",
+      "146",
+      "148",
+      "150",
+      "149",
+      "134",
+      "133",
+      "132",
+      "135",
+      "136",
+      "137",
+      "138",
+      "139",
+      "140"
+    ]
+  },
+  "EDDF": {
+    "note": "Terminal 3, pier J (non-Schengen, since 5 May 2026)",
+    "stands": [
+      "J"
+    ],
+    "prefix": true
+  },
+  "LSZH": {
+    "note": "dock E, smaller gates first (E52 takes an A380: last); dock B only when E is full",
+    "stands": [
+      "E26",
+      "E34",
+      "E42",
+      "E44",
+      "E48",
+      "E62",
+      "E52"
+    ],
+    "fallback": [
+      "B38",
+      "B43",
+      "B41",
+      "B39",
+      "B35",
+      "B33",
+      "B31",
+      "B37",
+      "B32"
+    ]
+  },
+  "EDDV": {
+    "note": "Terminal C",
+    "stands": [
+      "C15",
+      "C16",
+      "C17"
+    ]
+  },
+  "EBBR": {
+    "stands": [
+      "207",
+      "209",
+      "215",
+      "227",
+      "229L",
+      "229R",
+      "231"
+    ]
+  },
+  "EHAM": {
+    "stands": [
+      "G2",
+      "G4",
+      "G6",
+      "G8",
+      "E2",
+      "E4",
+      "E6",
+      "E8"
+    ]
+  },
+  "LOWW": {
+    "stands": [
+      "F26",
+      "F32",
+      "F36",
+      "F13",
+      "F23",
+      "D21",
+      "D22",
+      "D23",
+      "D28"
+    ]
+  },
+  "LDZA": {
+    "stands": [
+      "E1",
+      "E2",
+      "E3",
+      "E4",
+      "E6"
+    ]
+  },
+  "LCLK": {
+    "stands": [
+      "32",
+      "33",
+      "31"
+    ]
+  },
+  "EKCH": {
+    "stands": [
+      "C28",
+      "C30",
+      "C32",
+      "C27",
+      "C29"
+    ]
+  },
+  "LFPG": {
+    "stands": [
+      "C8",
+      "C10",
+      "C12",
+      "B2",
+      "B8",
+      "B14",
+      "E42",
+      "E44"
+    ]
+  },
+  "EDDB": {
+    "stands": [
+      "B09",
+      "B10",
+      "B11",
+      "B12",
+      "B13",
+      "B14",
+      "B15"
+    ]
+  },
+  "EDDL": {
+    "stands": [
+      "C02",
+      "C03",
+      "C05",
+      "C06",
+      "C07"
+    ]
+  },
+  "EDDS": {
+    "stands": [
+      "11",
+      "12",
+      "13",
+      "40",
+      "41",
+      "42",
+      "43",
+      "45",
+      "46"
+    ]
+  },
+  "LGAV": {
+    "stands": [
+      "A01",
+      "A03",
+      "A05",
+      "A07"
+    ]
+  },
+  "LIMC": {
+    "stands": [
+      "513",
+      "512",
+      "510",
+      "508",
+      "507"
+    ]
+  },
+  "LIRF": {
+    "stands": [
+      "703",
+      "702",
+      "701",
+      "704"
+    ]
+  },
+  "LYPG": {
+    "stands": [
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  "LYTV": {
+    "stands": [
+      "3",
+      "4",
+      "5",
+      "6"
+    ]
+  },
+  "LROP": {
+    "stands": [
+      "111",
+      "110",
+      "109",
+      "108"
+    ]
+  },
+  "ULLI": {
+    "stands": [
+      "A101",
+      "A105",
+      "A107",
+      "B103",
+      "B105",
+      "B107",
+      "131",
+      "132"
+    ]
+  },
+  "ESSA": {
+    "stands": [
+      "F37",
+      "F35",
+      "F31",
+      "F38",
+      "F34"
+    ]
+  },
+  "LTFM": {
+    "stands": [
+      "C4",
+      "C3",
+      "C2",
+      "D8",
+      "D6",
+      "D4",
+      "D2",
+      "E1",
+      "E2"
+    ]
+  },
+  "EGLL": {
+    "stands": [
+      "219",
+      "220"
+    ]
+  }
 }

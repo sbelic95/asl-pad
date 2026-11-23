@@ -117,6 +117,11 @@ ATIS: VATSIM zuerst; ist keine online, die echte D-ATIS von `atis.info/api/<ICAO
 `a.real = true`); sonst die Piste aus dem echten METAR-Wind (`runwayFromWind`). Europa hat keine freie echte ATIS – nicht scrapen.
 Hoppie-Feld ist `type=text` mit `class="masked"` (kein „Passwort speichern?“ des Browsers); nur CID+PIN ist ein echtes Login-Formular.
 
+Stände von Air Serbia: `va/asl-stands.json` (Daten der VA: stands.ini + Notizen des Nutzers, Nov 2026). `aslStand` in `js/stands.js` hat für
+ASL-Flüge Vorrang vor der allgemeinen Vorhersage (Ankunft überall, Abflug in Belgrad mit Regeln nach Ziel/Typ). Frankfurt = Terminal 3 Pier J
+(seit 5.5.2026, Präfix „J“), Zürich Dock E kleine Gates zuerst (E52 ist A380-fähig → zuletzt), Dock B nur wenn E voll. Keine Gate-Nummern erfinden:
+öffentliche Quellen nennen keine – nur, was die VA liefert. Das Dashboard (`tools/build-schedule.mjs`) liest dieselbe Datei für die Belgrad-Abflüge.
+
 ## Updates
 
 Jede sichtbare Neuerung als neuer Eintrag oben in `js/whatsnew.js` (nur, was das Pad wirklich kann). Das Pad zeigt ihn einmal
