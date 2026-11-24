@@ -2,7 +2,9 @@
 // PIN while the airline keeps that on), then the
 // pad takes over the profile kept there – SimBrief ID, VATSIM CID, IVAO VID and the Hoppie logon code – and the bookings.
 // The dashboard runs on another web address, so the pad keeps a token instead of a cookie (asl.account). Nothing else is sent.
-import { settings, saveSettings, emit } from "./data.js";
+import { settings, saveSettings, emit, logbook, saveLogbook } from "./data.js";
+import { aptDb } from "./tz.js";
+import { distNm } from "./util.js";
 import { store } from "./util.js";
 
 // on the developer's own machine (localhost) a local dashboard can be set for tests (asl.dash); the real pad always uses the live one
@@ -24,7 +26,7 @@ const call = async (path, opts = {}) => {
   return d;
 };
 // how the dashboard lets pilots sign in: { connect: a sign-in page is set up, provider: "vamsys" or "vatsim", pinLogin: CID + PIN still allowed }
-ACC.cfg = store.get("asl.dashcfg", { connect: false, provider: "", pinLogin: true });
+ACC.cfg = store.get("asl.dashcfg", { connect: true, provider: "vamsys", pinLogin: false });
 export async function accConfig() {
   try { const c = await call("config"); ACC.cfg = { connect: !!c.connect, provider: c.provider || (c.connect ? "vatsim" : ""), pinLogin: c.pinLogin !== false }; store.set("asl.dashcfg", ACC.cfg); emit(); } catch {}
 }
@@ -63,9 +65,34 @@ export async function accLoad(force) {
     if (p.hoppie && p.hoppie !== settings.hoppie) patch.hoppie = p.hoppie;
     if (p.ivao && p.ivao !== settings.ivao) patch.ivao = p.ivao;
     if (Object.keys(patch).length) saveSettings(patch);
+    call("pireps").then(mergePireps).catch(() => {});
   } catch (e) {
     ACC.err = e.message;
     if (e.status === 401) { ACC.token = ""; store.del("asl.account"); } // signed out on the dashboard
   }
   emit();
+}
+
+// the pilot's flights from vAMSYS (PIREPs, as of the last sign-in on the dashboard) go into the logbook, marked "vAMSYS".
+// A flight the pad logged itself is not doubled; a vAMSYS flight the pilot deleted here stays deleted (asl.logbook.gone).
+const minsOf = (v) => (v == null ? null : v > 2000 ? Math.round(v / 60) : v); // seconds or minutes
+function mergePireps(d) {
+  const list = Array.isArray(d?.list) ? d.list : []; if (!list.length) return;
+  const gone = new Set(store.get("asl.logbook.gone", [])), book = logbook();
+  const own = book.filter((e) => e.src !== "vamsys");
+  const twin = (x) => own.some((e) => e.dep === x.dep && e.arr === x.arr && Math.abs((e.offBlock || e.date) - x.off) < 3 * 3600e3);
+  const keep = book.filter((e) => e.src !== "vamsys" || !list.some((x) => "vamsys:" + x.id === e.id));
+  let added = 0;
+  for (const x of list) {
+    if (!x.off || gone.has("vamsys:" + x.id) || twin(x)) continue;
+    const A = aptDb(x.dep), B = aptDb(x.arr), blk = minsOf(x.block), air = minsOf(x.air);
+    const on = x.on || (blk ? x.off + blk * 60e3 : null);
+    keep.push({ id: "vamsys:" + x.id, src: "vamsys", date: x.off, callsign: x.cs || x.fn, flightNo: x.fn || x.cs, dep: x.dep, arr: x.arr,
+      depName: A?.[2]?.replace(/-/g, " ") || "", arrName: B?.[2]?.replace(/-/g, " ") || "", type: "", reg: "", pax: null,
+      schedOut: null, schedIn: null, offBlock: x.off, takeoff: null, landing: null, onBlock: on,
+      airMin: air, distNm: x.nm || (A && B ? Math.round(distNm([A[0], A[1]], [B[0], B[1]])) : 0), units: "kg", blockFuel: null, landingFuel: null, fuelUsed: x.fuel,
+      landingRate: x.lr, points: x.pts, network: x.net, status: x.status, checks: 0, route: "", path: A && B ? [[A[0], A[1]], [B[0], B[1]]] : [] });
+    added++;
+  }
+  if (added || keep.length !== book.length) saveLogbook(keep);
 }

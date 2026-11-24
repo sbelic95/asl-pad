@@ -1,5 +1,10 @@
 // Translations, looked up by the English text. SR = Serbian (Latin script), DE = German.
 export const SR = {
+  "Source": "Izvor",
+  "Landing rate": "Brzina dodira",
+  "Points": "Poeni",
+  "incl. {n} from vAMSYS": "od toga {n} iz vAMSYS-a",
+  "Logbook: your flights flown with Air Serbia Virtual in vAMSYS (PIREPs) come in by themselves, marked vAMSYS": "Dnevnik: tvoji letovi sa Air Serbia Virtual iz vAMSYS-a (PIREP) stižu sami, označeni sa vAMSYS",
   "You sign in on vAMSYS' own page – your password never reaches the pad.": "Prijavljuješ se na vAMSYS-ovoj stranici – tvoja lozinka nikad ne stiže do pada.",
   "Sign in with your Air Serbia Virtual account (vAMSYS): your SimBrief, VATSIM, IVAO and Hoppie settings and your bookings come into the pad.": "Prijavi se svojim Air Serbia Virtual nalogom (vAMSYS): tvoja SimBrief, VATSIM, IVAO i Hoppie podešavanja i rezervacije stižu u pad.",
   "Sign in with your Air Serbia Virtual account (vAMSYS) again: the VATSIM ID in vAMSYS links your dashboard profile and bookings": "Ponovo prijava Air Serbia Virtual nalogom (vAMSYS): VATSIM ID iz vAMSYS-a povezuje tvoj profil i rezervacije sa dashboarda",
@@ -735,6 +740,11 @@ export const SR = {
   "Window missed": "Prozor propušten",
 };
 export const DE = {
+  "Source": "Quelle",
+  "Landing rate": "Aufsetzrate",
+  "Points": "Punkte",
+  "incl. {n} from vAMSYS": "davon {n} aus vAMSYS",
+  "Logbook: your flights flown with Air Serbia Virtual in vAMSYS (PIREPs) come in by themselves, marked vAMSYS": "Logbuch: deine mit Air Serbia Virtual geflogenen Flüge aus vAMSYS (PIREPs) kommen von selbst, markiert mit vAMSYS",
   "You sign in on vAMSYS' own page – your password never reaches the pad.": "Du meldest dich auf der Seite von vAMSYS an – dein Passwort erreicht das Pad nie.",
   "Sign in with your Air Serbia Virtual account (vAMSYS): your SimBrief, VATSIM, IVAO and Hoppie settings and your bookings come into the pad.": "Melde dich mit deinem Air-Serbia-Virtual-Konto (vAMSYS) an: deine SimBrief-, VATSIM-, IVAO- und Hoppie-Einstellungen und deine Buchungen kommen ins Pad.",
   "Sign in with your Air Serbia Virtual account (vAMSYS) again: the VATSIM ID in vAMSYS links your dashboard profile and bookings": "Wieder Anmeldung mit dem Air-Serbia-Virtual-Konto (vAMSYS): die VATSIM-ID aus vAMSYS verbindet dein Dashboard-Profil und deine Buchungen",

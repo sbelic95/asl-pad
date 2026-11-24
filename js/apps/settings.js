@@ -45,7 +45,7 @@ function accRow() {
   const vam = c.provider === "vamsys";
   const vatsim = c.connect ? `<button class="btn small pri" data-do="acc-connect">${vam ? t("Sign in with vAMSYS") : t("Sign in with VATSIM")}</button>
     <div class="dim" style="font-size:12.5px;margin-top:6px">${vam ? t("You sign in on vAMSYS' own page – your password never reaches the pad.") : t("You sign in on VATSIM's own page – your password never reaches the pad.")}</div>` : "";
-  const pin = c.pinLogin === false ? "" : `<div class="acc-in"${c.connect ? ' style="margin-top:8px"' : ""}><input data-acc="cid" inputmode="numeric" placeholder="VATSIM CID" autocomplete="username" style="width:130px"> <input data-acc="pin" type="password" inputmode="numeric" placeholder="PIN" autocomplete="current-password" style="width:100px">
+  const pin = c.pinLogin === false || vam ? "" : `<div class="acc-in"${c.connect ? ' style="margin-top:8px"' : ""}><input data-acc="cid" inputmode="numeric" placeholder="VATSIM CID" autocomplete="username" style="width:130px"> <input data-acc="pin" type="password" inputmode="numeric" placeholder="PIN" autocomplete="current-password" style="width:100px">
     <button class="btn small${c.connect ? "" : " pri"}" data-do="acc-in">${t("Sign in")}</button></div>
     <div class="dim" style="font-size:12.5px;margin-top:6px">${t("No account yet? Sign in once on the dashboard and choose your PIN there.")} <a href="${DASH}" target="_blank" rel="noopener">${DASH.replace("https://", "")} ↗</a></div>`;
   return vatsim + pin + err;

@@ -97,3 +97,6 @@
 .ld .rw-chips { margin-bottom: 12px; }
 .snd-test { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
 .masked { -webkit-text-security: disc; text-security: disc; }
+
+/* logbook: a flight that came from vAMSYS (PIREP) */
+.vam-tag { display: inline-block; margin-left: 6px; padding: 0 5px; border-radius: 4px; font-size: 10px; font-weight: 600; letter-spacing: .03em; background: var(--accent, #0059C2); color: #fff; vertical-align: 1px; }

@@ -1,7 +1,7 @@
 // Logbook: every flight that reached on-block, plus flights added by hand. Stats, details with a route map, export and import.
 import { S, logbook, saveLogbook, addToLogbook } from "../data.js";
 import { t, nf, dateShort, LOCALE } from "../i18n.js";
-import { esc, hhmmz, dur, distNm, greatCircle } from "../util.js";
+import { esc, hhmmz, dur, distNm, greatCircle, store } from "../util.js";
 import { aptDb } from "../tz.js";
 import { sheet } from "../sheet.js";
 import { career, careerHtml } from "../career.js";
@@ -29,11 +29,11 @@ const airOf = (e) => (e.landing && e.takeoff ? e.landing - e.takeoff : 0);
 function hero(list) {
   const block = list.reduce((s, e) => s + blockOf(e), 0), dist = list.reduce((s, e) => s + (e.distNm || 0), 0);
   const apts = new Set(list.flatMap((e) => [e.dep, e.arr]));
-  const types = {}; list.forEach((e) => (types[e.type] = (types[e.type] || 0) + 1));
+  const types = {}; list.forEach((e) => { if (e.type) types[e.type] = (types[e.type] || 0) + 1; });
   const top = Object.entries(types).sort((a, b) => b[1] - a[1])[0];
   const c = (l, v, s) => `<div><div class="lbl">${l}</div><div class="big">${v}</div>${s ? `<div class="dim" style="font-size:12px">${s}</div>` : ""}</div>`;
   return `<div class="log-hero"><div><div class="ttl">${t("Logbook")}</div><div class="dim" style="font-size:13px">${t("Your flights with ASL Pad")}</div></div>
-    ${c(t("Flights"), nf(list.length))}${c(t("Block time"), dur(block))}${c(t("Distance"), nf(dist) + '<small style="font-size:14px" class="dim"> NM</small>')}
+    ${c(t("Flights"), nf(list.length), list.some((e) => e.src === "vamsys") ? t("incl. {n} from vAMSYS", { n: nf(list.filter((e) => e.src === "vamsys").length) }) : "")}${c(t("Block time"), dur(block))}${c(t("Distance"), nf(dist) + '<small style="font-size:14px" class="dim"> NM</small>')}
     ${c(t("Airports"), nf(apts.size), top ? t("mostly {type}", { type: top[0] }) : "")}</div>`;
 }
 // the last twelve months: block hours (bar) and flights per month
@@ -63,7 +63,7 @@ function months(list) {
     if (m !== cur) { out += `${cur ? "</div>" : ""}<div class="month">${esc(m)}</div><div>`; cur = m; }
     out += `<div class="log-row" data-i="${i}"><div class="d">${esc(wd.format(e.date))}<b>${new Date(e.date).getUTCDate()}</b></div>
       <div class="rt">${esc(e.dep)} – ${esc(e.arr)}<small>${esc(e.depName || "")}${e.arrName ? " → " + esc(e.arrName) : ""}</small></div>
-      <div><div class="v">${esc(e.flightNo)}</div><div class="s">${esc(e.type || "")}${e.reg ? " · " + esc(e.reg) : ""}</div></div>
+      <div><div class="v">${esc(e.flightNo)}</div><div class="s">${esc(e.type || "")}${e.reg ? " · " + esc(e.reg) : ""}${e.src === "vamsys" ? `<span class="vam-tag">vAMSYS</span>` : ""}</div></div>
       <div><div class="v">${dur(blockOf(e))}</div><div class="s">${hhmmz(e.offBlock || e.schedOut)} – ${hhmmz(e.onBlock || e.schedIn)}</div></div>
       <div><div class="v">${nf(e.distNm)}</div><div class="s">NM</div></div></div>`;
   });
@@ -94,11 +94,13 @@ function detail(e) {
       ${c(t("Block time"), dur(blockOf(e)))}${c(t("Flight time"), airOf(e) ? dur(airOf(e)) : "—")}${c(t("Delay"), delay == null ? "—" : `<span class="${delay > 15 * 60e3 ? "bad" : delay > 0 ? "warn" : "ok"}">${dur(delay, true)}</span>`)}
       ${c(t("Distance"), nf(e.distNm) + "<small>NM</small>")}${c(t("Aircraft"), esc(e.type || "—"), esc(e.reg || ""))}${c(t("Passengers"), e.pax != null ? nf(e.pax) : "—")}
       ${c(t("Fuel checks"), nf(e.checks || 0))}${c(t("Landing fuel"), e.landingFuel != null ? nf(e.landingFuel) + `<small>${esc(e.units || "kg")}</small>` : "—", t("expected"))}</div>
+    ${e.src === "vamsys" ? `<div class="kv">${c(t("Source"), "vAMSYS PIREP", esc(e.status || ""))}${c(t("Landing rate"), e.landingRate != null ? nf(e.landingRate) + "<small>fpm</small>" : "—")}${c(t("Fuel used"), e.fuelUsed != null ? nf(e.fuelUsed) + "<small>kg</small>" : "—")}${c(t("Points"), e.points != null ? nf(e.points) : "—")}${c(t("Network"), esc(e.network || "—"))}</div>` : ""}
     ${e.route ? `<div class="lbl" style="margin-top:14px">${t("Route")}</div><div class="wx-raw">${esc(e.route)}</div>` : ""}
     <div style="display:flex;justify-content:flex-end;margin-top:16px"><button class="btn small" data-del>${t("Delete flight")}</button></div>`,
   (ev, close) => {
     const d = ev.target.closest("[data-del]"); if (!d) return;
     if (!d.dataset.sure) { d.dataset.sure = "1"; d.textContent = t("Tap again to delete"); d.classList.add("pri"); return; }
+    if (e.src === "vamsys") store.set("asl.logbook.gone", [...new Set([...store.get("asl.logbook.gone", []), e.id])].slice(-2000)); // stays deleted
     saveLogbook(logbook().filter((x) => x.id !== e.id)); close();
   });
 }

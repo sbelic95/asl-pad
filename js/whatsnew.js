@@ -10,6 +10,7 @@ export const releases = () => [
   { v: "2.6.1", date: "2026-11-24", groups: [
     { icon: "settings", name: "ASL Pad", items: [
       t("Sign in with your Air Serbia Virtual account (vAMSYS) again: the VATSIM ID in vAMSYS links your dashboard profile and bookings"),
+      t("Logbook: your flights flown with Air Serbia Virtual in vAMSYS (PIREPs) come in by themselves, marked vAMSYS"),
     ] },
   ] },
   { v: "2.6.0", date: "2026-11-23", groups: [
