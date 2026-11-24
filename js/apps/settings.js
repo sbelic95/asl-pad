@@ -35,14 +35,16 @@ let cfgAsked = false;
 function accRow() {
   if (ACC.token) {
     const p = ACC.profile;
-    return `<span class="pill ok">${esc(p?.name || "CID " + (ACC.cid || ""))}</span> <span class="pill">CID ${esc(ACC.cid || p?.cid || "")}</span>
+    const vid = ACC.me?.vamsys || p?.vamsys || "", cid = ACC.cid || p?.cid || "";
+    return `<span class="pill ok">${esc(p?.name || vid || "CID " + cid)}</span>${vid ? ` <span class="pill">vAMSYS ${esc(vid)}</span>` : ""}${cid ? ` <span class="pill">CID ${esc(cid)}</span>` : ""}
       <button class="btn small" data-do="acc-load">${t("Refresh")}</button> <button class="btn small" data-do="acc-out">${t("Sign out")}</button>
       <div class="dim" style="font-size:12.5px;margin-top:6px">${t("SimBrief, VATSIM, IVAO and Hoppie come from your profile on the dashboard.")} <a href="${DASH}" target="_blank" rel="noopener">${t("Edit profile")} ↗</a></div>${ACC.err ? `<div class="bad" style="font-size:12.5px;margin-top:6px">${esc(ACC.err)}</div>` : ""}`;
   }
   if (!cfgAsked) { cfgAsked = true; accConfig(); }
   const c = ACC.cfg || {}, err = ACC.err ? `<div class="bad" style="font-size:12.5px;margin-top:6px">${esc(ACC.err)}</div>` : "";
-  const vatsim = c.connect ? `<button class="btn small pri" data-do="acc-connect">${t("Sign in with VATSIM")}</button>
-    <div class="dim" style="font-size:12.5px;margin-top:6px">${t("You sign in on VATSIM's own page – your password never reaches the pad.")}</div>` : "";
+  const vam = c.provider === "vamsys";
+  const vatsim = c.connect ? `<button class="btn small pri" data-do="acc-connect">${vam ? t("Sign in with vAMSYS") : t("Sign in with VATSIM")}</button>
+    <div class="dim" style="font-size:12.5px;margin-top:6px">${vam ? t("You sign in on vAMSYS' own page – your password never reaches the pad.") : t("You sign in on VATSIM's own page – your password never reaches the pad.")}</div>` : "";
   const pin = c.pinLogin === false ? "" : `<div class="acc-in"${c.connect ? ' style="margin-top:8px"' : ""}><input data-acc="cid" inputmode="numeric" placeholder="VATSIM CID" autocomplete="username" style="width:130px"> <input data-acc="pin" type="password" inputmode="numeric" placeholder="PIN" autocomplete="current-password" style="width:100px">
     <button class="btn small${c.connect ? "" : " pri"}" data-do="acc-in">${t("Sign in")}</button></div>
     <div class="dim" style="font-size:12.5px;margin-top:6px">${t("No account yet? Sign in once on the dashboard and choose your PIN there.")} <a href="${DASH}" target="_blank" rel="noopener">${DASH.replace("https://", "")} ↗</a></div>`;
@@ -63,7 +65,7 @@ function page() {
       ${row(t("IVAO VID"), t("Marks your own aircraft in the IVAO Radar."), `<input data-k="ivao" value="${esc(settings.ivao || "")}" inputmode="numeric" placeholder="123456" autocomplete="off" style="width:160px">`)}
       ${row(t("Hoppie ACARS"), (ACC.token ? t("Your personal logon code from hoppie.nl. For ACARS and CPDLC in ASL Fly. Comes from your profile on the dashboard.") : t("Your personal logon code from hoppie.nl. For ACARS and CPDLC in ASL Fly. Stays on this device.")), `<input data-k="hoppie" class="masked" value="${esc(settings.hoppie || "")}" data-lpignore="true" data-1p-ignore data-bwignore placeholder="${t("logon code")}" autocomplete="off" autocapitalize="off" spellcheck="false" style="width:200px"> <a class="btn small" href="https://www.hoppie.nl/acars/system/register.html" target="_blank" rel="noopener">${t("Get a code")}</a>`)}
       ${row(t("Simulator bridge"), t("Live data from MSFS, GSX and the Fenix through the VDGS bridge on the simulator PC. Opened from the bridge (…:8770/pad/) it connects by itself."), `<input data-k="bridge" value="${esc(settings.bridge || "")}" placeholder="192.168.1.20:8770" autocomplete="off" autocapitalize="off" spellcheck="false" style="width:200px">`)}
-      ${row(t("Air Serbia Virtual account"), t("Sign in with your VATSIM CID and the PIN of the pilot dashboard: your SimBrief, VATSIM, IVAO and Hoppie settings and your bookings come into the pad."), accRow())}
+      ${row(t("Air Serbia Virtual account"), ACC.cfg?.provider === "vamsys" || ACC.me?.vamsys ?t("Sign in with your Air Serbia Virtual account (vAMSYS): your SimBrief, VATSIM, IVAO and Hoppie settings and your bookings come into the pad.") : t("Sign in with your VATSIM CID and the PIN of the pilot dashboard: your SimBrief, VATSIM, IVAO and Hoppie settings and your bookings come into the pad."), accRow())}
     </div>
     <div class="card"><div class="lbl" style="margin-bottom:4px">${t("Display")}</div>
       ${row(t("Language"), "", seg("lang", Object.entries(LANGS), getLang()))}

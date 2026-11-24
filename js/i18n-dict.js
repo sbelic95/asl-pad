@@ -1,5 +1,8 @@
 // Translations, looked up by the English text. SR = Serbian (Latin script), DE = German.
 export const SR = {
+  "You sign in on vAMSYS' own page – your password never reaches the pad.": "Prijavljuješ se na vAMSYS-ovoj stranici – tvoja lozinka nikad ne stiže do pada.",
+  "Sign in with your Air Serbia Virtual account (vAMSYS): your SimBrief, VATSIM, IVAO and Hoppie settings and your bookings come into the pad.": "Prijavi se svojim Air Serbia Virtual nalogom (vAMSYS): tvoja SimBrief, VATSIM, IVAO i Hoppie podešavanja i rezervacije stižu u pad.",
+  "Sign in with your Air Serbia Virtual account (vAMSYS) again: the VATSIM ID in vAMSYS links your dashboard profile and bookings": "Ponovo prijava Air Serbia Virtual nalogom (vAMSYS): VATSIM ID iz vAMSYS-a povezuje tvoj profil i rezervacije sa dashboarda",
   "TOBT changeable in the pad (VDGS tab): −15/−5/+5/+15 or an exact time; where VATSIM CDM runs, the pad shows if the VATSIM VDGS still has another TOBT": "TOBT se menja u padu (kartica VDGS): −15/−5/+5/+15 ili tačno vreme; gde radi VATSIM CDM, pad pokazuje ako VATSIM VDGS još ima drugi TOBT",
   "Overview: the radio strip in two halves – the frequency now and the next frequency change": "Pregled: traka radija u dve polovine – sadašnja frekvencija i sledeća promena frekvencije",
   "US airports: the CTAF of each airport next to UNICOM when no controller is online": "Aerodromi u SAD: CTAF svakog aerodroma pored UNICOM-a kad nema kontrolora",
@@ -732,6 +735,9 @@ export const SR = {
   "Window missed": "Prozor propušten",
 };
 export const DE = {
+  "You sign in on vAMSYS' own page – your password never reaches the pad.": "Du meldest dich auf der Seite von vAMSYS an – dein Passwort erreicht das Pad nie.",
+  "Sign in with your Air Serbia Virtual account (vAMSYS): your SimBrief, VATSIM, IVAO and Hoppie settings and your bookings come into the pad.": "Melde dich mit deinem Air-Serbia-Virtual-Konto (vAMSYS) an: deine SimBrief-, VATSIM-, IVAO- und Hoppie-Einstellungen und deine Buchungen kommen ins Pad.",
+  "Sign in with your Air Serbia Virtual account (vAMSYS) again: the VATSIM ID in vAMSYS links your dashboard profile and bookings": "Wieder Anmeldung mit dem Air-Serbia-Virtual-Konto (vAMSYS): die VATSIM-ID aus vAMSYS verbindet dein Dashboard-Profil und deine Buchungen",
   "TOBT changeable in the pad (VDGS tab): −15/−5/+5/+15 or an exact time; where VATSIM CDM runs, the pad shows if the VATSIM VDGS still has another TOBT": "TOBT im Pad änderbar (Reiter VDGS): −15/−5/+5/+15 oder eine genaue Zeit; wo VATSIM-CDM läuft, zeigt das Pad, wenn im VATSIM-VDGS noch eine andere TOBT steht",
   "Overview: the radio strip in two halves – the frequency now and the next frequency change": "Übersicht: die Funk-Leiste in zwei Hälften – Frequenz jetzt und nächster Frequenzwechsel",
   "US airports: the CTAF of each airport next to UNICOM when no controller is online": "US-Flughäfen: die CTAF jedes Flughafens neben UNICOM, wenn kein Lotse online ist",

@@ -1,4 +1,5 @@
-// The Air Serbia Virtual account (the pilot dashboard on Cloudflare): sign in with the VATSIM CID and the own PIN, then the
+// The Air Serbia Virtual account (the pilot dashboard on Cloudflare): sign in with vAMSYS through the dashboard (or the CID and
+// PIN while the airline keeps that on), then the
 // pad takes over the profile kept there – SimBrief ID, VATSIM CID, IVAO VID and the Hoppie logon code – and the bookings.
 // The dashboard runs on another web address, so the pad keeps a token instead of a cookie (asl.account). Nothing else is sent.
 import { settings, saveSettings, emit } from "./data.js";
@@ -13,7 +14,7 @@ export const signedIn = () => !!ACC.token;
 export function pilot() {
   if (!ACC.token) return null;
   const p = ACC.profile || {}, me = ACC.me || {}, name = p.name || (me.name && !/^VATSIM \d+$/.test(me.name) ? me.name : "");
-  return { name, first: name.split(/\s+/)[0] || "", pilotId: ACC.cid || p.cid || "", rank: me.rank || "",
+  return { name, first: name.split(/\s+/)[0] || "", pilotId: me.vamsys || p.vamsys || ACC.cid || p.cid || "", rank: me.rank || "",
     bookings: (ACC.bookings || []).map((b) => ({ id: b.id, dep: b.dep, arr: b.arr, callsign: b.callsign || "", number: b.flight_number || "", at: Date.parse(b.departure_time || "") || null, reg: b.aircraft || "", type: b.type || "" })) };
 }
 const call = async (path, opts = {}) => {
@@ -22,12 +23,12 @@ const call = async (path, opts = {}) => {
   if (!r.ok) throw Object.assign(new Error(d.error || "HTTP " + r.status), { status: r.status });
   return d;
 };
-// how the dashboard lets pilots sign in: { connect: VATSIM Connect is set up, pinLogin: CID + PIN still allowed }
-ACC.cfg = store.get("asl.dashcfg", { connect: false, pinLogin: true });
+// how the dashboard lets pilots sign in: { connect: a sign-in page is set up, provider: "vamsys" or "vatsim", pinLogin: CID + PIN still allowed }
+ACC.cfg = store.get("asl.dashcfg", { connect: false, provider: "", pinLogin: true });
 export async function accConfig() {
-  try { const c = await call("config"); ACC.cfg = { connect: !!c.connect, pinLogin: c.pinLogin !== false }; store.set("asl.dashcfg", ACC.cfg); emit(); } catch {}
+  try { const c = await call("config"); ACC.cfg = { connect: !!c.connect, provider: c.provider || (c.connect ? "vatsim" : ""), pinLogin: c.pinLogin !== false }; store.set("asl.dashcfg", ACC.cfg); emit(); } catch {}
 }
-// "Sign in with VATSIM": the dashboard sends the pilot to VATSIM and back here with the token after # (never sent to a server)
+// "Sign in with vAMSYS": the dashboard sends the pilot to vAMSYS and back here with the token after # (never sent to a server)
 export function accConnect() {
   location.href = DASH + "/api/auth/connect?client=pad&return=" + encodeURIComponent(location.origin + location.pathname + location.search);
 }
@@ -35,6 +36,7 @@ function takeTokenFromAddress() {
   const m = typeof location !== "undefined" && location.hash.match(/asv_token=([A-Za-z0-9_.-]+)/); if (!m) return;
   history.replaceState(null, "", location.pathname + location.search); // the token leaves the address bar at once
   let cid = ""; try { cid = String(JSON.parse(atob(m[1].split(".")[0].replace(/-/g, "+").replace(/_/g, "/"))).cid || ""); } catch {}
+  if (!/^\d{6,8}$/.test(cid)) cid = ""; // a vAMSYS pilot without a VATSIM ID: no CID
   ACC.token = m[1]; ACC.cid = cid; store.set("asl.account", { token: ACC.token, cid }); ACC.err = "";
   setTimeout(() => accLoad(true), 0);
 }

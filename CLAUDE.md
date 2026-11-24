@@ -108,6 +108,14 @@ Testen ohne Simulator: Bridge mit `--test-gsx --pad-dir <pad>` starten und `http
 `js/sound.js`: Töne nur per Web Audio, eigene Klänge (keine Aufnahmen): `cpdlc` (ATC-Gong bei CPDLC aus `js/hoppie.js`), `msg`, `atis`, `slot`;
 iOS braucht die erste Berührung. `js/alerts.js`: Ton + Mitteilung bei Änderung von TSAT/CTOT/TOBT/Off-Block (3 h vor Off-Block) und neuer ATIS.
 
+## 2.6.1 Anmeldung wieder mit vAMSYS (24.11.2026)
+
+Der Nutzer will die vAMSYS-Anmeldung zurück (Client 1473 von Andrei, Pilot API, PKCE). Sie läuft **über das Dashboard**
+(`/api/auth/connect` wählt vAMSYS, sobald `VAMSYS_PILOT_CLIENT_ID` gesetzt ist); das Pad ändert nur Beschriftungen
+(`ACC.cfg.provider`). Das Konto bleibt das Dashboard-Konto: Schlüssel ist die VATSIM-ID aus dem vAMSYS-Profil, `pilot().pilotId`
+ist die vAMSYS-Piloten-ID (ASL…). Buchungen bleiben im Dashboard (nicht in vAMSYS). Der Abschnitt unten gilt sonst weiter –
+die Sätze „vAMSYS ist ganz entfernt … Nichts mehr mit vAMSYS einbauen“ sind damit überholt (das Pad spricht weiter nie selbst mit vAMSYS).
+
 ## 2.6 Ohne vAMSYS, echte ATIS
 
 **vAMSYS ist ganz entfernt** (Wunsch des Nutzers, dauerhaft: „es wird nichts über vAMSYS gemacht“). Es gibt nur noch das Konto (`js/account.js`,

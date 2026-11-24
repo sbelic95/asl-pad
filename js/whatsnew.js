@@ -7,6 +7,11 @@ import { esc } from "./util.js";
 import { APP_ICONS } from "./icons.js";
 
 export const releases = () => [
+  { v: "2.6.1", date: "2026-11-24", groups: [
+    { icon: "settings", name: "ASL Pad", items: [
+      t("Sign in with your Air Serbia Virtual account (vAMSYS) again: the VATSIM ID in vAMSYS links your dashboard profile and bookings"),
+    ] },
+  ] },
   { v: "2.6.0", date: "2026-11-23", groups: [
     { icon: "fly", name: "ASL Fly", items: [
       t("No VATSIM ATIS online? ASL Fly shows the airport's real ATIS (US airports) – otherwise the runway from the real METAR wind"),
