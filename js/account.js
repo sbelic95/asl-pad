@@ -88,7 +88,7 @@ function mergePireps(d) {
     const A = aptDb(x.dep), B = aptDb(x.arr), blk = minsOf(x.block), air = minsOf(x.air);
     const on = x.on || (blk ? x.off + blk * 60e3 : null);
     keep.push({ id: "vamsys:" + x.id, src: "vamsys", date: x.off, callsign: x.cs || x.fn, flightNo: x.fn || x.cs, dep: x.dep, arr: x.arr,
-      depName: A?.[2]?.replace(/-/g, " ") || "", arrName: B?.[2]?.replace(/-/g, " ") || "", type: "", reg: "", pax: null,
+      depName: A?.[2]?.replace(/-/g, " ") || "", arrName: B?.[2]?.replace(/-/g, " ") || "", type: x.type || "", reg: x.reg || "", pax: null,
       schedOut: null, schedIn: null, offBlock: x.off, takeoff: null, landing: null, onBlock: on,
       airMin: air, distNm: x.nm || (A && B ? Math.round(distNm([A[0], A[1]], [B[0], B[1]])) : 0), units: "kg", blockFuel: null, landingFuel: null, fuelUsed: x.fuel,
       landingRate: x.lr, points: x.pts, network: x.net, status: x.status, checks: 0, route: "", path: A && B ? [[A[0], A[1]], [B[0], B[1]]] : [] });
