@@ -6,7 +6,7 @@ import { esc, hhmmz, localHM, dur, store } from "../util.js";
 import { I } from "../icons.js";
 import { tzOf, cityOf } from "../tz.js";
 import { sheet } from "../sheet.js";
-import { planCard, suggestCard, bookingClick, fleetAll, schedule, daysTxt, openBooking } from "../booking.js";
+import { planCard, suggestCard, bookingClick, fleetAll, schedule, daysTxt, openBooking, realReg } from "../booking.js";
 import { rosterView, deskView, reportView, reportInput, sendReport, duties, doCheckIn, setDesk } from "../crew.js";
 
 export const name = "ASL Ops";
@@ -132,14 +132,14 @@ function ops(now) {
 const TYPE_ORDER = ["A319", "A320", "E195", "AT76", "A332"];
 function fleet() {
   const cur = S.ofp?.reg, own = store.get("asl.fleet", []), all = fleetAll();
-  const tile = (a) => { const isOwn = own.some((o) => o.reg === a.reg), inner = `<div style="width:30px;height:30px;color:var(--accent)">${I.plane}</div>
+  const tile = (a) => { const isOwn = a.own, inner = `<div style="width:30px;height:30px;color:var(--accent)">${I.plane}</div>
       <div style="flex:1;min-width:0"><b>${esc(a.reg)}</b><div><span>${esc(a.name || TYPE_NAME[a.type] || a.type)}${a.sb ? " · " + t("SimBrief airframe") : ""}</span></div></div>
       ${isOwn ? `<button class="btn small" data-do="delac" data-reg="${esc(a.reg)}" onclick="event.preventDefault()">×</button>` : ""}`;
     return a.sb ? `<a href="${esc(a.sb)}" target="_blank" rel="noopener" class="${a.reg === cur ? "cur" : ""}">${inner}</a>` : `<div class="nolink ${a.reg === cur ? "cur" : ""}">${inner}</div>`; };
   const types = [...new Set(all.map((a) => a.type))].sort((x, y) => (TYPE_ORDER.indexOf(x) + 99) % 99 - (TYPE_ORDER.indexOf(y) + 99) % 99);
   const o = S.ofp;
   return `<div class="card"><div style="display:flex;align-items:center;gap:12px;margin-bottom:6px"><div class="lbl">${t("Fleet")} · Air Serbia Virtual · ${all.length} ${t("aircraft")}</div>
-      <a class="btn small" style="margin-left:auto" href="${LIVERY}" target="_blank" rel="noopener">${t("Livery pack (Fenix A319)")}</a><button class="btn small" data-do="addac">${t("Add aircraft")}</button></div>
+      <a class="btn small" style="margin-left:auto" href="${LIVERY}" target="_blank" rel="noopener">${t("Livery pack (Fenix A319)")}</a><button class="btn small" data-do="addac">${t("SimBrief airframe")} +</button></div>
       ${types.map((ty) => `<div class="lbl" style="margin:14px 0 8px">${esc(TYPE_NAME[ty] || ty)} · ${all.filter((a) => a.type === ty).length}</div><div class="fleet">${all.filter((a) => a.type === ty).map(tile).join("")}</div>`).join("")}
       <p class="dim" style="font-size:12.5px;margin:12px 0 0">${t("Aircraft with a SimBrief airframe open it on a tap – save it to your account and plan with it. For the others SimBrief uses its default for the type.")}</p></div>
     ${o ? `<div class="card"><div class="lbl" style="margin-bottom:12px">${t("Aircraft of this flight")}</div><div class="kv">
@@ -166,19 +166,19 @@ function timetable(now) {
     </tbody></table><p class="dim" style="font-size:12px;margin:10px 0 0">${t("Timetable of Air Serbia Virtual ({src}). All times UTC.", { src: S.routes?.source || "vAMSYS" })}</p></div>`;
 }
 
+// a SimBrief airframe link for an aircraft of the VA fleet – the registration is picked from the fleet, never typed
 function addAircraft() {
-  sheet(`<h2>${t("Add aircraft")}</h2><p class="dim" style="font-size:13px">${t("Paste the share link of a SimBrief airframe.")}</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
-      <label><div class="lbl">${t("Registration")}</div><input name="reg" placeholder="YU-ARB" style="width:100%"></label>
-      <label><div class="lbl">${t("Type")}</div><input name="type" placeholder="A332" style="width:100%"></label>
-      <label style="grid-column:1/-1"><div class="lbl">${t("SimBrief share link")}</div><input name="sb" placeholder="https://dispatch.simbrief.com/airframes/share/…" style="width:100%"></label></div>
+  const list = fleetAll();
+  sheet(`<h2>${t("SimBrief airframe")}</h2><p class="dim" style="font-size:13px">${t("Pick the aircraft of Air Serbia Virtual and paste the share link of your SimBrief airframe for it. Only registrations of the fleet can be used.")}</p>
+    <div style="display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px">
+      <label><div class="lbl">${t("Registration")}</div><select name="reg" style="width:100%">${list.map((a) => `<option value="${esc(a.reg)}">${esc(a.reg)} · ${esc(a.name || TYPE_NAME[a.type] || a.type)}</option>`).join("")}</select></label>
+      <label><div class="lbl">${t("SimBrief share link")}</div><input name="sb" placeholder="https://dispatch.simbrief.com/airframes/share/…" style="width:100%"></label></div>
     <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px"><button class="btn" data-close>${t("Cancel")}</button><button class="btn pri" data-save>${t("Save")}</button></div>`,
   (e, close, el) => {
     if (!e.target.closest("[data-save]")) return;
-    const v = (n) => el.querySelector(`[name=${n}]`).value.trim();
-    const reg = v("reg").toUpperCase(), type = v("type").toUpperCase(), sb = v("sb");
-    if (!reg || !/^https:\/\/(dispatch\.)?simbrief\.com\//.test(sb)) { el.querySelector("[name=sb]").style.borderColor = "var(--red)"; return; }
-    store.set("asl.fleet", [...myFleet().filter((x) => x.reg !== reg), { reg, type, sb }]);
+    const reg = realReg(el.querySelector("[name=reg]").value), sb = el.querySelector("[name=sb]").value.trim(), a = list.find((x) => x.reg === reg);
+    if (!a || !/^https:\/\/(dispatch\.)?simbrief\.com\//.test(sb)) { el.querySelector("[name=sb]").style.borderColor = "var(--red)"; return; }
+    store.set("asl.fleet", [...myFleet().filter((x) => x.reg !== reg && realReg(x.reg)), { reg, type: a.type, sb }]);
     close(); C.setTab("fleet");
   });
 }
