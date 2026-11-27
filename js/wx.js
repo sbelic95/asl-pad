@@ -39,8 +39,13 @@ export function atisInfo(lines) {
   let m = txt.match(/INFORMATION ([A-Z])\b/) || txt.match(/\bINFO ([A-Z])\b/) || txt.match(/\bATIS ([A-Z])\b/);
   if (m) o.letter = m[1];
   const rw = (re) => { const x = txt.match(re); return x ? x[1].replace(/\s/g, "").replace(/LEFT/, "L").replace(/RIGHT/, "R").replace(/CENTER|CENTRE/, "C") : ""; };
-  o.arrRwy = rw(/(?:LANDING|ARRIVAL|ARR)\s+(?:RUNWAYS?|RWYS?)\s*(\d{2}\s?(?:[LRC]|LEFT|RIGHT|CENTER|CENTRE)?)/) || rw(/(?:RUNWAYS?|RWYS?) (?:IN USE )?(\d{2}\s?(?:[LRC]|LEFT|RIGHT|CENTER|CENTRE)?)\s+(?:FOR )?(?:LANDING|ARRIVAL)/);
-  o.depRwy = rw(/(?:DEPARTURE|DEPARTING|TAKE-?OFF|DEP)\s+(?:RUNWAYS?|RWYS?)\s*(\d{2}\s?(?:[LRC]|LEFT|RIGHT|CENTER|CENTRE)?)/) || rw(/(?:RUNWAYS?|RWYS?) (?:IN USE )?(\d{2}\s?(?:[LRC]|LEFT|RIGHT|CENTER|CENTRE)?)\s+(?:FOR )?(?:DEPARTURE|TAKE-?OFF)/);
+  // first the forms of the US D-ATIS too ("APPROACH IN USE ILS RY 4R", "DEPG RY 4L", "DEPS EXP RWYS 28R"), then the classic ones
+  const R = "(\\d{1,2}[LRC]?)", pad2 = (r) => (/^\d[LRC]?$/.test(r) ? "0" + r : r);
+  const find = (pats) => { for (const q of pats) { const x = txt.match(new RegExp(q)); if (x) return pad2(x[1]); } return ""; };
+  const dep1 = find([`DEP(?:ARTURE|G|S)?(?:\\s+EXP(?:ECT)?)?\\s+(?:RWYS?|RY|RUNWAYS?)(?:\\s+IN\\s+USE)?\\s+${R}`, `(?:TAKE-?OFF|DEPARTING)\\s+(?:RWYS?|RY|RUNWAYS?)\\s+${R}`]);
+  const arr1 = find([`ARR(?:IVAL)?S?(?:\\s+EXP(?:ECT)?)?\\s+(?:[A-Z]+\\s+){0,2}(?:RWYS?|RY|RUNWAYS?)(?:\\s+IN\\s+USE)?\\s+${R}`, `(?:APCH|APPROACH)(?:\\s+IN\\s+USE)?\\s+(?:[A-Z]+\\s+){0,3}(?:RWY|RY|RUNWAY)\\s+${R}`, `(?:LANDING|LNDG)\\s+(?:RWYS?|RY|RUNWAYS?)\\s+${R}`]);
+  o.arrRwy = arr1 || rw(/(?:LANDING|ARRIVAL|ARR)\s+(?:RUNWAYS?|RWYS?)\s*(\d{2}\s?(?:[LRC]|LEFT|RIGHT|CENTER|CENTRE)?)/) || rw(/(?:RUNWAYS?|RWYS?) (?:IN USE )?(\d{2}\s?(?:[LRC]|LEFT|RIGHT|CENTER|CENTRE)?)\s+(?:FOR )?(?:LANDING|ARRIVAL)/);
+  o.depRwy = dep1 || rw(/(?:DEPARTURE|DEPARTING|TAKE-?OFF|DEP)\s+(?:RUNWAYS?|RWYS?)\s*(\d{2}\s?(?:[LRC]|LEFT|RIGHT|CENTER|CENTRE)?)/) || rw(/(?:RUNWAYS?|RWYS?) (?:IN USE )?(\d{2}\s?(?:[LRC]|LEFT|RIGHT|CENTER|CENTRE)?)\s+(?:FOR )?(?:DEPARTURE|TAKE-?OFF)/);
   const any = rw(/(?:RUNWAYS? IN USE|RWYS? IN USE|ACTIVE RUNWAYS?|RUNWAY|RWY)\s*(\d{2}\s?(?:[LRC]|LEFT|RIGHT|CENTER|CENTRE)?)/);
   o.arrRwy = o.arrRwy || any; o.depRwy = o.depRwy || any;
   return o;
@@ -53,6 +58,8 @@ export function loadRunways() {
     .then((d) => { RUNWAYS = d || {}; return RUNWAYS; }).catch(() => { rwyReq = null; return {}; });
   return rwyReq;
 }
+// the runway ends of an airport: [{ id, hdg (true), lenFt }] (empty until the runway file is loaded)
+export const runwaysAt = (icao) => (RUNWAYS?.[icao] || []).flatMap((r) => [{ id: r[0], hdg: r[1], lenFt: r[4] }, { id: r[2], hdg: r[3], lenFt: r[4] }]).filter((e) => e.id && e.hdg != null);
 // runway with the most headwind (from 5 kt), else the longest
 export function runwayFromWind(icao, w) {
   const list = RUNWAYS?.[icao]; if (!list?.length) return "";

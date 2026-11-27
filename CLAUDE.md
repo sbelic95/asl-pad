@@ -54,19 +54,92 @@ erzeugt mit `python3 tools/import-schedule.py <Ordner>` aus den vAMSYS-CSV-Datei
 Nie von Hand ändern oder Linien erfinden; neuer Flugplan = Skript neu laufen lassen. ASL Ops Reiter „Timetable“. Buchung → SimBrief → Plan-Karte
 mit Sprit ±. Sprit/Gewichte nur als Summen aus dem OFP, keine Performance. Kein LH-Layout nachbauen, eigener Stil.
 
-## 1.8 Funk, ACARS, Cabin, vAMSYS
+## 1.8 Funk, ACARS, Cabin
 
 Keine VDGS-App mehr im Pad (Wunsch des Nutzers): Frequenz-Führer `js/atc.js`, Hoppie `js/hoppie.js` → ASL Fly Reiter „radio“; Passagier-Ansicht = App `cabin`.
-vAMSYS-Anmeldung `js/vamsys.js` + `va/vamsys.json` (nur Client-ID, **nie ein Secret ins Repo**). Feldnamen der Pilot API sind locker gemappt und mit einem echten Konto zu prüfen.
-Pflicht-Anmeldung per Schalter `required` in `va/vamsys.json` (Wunsch des Nutzers: einmal anmelden, Gerät bleibt frei bis zur Abmeldung; keine Ausnahme ohne vAMSYS). Steht auf `false`, bis der Login getestet ist.
 
 ## 2.0 (nach dem LH-Virtual-Pad-Guide, eigener Stil)
 
 Apps-Gruppen in `home.js` (`GROUPS`, `HOME_APPS[].g`, `core` = nicht entfernbar), App Store `js/apps/store.js`. Geräte-Oberfläche `js/device.js`
-(PIN = Ziffern der vAMSYS-Piloten-ID, Face ID nur gespielt, Kontroll-/Mitteilungszentrale), Mitteilungen nur über `notify()` aus `js/notify.js`.
+(**keine PIN** – Wunsch des Nutzers: Wischen öffnet das Pad; Face ID nur gespielt, Kontroll-/Mitteilungszentrale), Mitteilungen nur über `notify()` aus `js/notify.js`.
 Dienstplan/Crew Desk/Bericht in `js/crew.js`. Namen bewusst eigen: „Crew Desk“ statt „eDesk“. Manuals nur als Links (`va/manuals.json`, kein PDF ins Repo).
 Karten: nur OpenStreetMap-Kacheln über `baseLayer()` in `js/apps/map.js` (CARTO braucht seit 11/2026 einen Schlüssel – nicht mehr verwenden). VDGS-Anzeige = ASL Fly Reiter `vdgs` (`js/apps/vdgs.js`): Zeiten zuerst von VATSIM (vIFF CDM von VATSIM Spain, `viff-system.network/ifps/callsign` – deckt auch EDDF/EGLL ab; vACDM Germany ist eingestellt), sonst aus SimBrief (Wunsch des Nutzers). EDDF verlangt immer eine TOBT (`REQ_TOBT`), gesetzt wird sie im VATSIM-VDGS `vdgs.vatsimspain.es`.
 Server `server/worker.js` (Cloudflare) ist vorbereitet, aktiv erst mit `url` in `va/server.json` – braucht das Cloudflare-Konto des Nutzers. Ground (GSX) kommt später.
+
+## 2.1 Geräterahmen
+
+`js/frame.js`: Auf großen Computer-Bildschirmen (ab 1400×880, nicht als installierte App, nicht auf Touch-Geräten) liegt das Pad als Tablet
+auf einem Tisch: Rahmen `#device` um `#pad`, Sperrtaste oben (`.dv-power`), Helligkeitstasten rechts (`.dv-vol`), Crew-Ausweis `#crewcard`
+links (Name/Rating/CID aus dem Konto, Flug aus dem OFP). Einstellung `settings.frame` = auto | on | off. Bei 1180×820 (Test) gibt es keinen Rahmen.
+Statusleiste mit Netz und Akku (`navigator.getBattery`, nur wenn der Browser ihn liefert – nie erfinden). Zeigerpositionen immer relativ
+zum Pad rechnen (`getBoundingClientRect`), nicht zum Fenster. Eigenes Design, nicht das Gerät von LH Virtual nachbauen.
+
+## 2.2 Neue Apps (Funktionen wie im LH-Virtual-Pad, eigener Stil und eigene Namen)
+
+Startseite „Crew & community“ (`GROUPS` in `home.js`): Mail (`js/apps/mail.js`: nur echte Quellen – `va/notices.json`, Willkommensbrief,
+Monatsübersicht aus dem Logbuch), Messages (Mitteilungen + Hoppie-ACARS als Unterhaltungen, nur lesen), Academy (Kurse dreisprachig im Modul,
+Fortschritt `asl.academy`; kein offizielles VA-Training), News (`sim-news.yml` → Branch `news`, nur Titel, Teaser ≤ 160 Zeichen, Quelle, Link),
+Photos (IndexedDB `asl.photos` – Bilder sind zu groß für localStorage), Scenery (Wischen durch `va/routes.json`, Link zur Suche auf flightsim.to).
+Werkzeuge: Reference (Alphabet, Umrechner, Codes, Lichtsignale, METAR), Browser (Links in neuem Tab – die Dienste erlauben keine Einbettung).
+Home-Spalten scrollen innen (`.hm-widgets`, `.hm-main`), damit das Dock nie abgeschnitten wird. Nicht übernommen: Partner-Apps von LH Virtual.
+
+## 2.3 Turnaround (GSX) und Fenix EFB
+
+Live-Daten kommen von der VDGS-Bridge (`vdgs-slot-board/bridge/vdgs_bridge.py`): Sie liefert das Pad unter `http://<PC>:8770/pad/`
+aus (von GitHub Pages, mit Offline-Kopie; Test: `--pad-dir`), dann fragt `js/sim.js` `/sim` alle 2 s ab. Von github.io aus geht das
+nur mit Bridge-Adresse in den Einstellungen (`settings.bridge`) und wenn der Browser es erlaubt (https → Heimnetz ist meist blockiert).
+GSX: L:-Variablen `FSDT_GSX_*` (Namen, Status 1–7 und Menünummern wie im freien Fenix2GSX), Dienste rufen über `/gsx/call`
+(Menü öffnen `FSDT_GSX_MENU_OPEN=1`, Auswahl `FSDT_GSX_MENU_CHOICE = Nummer−1`). Fenix: Port 8083 (EFB als Webseite, GraphQL
+`dataRef(name)`; Fenix veröffentlicht die Namen nicht – nur echte, geprüfte Namen in `FENIX_REFS` eintragen).
+Namen bewusst eigen: „Turnaround“ (nicht „Ground“), „Fenix EFB“ (das EFB gehört Fenix Simulations, das Pad öffnet es nur).
+Testen ohne Simulator: Bridge mit `--test-gsx --pad-dir <pad>` starten und `http://localhost:8770/pad/?demo=ground&unlock` öffnen.
+
+## 2.4 Checklist, Landing, Konto
+
+- **Checklist** (`js/apps/checklist.js`) und **Landing** (`js/apps/landing.js`): Inhalte nur aus Unterlagen der VA, je Typ in `va/checklists.json`
+  (heute A320-Familie, Karte Februar 2022) und `va/landing.json` (heute Embraer E190/E195: Windgrenzen, Autobrake, Vapp). Typauswahl `js/fleet.js`.
+  Für andere Typen nichts erfinden – die VA trägt sie ein. Windrechner (aus der Excel-Tabelle der VA) für alle Typen; Seite über 360° korrekt.
+  Start-/Landeperformance bleibt SimBriefs Runway Analysis (ASL Fly → Performance). Die Embraer-Diagramme (S. 4–9) sind nicht übernommen.
+- **Konto** (`js/account.js`): Anmeldung mit VATSIM-CID + PIN gegen das Pilot-Dashboard (`https://airserbia-virtual.pages.dev`, Token statt Cookie,
+  `asl.account`); das Profil (SimBrief, CID, IVAO, Hoppie) wird übernommen. Auf localhost zum Testen `asl.dash` = lokales Dashboard.
+- **Nur ASL-Flugpläne**: `pollSimbrief` lädt nur OFPs, deren Callsign mit `ASL` beginnt (`S.ofpErr = "notasl"`).
+
+## 2.5 Bildschirm an, Töne
+
+`js/wake.js`: Screen Wake Lock (iPad ab iOS 16.4), Einstellung `settings.awake` (Standard an), nach Hintergrund/erster Berührung neu holen.
+`js/sound.js`: Töne nur per Web Audio, eigene Klänge (keine Aufnahmen): `cpdlc` (ATC-Gong bei CPDLC aus `js/hoppie.js`), `msg`, `atis`, `slot`;
+iOS braucht die erste Berührung. `js/alerts.js`: Ton + Mitteilung bei Änderung von TSAT/CTOT/TOBT/Off-Block (3 h vor Off-Block) und neuer ATIS.
+
+## 2.6.1 Anmeldung wieder mit vAMSYS (24.11.2026)
+
+Der Nutzer will die vAMSYS-Anmeldung zurück (Client 1473 von Andrei, Pilot API, PKCE). Sie läuft **über das Dashboard**
+(`/api/auth/connect` wählt vAMSYS, sobald `VAMSYS_PILOT_CLIENT_ID` gesetzt ist); das Pad ändert nur Beschriftungen
+(`ACC.cfg.provider`). Das Konto bleibt das Dashboard-Konto: Schlüssel ist die VATSIM-ID aus dem vAMSYS-Profil, `pilot().pilotId`
+ist die vAMSYS-Piloten-ID (ASL…). Buchungen bleiben im Dashboard (nicht in vAMSYS). Der Abschnitt unten gilt sonst weiter –
+die Sätze „vAMSYS ist ganz entfernt … Nichts mehr mit vAMSYS einbauen“ sind damit überholt (das Pad spricht weiter nie selbst mit vAMSYS).
+
+## 2.6 Ohne vAMSYS, echte ATIS
+
+**vAMSYS ist ganz entfernt** (Wunsch des Nutzers, dauerhaft: „es wird nichts über vAMSYS gemacht“). Es gibt nur noch das Konto (`js/account.js`,
+VATSIM-CID + PIN gegen das Dashboard); `pilot()` liefert Name, CID, VATSIM-Rating und die Dashboard-Buchungen für Crew-Ausweis, Dienstplan,
+Kalender und Home. Keine Pflicht-Anmeldung (der alte vAMSYS-Schalter ist weg). Nichts mehr mit vAMSYS einbauen.
+ATIS: VATSIM zuerst; ist keine online, die echte D-ATIS von `atis.info/api/<ICAO>` (nur US-Flughäfen, `realAtis` in `js/data.js`,
+`a.real = true`); sonst die Piste aus dem echten METAR-Wind (`runwayFromWind`). Europa hat keine freie echte ATIS – nicht scrapen.
+Hoppie-Feld ist `type=text` mit `class="masked"` (kein „Passwort speichern?“ des Browsers); nur CID+PIN ist ein echtes Login-Formular.
+
+Stände von Air Serbia: `va/asl-stands.json` (Daten der VA: stands.ini + Notizen des Nutzers, Nov 2026). `aslStand` in `js/stands.js` hat für
+ASL-Flüge Vorrang vor der allgemeinen Vorhersage (Ankunft überall, Abflug in Belgrad mit Regeln nach Ziel/Typ). Frankfurt = Terminal 3 Pier J
+(seit 5.5.2026, Präfix „J“), Zürich Dock E kleine Gates zuerst (E52 ist A380-fähig → zuletzt), Dock B nur wenn E voll. Keine Gate-Nummern erfinden:
+öffentliche Quellen nennen keine – nur, was die VA liefert. Das Dashboard (`tools/build-schedule.mjs`) liest dieselbe Datei für die Belgrad-Abflüge.
+
+Login: VATSIM Connect über das Dashboard (`accConnect` in `js/account.js` → `/api/auth/connect?client=pad&return=…`, zurück mit
+`#asv_token=…`, das sofort aus der Adresse entfernt wird). CID+PIN nur, solange das Dashboard `pinLogin` meldet. Nie Passwörter im Pad.
+
+TOBT: vIFF CDM hat **keine offene Schnittstelle** zum Setzen der TOBT (Pilot-Panel vdgs.vatsimspain.es nur mit VATSIM-Login).
+Darum: eigene TOBT im Pad (`ownTobt`/`setOwnTobt` in `js/apps/vdgs.js`, `asl.tobt` je `flightKey`), an CDM-Flughäfen Hinweis + Knopf zum
+VATSIM-VDGS, wenn sie von der vIFF-TOBT abweicht. Funk: Übersichts-Leiste zweigeteilt (jetzt | nächster Wechsel); US-CTAF aus
+`ctaf-us.json` (`stnA` in `js/atc.js`; ohne CTAF die Tower-Frequenz = CTAF bei geschlossenem Tower). Neu bauen:
+`python tools/build-ctaf.py airports.csv airport-frequencies.csv > ctaf-us.json` (OurAirports).
 
 ## Updates
 
@@ -91,5 +164,4 @@ Autor `sbelic95 <119758002+sbelic95@users.noreply.github.com>`. Nach dem Push pr
 ## Offen
 
 - Feldnamen der SimBrief-Runway-Analysis (`tlr.takeoff.runway[].speeds_v1` usw.) stammen aus einem Forenbeispiel; mit einem echten OFP des Nutzers gegenprüfen (Einheiten: Längen in m?).
-- vAMSYS mit echtem Konto testen (Aktivierung durch die VA, CORS, Feldnamen von /profile und /bookings).
 - Ideen: Live-FOB, Position und COM1 aus dem Simulator über die Bridge des VDGS (`bridge/vdgs_bridge.py`; braucht http im Heimnetz), weitere SimBrief-Airframes (A320, A330, ATR) in `FLEET` in `js/apps/ops.js`, Push-Hinweise.

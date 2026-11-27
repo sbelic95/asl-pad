@@ -9,7 +9,9 @@ import { cityOf } from "./tz.js";
 
 const VATSPY = "https://raw.githubusercontent.com/vatsimnetwork/vatspy-data-project/master/";
 const TRACON_URL = "https://raw.githubusercontent.com/sbelic95/vdgs-slot-board/atc/tracons.json";
-let FIR = null, TRACONS = null, firReq = null, trReq = null;
+let FIR = null, TRACONS = null, firReq = null, trReq = null, CTAF = null, ctafReq = null;
+// US airports: the CTAF of the airport (ctaf-us.json from OurAirports, tools/build-ctaf.py) – shown next to UNICOM when nobody is online
+export const ctafOf = (icao) => { const c = CTAF?.[icao]; return c ? { mhz: c[0], twr: c[1] === 1 } : null; };
 
 export function loadAtcData() {
   if (!firReq) firReq = Promise.all([getJSON(VATSPY + "Boundaries.geojson", 60000), fetch(VATSPY + "VATSpy.dat").then((r) => r.text())])
@@ -32,6 +34,7 @@ export function loadAtcData() {
       FIR = { feats, firs, uirs, lids }; idxFor = null; seqKey = "";
     }).catch(() => { firReq = null; });
   if (!trReq) trReq = getJSON(TRACON_URL, 30000).then((d) => { if (Array.isArray(d)) TRACONS = d; }).catch(() => { trReq = null; });
+  if (!ctafReq) ctafReq = getJSON("ctaf-us.json", 30000).then((d) => { CTAF = d || {}; seqKey = ""; }).catch(() => { ctafReq = null; });
   return Promise.all([firReq, trReq]);
 }
 export const atcReady = () => !!FIR;
@@ -99,6 +102,8 @@ export function aptStations(icao, pos) {
 }
 const td = (...l) => l.find(Boolean) || null;
 const FAC = { 1: "Radio", 2: "Delivery", 3: "Ground", 4: "Tower", 5: "Approach", 6: "Radar" };
+// a station at an airport: with nobody online, a US airport also gets its CTAF
+function stnA(icao, c, place) { const s = stn(c, place); if (s.unicom) { const f = ctafOf(icao); if (f) return { ...s, ctaf: f.mhz, ctafTwr: f.twr, apt: icao }; } return s; }
 function stn(c, place) {
   if (!c) return { cs: "UNICOM", mhz: "122.800", name: t("No controller online"), unicom: true, alt: [] };
   if (c.c) return { ...stn(c.c, c.name), alt: (c.alts || []).map((x) => ({ cs: x.c.callsign, mhz: x.c.frequency })) };
@@ -151,12 +156,12 @@ export function freqPlan() {
   const depApp = td(D.dep, D.app);
   const depZone = airborne && distDep != null && distDep < 50 && alt < 12000 && (remain == null || remain > APP_KM);
   if (!airborne && !atDest) {
-    if (gs < 3) push(t("Clearance"), stn(td(D.del, D.gnd, D.twr, depApp, here), dc), t("now"));
-    push(t("Push-back and taxi"), stn(td(D.gnd, D.twr, depApp, here), dc), gs < 3 ? t("after the clearance") : t("now"));
-    push(t("Take-off"), stn(td(D.twr, depApp, here), dc), t("at the holding point"));
+    if (gs < 3) push(t("Clearance"), stnA(depI, td(D.del, D.gnd, D.twr, depApp, here), dc), t("now"));
+    push(t("Push-back and taxi"), stnA(depI, td(D.gnd, D.twr, depApp, here), dc), gs < 3 ? t("after the clearance") : t("now"));
+    push(t("Take-off"), stnA(depI, td(D.twr, depApp, here), dc), t("at the holding point"));
     push(t("Departure"), stn(td(depApp, here), dc), t("after take-off, when Tower says"));
   } else if (depZone) {
-    if (distDep < 10 && alt < 3000) push(t("Take-off"), stn(td(D.twr, depApp, here), dc), t("now"));
+    if (distDep < 10 && alt < 3000) push(t("Take-off"), stnA(depI, td(D.twr, depApp, here), dc), t("now"));
     push(t("Departure"), stn(td(depApp, here), dc), distDep < 10 && alt < 3000 ? t("after take-off, when Tower says") : t("now"));
   }
   if (!atDest) {
@@ -172,15 +177,15 @@ export function freqPlan() {
     }
     const r = remain ?? total;
     if (arrI) {
-      push(t("Approach") + " " + arrI, stn(td(A.app, arrCtr), ac), t("about {n} km before the destination", { n: APP_KM }), r != null ? Math.max(0, r - APP_KM) : null);
-      push(t("Landing"), stn(td(A.twr, A.app, arrCtr), ac), t("on final"), r != null ? Math.max(0, r - TWR_KM) : null);
-      push(t("Taxi to the stand"), stn(td(A.gnd, A.twr, A.app, arrCtr), ac), t("after vacating the runway"), r);
+      push(t("Approach") + " " + arrI, stnA(arrI, td(A.app, arrCtr), ac), t("about {n} km before the destination", { n: APP_KM }), r != null ? Math.max(0, r - APP_KM) : null);
+      push(t("Landing"), stnA(arrI, td(A.twr, A.app, arrCtr), ac), t("on final"), r != null ? Math.max(0, r - TWR_KM) : null);
+      push(t("Taxi to the stand"), stnA(arrI, td(A.gnd, A.twr, A.app, arrCtr), ac), t("after vacating the runway"), r);
     }
-  } else push(t("Taxi to the stand"), stn(td(A.gnd, A.twr, A.app, arrCtr), ac), t("now"));
+  } else push(t("Taxi to the stand"), stnA(arrI, td(A.gnd, A.twr, A.app, arrCtr), ac), t("now"));
   const merged = [];
   for (const s of steps) {
     const prev = merged.at(-1);
-    if (prev && prev.st.cs === s.st.cs) { if (!prev.role.includes(s.role)) prev.role += " · " + s.role; continue; }
+    if (prev && prev.st.cs === s.st.cs && (prev.st.ctaf || "") === (s.st.ctaf || "")) { if (!prev.role.includes(s.role)) prev.role += " · " + s.role; continue; }
     merged.push({ ...s });
   }
   let cur = 0;

@@ -1,6 +1,5 @@
 // ASL Pad shell: lock screen, home screen, apps, app switcher (double-tap the home bar), status bar.
 import { bookingClick } from "./booking.js";
-import { handleRedirect, gateNeeded, signIn, V } from "./vamsys.js";
 import { $, esc, hhmmz, store } from "./util.js";
 import { S, settings, saveSettings, setTestDemo, onChange, wxOf, startPolling, refreshAll, restart, emit } from "./data.js";
 import { t, setLang, getLang, dateLong } from "./i18n.js";
@@ -27,13 +26,31 @@ import * as Kneeboard from "./apps/kneeboard.js";
 import * as Manuals from "./apps/manuals.js";
 import * as Store from "./apps/store.js";
 import { Vatsim, Ivao } from "./apps/radar.js";
+import * as Mail from "./apps/mail.js";
+import * as Messages from "./apps/messages.js";
+import * as Academy from "./apps/academy.js";
+import * as Reference from "./apps/reference.js";
+import * as Photos from "./apps/photos.js";
+import * as Browser from "./apps/browser.js";
+import * as Scenery from "./apps/scenery.js";
+import * as News from "./apps/news.js";
+import * as Turnaround from "./apps/turnaround.js";
+import * as Fenix from "./apps/fenix.js";
+import * as Checklist from "./apps/checklist.js";
+import * as Landing from "./apps/landing.js";
+import { startSim, onSim, SIM } from "./sim.js";
 import { notify, N } from "./notify.js";
 import { startSync } from "./sync.js";
-import { initDevice, askPin, pinNeeded, faceId, applyBright, hide as hideDc, isOpen as dcOpen } from "./device.js";
+import { initDevice, faceId, applyBright, hide as hideDc, isOpen as dcOpen } from "./device.js";
+import { initFrame, applyFrame } from "./frame.js";
+import { startAlerts } from "./alerts.js";
+import { applyWake } from "./wake.js";
+import "./sound.js";
 
 const APPS = {
   fly: Fly, ops: Ops, log: Log, settings: Settings, downloads: Downloads, apt: Airport, cabin: Cabin,
   weather: Weather, clock: Clock, calc: Calc, calendar: Calendar, kneeboard: Kneeboard, manuals: Manuals, store: Store, radar: Vatsim, ivao: Ivao,
+  mail: Mail, messages: Messages, academy: Academy, reference: Reference, photos: Photos, browser: Browser, scenery: Scenery, news: News, turnaround: Turnaround, fenix: Fenix, checklist: Checklist, landing: Landing,
 };
 const NAMES = Object.fromEntries(HOME_APPS.map((a) => [a.id, a]));
 
@@ -57,10 +74,17 @@ export function skyNow(now = Date.now()) {
 applyTheme();
 
 // ---------- status bar ----------
+// network and battery like on a real tablet; the battery only where the browser tells it (Chrome, Edge), never made up
+let BAT = null;
+navigator.getBattery?.().then((b) => { const u = () => { BAT = { l: b.level, c: b.charging }; renderStatus(); }; u(); b.addEventListener("levelchange", u); b.addEventListener("chargingchange", u); }).catch(() => {});
+addEventListener("online", () => renderStatus()); addEventListener("offline", () => renderStatus());
+const simDot = () => (SIM.base ? `<span title="${SIM.ok ? t("Simulator connected") : t("Simulator not connected")}"><span class="dot ${SIM.ok ? "on" : SIM.d ? "" : "off"}"></span>SIM</span>` : "");
+const sysIcons = () => simDot() + `<span class="sysi" title="${navigator.onLine ? "" : t("Offline")}">${navigator.onLine ? I.wifi : I.wifiOff}</span>`
+  + (BAT ? `<span class="bat${BAT.c ? " chg" : BAT.l <= 0.2 ? " low" : ""}" title="${BAT.c ? t("Charging") : ""}"><span class="num">${Math.round(BAT.l * 100)} %</span><i><b style="width:calc(${Math.max(4, BAT.l * 100)}% - 3px)"></b></i></span>` : "");
 function renderStatus(now = Date.now()) {
   const vat = settings.demo ? `<span class="dot on"></span>DEMO` : S.feedOk == null ? "" : `<span class="dot ${S.pilot ? "on" : S.feedOk ? "" : "off"}"></span>VATSIM${S.pilot ? " · " + esc(S.pilot.callsign) : ""}`;
-  $("status").innerHTML = ui.view === "lock" ? `<span class="sp"></span><span>${vat}</span>`
-    : `<span class="num">${new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit" }).format(now)}</span><span class="dim">${esc(dateLong(now))}</span><span class="sp"></span><span>${vat}</span><span class="num">${hhmmz(now)}</span>`;
+  $("status").innerHTML = ui.view === "lock" ? `<span class="sp"></span><span>${vat}</span>${sysIcons()}`
+    : `<span class="num">${new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit" }).format(now)}</span><span class="dim">${esc(dateLong(now))}</span><span class="sp"></span><span>${vat}</span><span class="num">${hhmmz(now)}</span>${sysIcons()}`;
 }
 
 // ---------- app frames ----------
@@ -124,7 +148,7 @@ export function goHome() {
   renderHome($("home")); renderStatus();
 }
 function lockPad() { hideSwitcher(); hideDc(true); ui.view = "lock"; renderLock($("lock")); $("lock").classList.remove("gone"); renderStatus(); }
-function unlock() { if (pinNeeded()) { if (!document.querySelector(".pin")) askPin(reallyUnlock); return; } reallyUnlock(); }
+function unlock() { reallyUnlock(); } // no PIN: a swipe opens the pad
 function reallyUnlock() { $("lock").classList.add("gone"); if (ui.app) { ui.view = "app"; renderApp(ui.app); } else goHome(); renderStatus(); whatsNewOnce(); }
 
 // ---------- a new rank: a letter, once ----------
@@ -280,7 +304,7 @@ setInterval(() => {
 
 // ---------- start ----------
 export function settingsChanged(kind) {
-  applyTheme();
+  applyTheme(); applyFrame(); applyWake();
   if (kind === "lang") { // tab labels are built with the frame: build the frames again
     document.querySelectorAll(".app").forEach((a) => a.remove());
     if (ui.view === "app" && ui.app) { renderApp(ui.app); frameOf(ui.app).classList.add("open"); }
@@ -288,29 +312,26 @@ export function settingsChanged(kind) {
   if (kind === "data") restart();
   renderAll();
 }
-// ---------- sign-in with vAMSYS before the pad can be used (switch "required" in va/vamsys.json) ----------
-async function checkGate() {
-  const need = await gateNeeded();
-  let g = $("gate");
-  if (!need) { g?.remove(); return; }
-  if (!g) { g = Object.assign(document.createElement("section"), { id: "gate", className: "layer" }); $("pad").appendChild(g);
-    g.addEventListener("click", (e) => { const b = e.target.closest("[data-gate]"); if (b) { b.disabled = true; signIn().catch(() => { b.disabled = false; }); } }); }
-  const err = V.err === "browser" ? t("vAMSYS could not be reached from the browser. The airline may first have to activate the pad in vAMSYS.") : V.err === "state" ? t("The sign-in was not completed. Please try again.") : V.err;
-  g.innerHTML = `<div class="gate-box"><img class="gate-logo" src="https://pics.avs.io/240/80/JU.png" alt="" referrerpolicy="no-referrer" onerror="this.remove()">
-    <h1>ASL Pad</h1><p>${t("The crew pad of Air Serbia Virtual. Sign in once with your Air Serbia Virtual account to use it on this device.")}</p>
-    <button class="btn pri gate-btn" data-gate>${t("Sign in with vAMSYS")}</button>${err ? `<div class="gate-err">${esc(err)}</div>` : ""}
-    <p class="gate-note">${t("The password stays at vAMSYS. Unofficial fan project for flight simulation.")} · <a href="privacy.html" target="_blank" rel="noopener">${t("Privacy")}</a></p></div>`;
+// the note at the bottom: a virtual airline for a video game, not a real airline (always visible)
+function renderDisclaimer() {
+  let d = $("vdisc"); if (!d) { d = Object.assign(document.createElement("div"), { id: "vdisc", className: "vdisc" }); d.setAttribute("role", "note"); $("pad").appendChild(d); }
+  const txt = t("Virtual airline for a video game (flight simulation) – not a real airline. Not affiliated with Air Serbia.");
+  if (d.textContent !== txt) d.textContent = txt;
 }
-onChange(() => { if ($("gate") || V.err) checkGate(); });
+renderDisclaimer(); onChange(renderDisclaimer);
 loadAirports().then(() => renderAll());
 renderLock($("lock")); renderHome($("home")); renderStatus();
 N.banner = toast;
 initDevice({ goHome, lock: lockPad, applyTheme, renderAll, openApp, changed: settingsChanged, toast });
 applyBright();
-if ((q.has("unlock") || q.get("app")) && !pinNeeded()) { $("lock").classList.add("gone"); ui.view = "home"; if (q.get("app")) openApp(q.get("app"), q.get("tab") || undefined); }
-handleRedirect().then(async (back) => { if (back && !(await gateNeeded())) openApp("settings"); checkGate(); }); // back from the vAMSYS sign-in
+initFrame({ lock: lockPad, unlock, isLocked: () => ui.view === "lock", brighter: (d) => { saveSettings({ bright: Math.min(1, Math.max(0.4, Math.round(((settings.bright ?? 1) + d * 0.1) * 10) / 10)) }); applyBright(); } });
+if (q.has("unlock") || q.get("app")) { $("lock").classList.add("gone"); ui.view = "home"; if (q.get("app")) openApp(q.get("app"), q.get("tab") || undefined); }
 if (ui.view !== "lock") whatsNewOnce();
 startPolling();
+News.pollNews(); setInterval(() => News.pollNews(), 15 * 60e3);
+import("./account.js").then((m) => { m.accLoad(true); setInterval(() => m.accLoad(), 5 * 60e3); });
+startAlerts(); applyWake();
+startSim(); onSim(() => { renderStatus(); if (ui.view === "app" && ["turnaround", "fenix"].includes(ui.app)) renderApp(ui.app); });
 startSync();
 if ("serviceWorker" in navigator && location.protocol === "https:") {
   // a new version took over (sw.js changed): load it once, so a fix shows up without opening the pad twice

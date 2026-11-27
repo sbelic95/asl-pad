@@ -315,6 +315,36 @@ export function buildStands(el) {
 }
 
 // stands: list for arrI; pilots: VATSIM pilots (stands with an aircraft on the ground count as taken)
+// Air Serbia's own stands (va/asl-stands.json, kept by the VA): per airport best first; at Belgrade per side (dep/arr)
+// with rules by destination/origin and type. They win over the general forecast for ASL flights.
+let ASL_ST = null;
+export const setAslStands = (d) => { ASL_ST = d && typeof d === "object" ? d : null; };
+const normRef = (r) => String(r || "").toUpperCase().replace(/\s+/g, "").replace(/^([A-Z]*)0+(?=\d)/, "$1");
+export function aslPrefs(icao, other, type, side = "arr") {
+  const a = ASL_ST?.[icao]; if (!a) return null;
+  const c = a.dep || a.arr ? a[side] : a; if (!c) return null;
+  const r = (c.rules || []).find((x) => (!x.to || x.to.includes(other)) && (!x.from || x.from.includes(other)) && (!x.type || x.type.includes(type)));
+  return { list: [...(r ? r.stands : []), ...(c.stands || [])], fallback: Array.isArray(c.fallback) ? c.fallback : [], prefix: !!(a.prefix || c.prefix), note: r?.note || c.note || "" };
+}
+export function aslStand(stands, icao, other, cs, type, side = "arr", pilots = []) {
+  if (!/^ASL/.test(cs || "")) return null;
+  const p = aslPrefs(icao, other, type, side); if (!p) return null;
+  const taken = (pilots || []).filter((x) => x.groundspeed < 5 && x.callsign !== cs).map((x) => [x.latitude, x.longitude]);
+  const free = (s) => !taken.some((t) => distKm(t, [s.lat, s.lon]) < 0.06);
+  const list = stands || [], byRef = new Map(list.map((s) => [normRef(s.ref), s]));
+  const pick = (refs) => {
+    for (const r of refs) {
+      if (p.prefix) { const m = list.filter((s) => normRef(s.ref).startsWith(normRef(r))).sort((a, b) => a.ref.localeCompare(b.ref, "en", { numeric: true })).find(free); if (m) return m; }
+      else { const s = byRef.get(normRef(r)); if (s && free(s)) return s; }
+    }
+    return null;
+  };
+  const c = pick(p.list), s = c || pick(p.fallback);
+  if (s) return { ref: s.ref, gate: c ? s.gate : false, term: p.note, schengen: null, remote: !c, pos: [s.lat, s.lon], src: "Air Serbia" };
+  // not in the map data (or all taken): still the airline's first choice, without a position on the map
+  const first = p.list[0];
+  return first ? { ref: p.prefix ? first + "…" : first, gate: true, term: p.note, schengen: null, remote: false, pos: null, src: "Air Serbia" } : null;
+}
 export function predictStand(stands, arrI, depI, cs, type, pilots = []) {
   if (!stands || !stands.length) return null;
   const schengenFlight = SCHENGEN.test(arrI) ? SCHENGEN.test(depI || "") : null;

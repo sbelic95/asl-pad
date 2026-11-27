@@ -9,21 +9,28 @@ import { APP_ICONS, I } from "./icons.js";
 import { flightWidget, timesWidget, todayWidget, liveHtml } from "./lock.js";
 import { cityOf } from "./tz.js";
 import { planCard, suggestCard, vamBookingCard } from "./booking.js";
-import { V } from "./vamsys.js";
+import { pilot } from "./account.js";
 import { weatherWidget } from "./apps/weather.js";
 import { calendarWidget } from "./apps/calendar.js";
+import { unreadMail } from "./apps/mail.js";
 
 // every app of the pad with its group (the home pages) – "core" apps cannot be removed in the App Store
-export const GROUPS = [["ops", "Operations"], ["net", "Network & weather"], ["tools", "Tools & device"]];
+export const GROUPS = [["ops", "Operations"], ["crew", "Crew & community"], ["net", "Network & weather"], ["tools", "Tools & device"]];
 export const HOME_APPS = [
   { id: "fly", name: "ASL Fly", icon: "fly", g: "ops", core: true }, { id: "ops", name: "ASL Ops", icon: "ops", g: "ops", core: true },
   { id: "apt", name: "Airport", icon: "airport", g: "ops" }, { id: "log", name: "Logbook", icon: "log", g: "ops", core: true },
   { id: "kneeboard", name: "Kneeboard", icon: "kneeboard", g: "ops" }, { id: "manuals", name: "Manuals", icon: "manuals", g: "ops" },
   { id: "calendar", name: "Calendar", icon: "calendar", g: "ops" }, { id: "cabin", name: "Cabin", icon: "cabin", g: "ops" },
   { id: "simbrief", name: "SimBrief", icon: "simbrief", g: "ops" },
+  { id: "checklist", name: "Checklist", icon: "checklist", g: "ops" }, { id: "landing", name: "Landing", icon: "landing", g: "ops" },
+  { id: "turnaround", name: "Turnaround", icon: "turnaround", g: "ops" }, { id: "fenix", name: "Fenix EFB", icon: "fenix", g: "ops" },
+  { id: "mail", name: "Mail", icon: "mail", g: "crew" }, { id: "messages", name: "Messages", icon: "messages", g: "crew" },
+  { id: "academy", name: "Academy", icon: "academy", g: "crew" }, { id: "news", name: "News", icon: "news", g: "crew" },
+  { id: "photos", name: "Photos", icon: "photos", g: "crew" }, { id: "scenery", name: "Scenery", icon: "scenery", g: "crew" },
   { id: "radar", name: "VATSIM Radar", icon: "radar", g: "net" }, { id: "ivao", name: "IVAO Radar", icon: "ivao", g: "net" },
   { id: "weather", name: "Weather", icon: "weather", g: "net" },
   { id: "clock", name: "Clock", icon: "clock", g: "tools" }, { id: "calc", name: "Calculator", icon: "calc", g: "tools" },
+  { id: "reference", name: "Reference", icon: "reference", g: "tools" }, { id: "browser", name: "Browser", icon: "browser", g: "tools" },
   { id: "downloads", name: "Downloads", icon: "downloads", g: "tools" }, { id: "store", name: "App Store", icon: "store", g: "tools", core: true },
   { id: "settings", name: "Settings", icon: "settings", g: "tools", core: true },
 ];
@@ -41,11 +48,11 @@ const icon = (a, badge) => `<button class="app-ic" data-app="${a.id}"><div class
 export function renderHome(el, now = Date.now()) {
   const o = S.ofp, d = derived(now);
   const urgent = actions(now).filter((a) => a.lv === "red" || a.lv === "attn");
-  const badges = { ops: urgent.filter((a) => a.app === "ops").length, fly: urgent.filter((a) => a.app === "fly").length };
+  const badges = { ops: urgent.filter((a) => a.app === "ops").length, fly: urgent.filter((a) => a.app === "fly").length, mail: installed("mail") ? unreadMail() : 0 };
   const sub = o ? t("{f} to {city} today", { f: o.iataNo || o.callsign, city: cityOf(o.dest) || o.dest?.icao }) : t("No flight loaded");
   el.innerHTML = `
     <div class="hm-widgets">
-      <div><p class="hm-greet">${esc(greeting(now))}, ${V.data?.first ? esc(V.data.first) : t("Captain")}</p><div class="hm-sub">${esc(sub)}</div>${show("wx") ? wxHere(o, d) : ""}${show("career") ? careerHtml(career()) + (V.data?.rank ? `<div class="hm-vam"><span class="lbl">vAMSYS</span> <b>${esc(V.data.rank)}</b>${V.data.hours != null ? ` · ${Math.round(+V.data.hours)} h` : ""}${V.data.flights != null ? ` · ${esc(String(V.data.flights))} ${t("flights")}` : ""}</div>` : "") : ""}</div>
+      <div><p class="hm-greet">${esc(greeting(now))}, ${pilot()?.first ? esc(pilot().first) : t("Captain")}</p><div class="hm-sub">${esc(sub)}</div>${show("wx") ? wxHere(o, d) : ""}${show("career") ? careerHtml(career()) + (pilot()?.rank ? `<div class="hm-vam"><span class="lbl">VATSIM</span> <b>${esc(pilot().rank)}</b></div>` : "") : ""}</div>
       ${flightWidget(o, d, now)}${timesWidget(o, now)}${todayWidget(now)}${show("wwx") ? weatherWidget() : ""}${show("wcal") ? calendarWidget() : ""}
     </div>
     <div class="hm-main">
@@ -58,7 +65,7 @@ export function renderHome(el, now = Date.now()) {
 }
 
 // cards the pilot can hide (Settings → Home screen); the cards of the board can also be sorted
-export const HOME_CARDS = [["wwx", "Weather widget"], ["wcal", "Calendar widget"], ["wx", "Weather here"], ["career", "Career"], ["vbook", "vAMSYS booking"], ["plan", "Flight plan"], ["suggest", "Suggested for you"], ["notices", "Notices"], ["events", "Network events"]];
+export const HOME_CARDS = [["wwx", "Weather widget"], ["wcal", "Calendar widget"], ["wx", "Weather here"], ["career", "Career"], ["vbook", "Your booking"], ["plan", "Flight plan"], ["suggest", "Suggested for you"], ["notices", "Notices"], ["events", "Network events"]];
 const BOARD = { vbook: (o, now) => vamBookingCard(now), plan: (o, now) => planCard(o, now), suggest: (o, now) => suggestCard(now), notices: (o, now, d) => noticesCard(now, d), events: (o, now) => eventsCard(o, now) };
 export const BOARD_DEFAULT = ["vbook", "plan", "suggest", "notices", "events"];
 export function boardOrder() { const o = (settings.homeOrder || []).filter((k) => BOARD[k]); return [...o, ...BOARD_DEFAULT.filter((k) => !o.includes(k))]; }

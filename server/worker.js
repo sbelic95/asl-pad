@@ -1,11 +1,11 @@
 // ASL Pad server (Cloudflare Worker + KV): keeps the pilot's pad data in step across devices.
-// Who is who comes from vAMSYS: the pad sends its vAMSYS access token, the worker asks vAMSYS for the pilot and
-// stores the data under that pilot's ID. No passwords, no secrets of the pad; the worker itself needs none either.
+// Who is who comes from the Air Serbia Virtual dashboard: the pad sends its account token (CID + PIN sign-in), the worker
+// asks the dashboard for the pilot and stores the data under the pilot's VATSIM CID. No passwords, no secrets of the pad; the worker itself needs none either.
 //   GET  /sync   → { at, data }   the stored copy of this pilot
 //   PUT  /sync   ← { at, data }   replaces it (the pad merges before it writes)
 //   GET  /health → "ok"
 // Bindings (wrangler.toml): KV namespace PAD. Variable ORIGINS = allowed origins, comma separated.
-const VAMSYS_USER = "https://vamsys.io/api/v3/pilot/user";
+const DASH_ME = "https://airserbia-virtual.pages.dev/api/me";
 const MAX = 512 * 1024; // 512 KB per pilot is plenty for logbook, calendar and settings
 
 export default {
@@ -34,15 +34,15 @@ export default {
   },
 };
 
-// the vAMSYS token → pilot ID, cached for 30 minutes (vAMSYS tokens last an hour)
+// the account token → VATSIM CID, cached for 30 minutes
 async function whoIs(req, env) {
   const m = (req.headers.get("authorization") || "").match(/^Bearer\s+(\S{20,})$/); if (!m) return null;
   const tok = m[1], hash = [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(tok)))].map((b) => b.toString(16).padStart(2, "0")).join("");
   const hit = await env.PAD.get("tok:" + hash); if (hit) return hit;
-  const r = await fetch(VAMSYS_USER, { headers: { authorization: "Bearer " + tok, accept: "application/json" } });
+  const r = await fetch(env.DASH_ME || DASH_ME, { headers: { authorization: "Bearer " + tok, accept: "application/json" } });
   if (!r.ok) return null;
-  const u = await r.json().catch(() => null), d = u?.data || u;
-  const id = String(d?.id ?? d?.user_id ?? ""); if (!id) return null;
+  const d = await r.json().catch(() => null);
+  const id = String(d?.id ?? ""); if (!/^\d{6,8}$/.test(id)) return null;
   await env.PAD.put("tok:" + hash, id, { expirationTtl: 1800 });
   return id;
 }

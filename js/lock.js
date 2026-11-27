@@ -10,7 +10,8 @@ import { tzOf } from "./tz.js";
 const LOGO = "https://pics.avs.io/480/160/JU.png"; // Air Serbia logo, loaded at display time (not part of this project)
 
 export function brand() {
-  return `<img src="${LOGO}" alt="Air Serbia" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'word',textContent:'AIR SERBIA'}))">`;
+  // "Virtual" under the logo: this is a virtual airline, not Air Serbia
+  return `<span class="vbrand"><img src="${LOGO}" alt="Air Serbia" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'word',textContent:'AIR SERBIA'}))"><span class="vword">Virtual</span></span>`;
 }
 
 export function noteHtml(a) {

@@ -1,0 +1,26 @@
+{
+  "_help": "Podaci za sletanje po tipu aviona za aplikaciju Landing. Svaki tip: name, applies (ICAO tipovi), source, info (lista), limits (tailwind, crosswindDry, crosswindWet u kt), autobrake: [uslov, kočnice, reverse, flaps, ključ (dryLong | dryShort | wet | cat2dry | cat2wet | cont | narrow)], notes, vapp (true ako važi korekcija ½ čeonog + udar, min 5 maks 20). Samo pravi podaci kompanije – ništa ne izmišljati.",
+  "types": {
+    "EJET": {
+      "name": "Embraer E190 / E195",
+      "applies": ["E190", "E195", "E290", "E295"],
+      "source": "Air Serbia Virtual – Landing Data & Performance Tables (Embraer), revision 1.0",
+      "info": ["FLAPS FULL", "AUTOBRAKE SETTING – MEDIUM", "Consider landing distance based on max manual braking", "Use manual braking and the HUD deceleration scale after touchdown (if applicable)"],
+      "limits": { "tailwind": 5, "crosswindDry": 15, "crosswindWet": 5 },
+      "autobrake": [
+        ["DRY more than 1800 m", "MED", "MIN REV", "5/FULL", "dryLong"],
+        ["DRY 1800 m or less", "MED", "MAX REV", "FULL", "dryShort"],
+        ["WET", "MED", "MAX REV", "FULL", "wet"],
+        ["CAT II DRY", "MED", "MAX REV", "5", "cat2dry"],
+        ["CAT II WET", "MED", "MAX REV", "5", "cat2wet"],
+        ["Contaminated runway", "HI", "MAX REV", "FULL", "cont"],
+        ["RWY DRY < 42 m (width)", "MED", "MAX REV", "FULL", "narrow"]
+      ],
+      "notes": ["Autobrake must be set to HI when MED is not sufficient according to the performance software analysis.",
+        "If runway occupancy is a concern and a rapid exit near the apron is available, refer to the airport briefing.",
+        "Check deceleration on the HGS deceleration scale; at any slippage take over at once with maximum manual braking.",
+        "If directional control is a concern, consider using less than maximum reverse."],
+      "vapp": true
+    }
+  }
+}

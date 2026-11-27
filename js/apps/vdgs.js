@@ -4,7 +4,9 @@
 // Countdowns run every second through tick() (no full rebuild).
 import { S, departureStand, arrivalStand, runwayOf, atisOf, emit } from "../data.js";
 import { t } from "../i18n.js";
-import { esc, hhmmz, p2 } from "../util.js";
+import { esc, hhmmz, p2, store } from "../util.js";
+import { flightKey } from "../flight.js";
+import { sheet } from "../sheet.js";
 import { freqPlan, loadAtcData, atcReady } from "../atc.js";
 
 const mmss = (ms) => { const s = Math.max(0, Math.round(ms / 1000)), h = Math.floor(s / 3600); return (h ? h + ":" + p2(Math.floor(s / 60) % 60) : Math.floor(s / 60)) + ":" + p2(s % 60); };
@@ -42,8 +44,8 @@ function freqBox(now) {
   const p = freqPlan();
   if (!p?.cur) return `<div class="vd-freq"><div class="vd-l">${t("FREQUENCY")}</div><div class="vd-v dim">${atcReady() ? "UNICOM 122.800" : t("loading the airspaces…")}</div></div>`;
   const when = p.next ? [p.next.when !== t("now") ? p.next.when : "", p.next.min != null && p.next.km > 0.5 ? t("in about {n} min", { n: p.next.min }) : ""].filter(Boolean).join(" · ") : "";
-  return `<div class="vd-freq"><div class="vd-row"><div class="vd-l">${t("CONTACT NOW")}</div><div class="vd-st">${esc(p.cur.st.name)}<small>${esc(p.cur.st.cs)} · ${esc(p.cur.role)}</small></div><b class="vd-mhz">${esc(p.cur.st.mhz)}</b></div>
-    ${p.next ? `<div class="vd-row next${p.soon ? " soon" : ""}"><div class="vd-l">${p.soon ? t("CHANGE SOON") : t("NEXT")}</div><div class="vd-st">${esc(p.next.st.name)}<small>${esc(p.next.st.cs)} · ${esc(p.next.role)}${when ? " · " + esc(when) : ""}</small></div><b class="vd-mhz">${esc(p.next.st.mhz)}</b></div>` : ""}</div>`;
+  return `<div class="vd-freq"><div class="vd-row"><div class="vd-l">${t("CONTACT NOW")}</div><div class="vd-st">${esc(p.cur.st.name)}<small>${esc(p.cur.st.cs)} · ${esc(p.cur.role)}</small></div><b class="vd-mhz">${esc(p.cur.st.mhz)}${p.cur.st.ctaf ? `<small> · CTAF ${esc(p.cur.st.ctaf)}</small>` : ""}</b></div>
+    ${p.next ? `<div class="vd-row next${p.soon ? " soon" : ""}"><div class="vd-l">${p.soon ? t("CHANGE SOON") : t("NEXT")}</div><div class="vd-st">${esc(p.next.st.name)}<small>${esc(p.next.st.cs)} · ${esc(p.next.role)}${when ? " · " + esc(when) : ""}</small></div><b class="vd-mhz">${esc(p.next.st.mhz)}${p.next.st.ctaf ? `<small> · CTAF ${esc(p.next.st.ctaf)}</small>` : ""}</b></div>` : ""}</div>`;
 }
 const cell = (l, v, cls = "") => `<div class="vd-c ${cls}"><span>${l}</span><b>${v}</b></div>`;
 export function vdgsView(o, d, now) {

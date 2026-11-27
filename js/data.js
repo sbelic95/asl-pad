@@ -3,13 +3,13 @@ import { getJSON, getText, store, distKm, greatCircle } from "./util.js";
 import { fetchOfp, normOfp } from "./ofp.js";
 import { decodeMetar, atisInfo, loadRunways, runwayFromWind } from "./wx.js";
 import { loadFlight, saveFlight, updateFlight, project, phaseOf, estimates, fuelState, logEntry, flightKey } from "./flight.js";
-import { standsCached, standsGithub, standsOverpass, predictStand } from "./stands.js";
+import { standsCached, standsGithub, standsOverpass, predictStand, aslStand, setAslStands } from "./stands.js";
 import { demoSimbrief, demoPilot, demoMetars, demoAtis, demoControllers, demoLogbook, demoEvents, demoTraffic, demoSigmets, demoBoard, demoNet } from "./demo.js";
 import { pollAcars } from "./hoppie.js";
-import { loadVamsys } from "./vamsys.js";
 
 export const API = {
   feed: "https://data.vatsim.net/v3/vatsim-data.json",
+  datis: "https://atis.info/api/", // the airports' real D-ATIS (US airports only); used when no VATSIM ATIS is online
   metar: "https://metar.vatsim.net/",
   viff: "https://viff-system.network",
   ukcp: "https://raw.githubusercontent.com/sbelic95/vdgs-slot-board/data/ukcp.json",
@@ -23,7 +23,7 @@ export const API = {
   vafleet: "va/fleet.json", // the VA fleet with registrations (same tool)
 };
 
-const DEF = { simbrief: "", cid: "", unit: "kg", theme: "dark", wall: "night", wallDim: 0.3, homeHide: [], homeOrder: [], hoppie: "", ivao: "", appsOff: [], pin: true, dnd: false, push: false, lock: 10, demo: "" };
+const DEF = { simbrief: "", cid: "", unit: "kg", theme: "dark", wall: "night", wallDim: 0.3, homeHide: [], homeOrder: [], hoppie: "", ivao: "", appsOff: [], dnd: false, push: false, lock: 10, frame: "auto", bridge: "", awake: true, sound: true, soundVol: 0.7, demo: "" };
 export let settings = { ...DEF, ...store.get("asl.settings", {}) };
 // The demo flight is only for the automated test on the developer's own computer (localhost).
 // On the real site it can never be switched on, and a demo saved earlier is switched off.
@@ -66,6 +66,8 @@ export async function pollSimbrief(force) {
   let o = null;
   try { o = await fetchOfp(settings.simbrief.trim()); }
   catch (e) { const m = String(e.message || e); S.ofpErr = m === "user" || m === "noofp" ? m : m.startsWith("parse:") ? "parse" : "net"; S.ofpErrMsg = m.replace(/^(net|parse):/, ""); }
+  // only Air Serbia flights: a plan of another airline is not loaded (the last Air Serbia plan stays)
+  if (o && !/^ASL/.test(o.callsign || "")) { S.ofpErr = "notasl"; S.ofpErrMsg = o.callsign || ""; o = null; }
   if (o) {
     try { setOfp(o); S.ofpErr = ""; S.ofpErrMsg = ""; }
     catch (e) { S.ofpErr = "parse"; S.ofpErrMsg = "pad: " + (e.message || e.name); console.error(e); }
@@ -124,6 +126,7 @@ export async function pollFeed() {
     S.prefile = S.pilot ? null : d.prefiles.find((p) => (cid && p.cid === cid) || (cs && p.callsign === cs)) || null;
     S.inUse = new Set([...d.pilots, ...d.prefiles].map((p) => p.callsign).filter((c) => /^ASL/.test(c)));
     S.atis = d.atis; // all of them: the frequency guide also finds stations by other prefixes (JFK_, IATA codes)
+    pollDatis([o?.dep?.icao, o?.dest?.icao]);
     S.ctrl = d.controllers.filter((c) => c.facility > 0 && c.frequency !== "199.998");
     // aircraft on the ground near both airports: those stands count as taken
     const near = (pos) => (pos ? d.pilots.filter((p) => p.groundspeed < 5 && distKm([p.latitude, p.longitude], pos) < 6).map((p) => ({ callsign: p.callsign, latitude: p.latitude, longitude: p.longitude, groundspeed: p.groundspeed })) : []);
@@ -186,9 +189,27 @@ export function wxOf(icao) {
   const m = S.metar[icao] || (() => { const a = airportsOfFlight().find((x) => x.icao === icao); return a?.metar ? { raw: a.metar, src: "SimBrief" } : null; })();
   return m ? { ...decodeMetar(m.raw), src: m.src, at: m.at } : null;
 }
+// the real D-ATIS of US airports (atis.info), every 5 min, only for the flight's airports
+const DATIS = {};
+const usAirport = (icao) => /^(K[A-Z]{3}|P[AHGF][A-Z]{2})$/.test(icao || "");
+function pollDatis(icaos) {
+  for (const i of icaos) {
+    if (!usAirport(i) || (DATIS[i] && Date.now() - DATIS[i].at < 5 * 60e3)) continue;
+    DATIS[i] = { at: Date.now(), list: DATIS[i]?.list || [] };
+    getJSON(API.datis + i, 15000).then((l) => { DATIS[i] = { at: Date.now(), list: Array.isArray(l) ? l : [] }; }).catch(() => {});
+  }
+}
+function realAtis(icao) {
+  const l = DATIS[icao]?.list || [];
+  if (!l.length) return null;
+  const pick = (ty) => l.find((a) => a.type === ty) || l.find((a) => a.type === "combined") || l[0];
+  const arr = pick("arr"), dep = pick("dep"), item = (a) => ({ callsign: icao + "_ATIS", text_atis: [a.datis || ""], atis_code: a.code || "" });
+  const ia = atisInfo([arr.datis || ""]), id = atisInfo([dep.datis || ""]);
+  return { ...ia, depRwy: id.depRwy || ia.depRwy, letter: arr.code || ia.letter, depLetter: dep.code || id.letter, freq: "", real: true, list: [...new Set([arr, dep])].map(item) };
+}
 export function atisOf(icao) {
   const list = S.atis.filter((a) => a.callsign.startsWith(icao + "_"));
-  if (!list.length) return null;
+  if (!list.length) return settings.demo ? null : realAtis(icao);
   const info = atisInfo(list.flatMap((a) => a.text_atis || []));
   const arr = list.find((a) => /_A_ATIS|ARR/.test(a.callsign)) || list[0], dep = list.find((a) => /_D_ATIS|DEP/.test(a.callsign)) || list[0];
   return { ...info, letter: arr.atis_code || info.letter, depLetter: dep.atis_code || info.letter, freq: arr.frequency, list };
@@ -259,6 +280,12 @@ export async function loadStandsFor(a) {
   if (list) { S.stands[a.icao] = list; emit(); }
 }
 // notices and tips of the airline (va/notices.json) and the coming VATSIM events
+// Air Serbia's own stands (va/asl-stands.json), loaded with the notices
+let aslStandsAt = 0;
+async function loadAslStands() {
+  if (Date.now() - aslStandsAt < 3600e3) return;
+  try { setAslStands(await getJSON("va/asl-stands.json", 15000)); aslStandsAt = Date.now(); fixedArr = null; } catch {}
+}
 export async function pollNotices() {
   await Promise.all(["notices", "downloads", "ranks", "routes", "vafleet"].map(async (k) => {
     try { const n = await getJSON(API[k]); if (n) { S[k] = n; store.set("asl." + k, n); } } catch {}
@@ -295,7 +322,7 @@ export function arrivalStand() {
   if (!S.stands[icao]) return { state: S.stands[icao] === undefined ? "loading" : "none" };
   const key = o.callsign + icao;
   if (!fixedArr || fixedArr.key !== key) {
-    const p = predictStand(S.stands[icao], icao, o.dep?.icao, o.callsign, o.type, S.near.arr);
+    const p = aslStand(S.stands[icao], icao, o.dep?.icao, o.callsign, o.type, "arr", S.near.arr) || predictStand(S.stands[icao], icao, o.dep?.icao, o.callsign, o.type, S.near.arr);
     fixedArr = p ? { key, ...p, state: "forecast" } : null;
   }
   return fixedArr || { state: "none" };
@@ -304,6 +331,7 @@ export function departureStand() {
   const o = S.ofp; if (!o?.dep) return null;
   const s = !S.st?.offBlock ? standAt(o.dep.icao, S.pilot) : null;
   if (s) return { ...s, state: "parked" };
+  if (!S.st?.offBlock) { const a = aslStand(S.stands[o.dep.icao], o.dep.icao, o.dest?.icao, o.callsign, o.type, "dep", S.near.dep); if (a) return { ...a, state: "forecast" }; }
   return { state: S.stands[o.dep.icao] ? "unknown" : "loading" };
 }
 
@@ -323,7 +351,7 @@ export function derived(now = Date.now()) {
 
 // ---------- polling ----------
 const JOBS = { simbrief: [pollSimbrief, 300e3], feed: [pollFeed, 20e3], metar: [pollMetars, 300e3], cdm: [pollCdm, 30e3], ukcp: [pollUkcp, 120e3],
-  notices: [pollNotices, 900e3], events: [pollEvents, 1800e3], sigmets: [pollSigmets, 900e3], acars: [pollAcars, 60e3], vamsys: [loadVamsys, 900e3] };
+  notices: [pollNotices, 900e3], events: [pollEvents, 1800e3], sigmets: [pollSigmets, 900e3], acars: [pollAcars, 60e3] };
 const busy = {}, next = {};
 export function runJob(name, force) {
   if (busy[name]) return Promise.resolve();
@@ -333,7 +361,7 @@ export function runJob(name, force) {
 export async function refreshAll() {
   await runJob("simbrief", true);
   await runJob("feed");
-  runJob("metar"); runJob("cdm"); runJob("ukcp"); runJob("notices"); runJob("events"); runJob("sigmets"); runJob("acars"); runJob("vamsys");
+  runJob("metar"); runJob("cdm"); runJob("ukcp"); runJob("notices"); runJob("events"); runJob("sigmets"); runJob("acars");
 }
 export function startPolling() {
   loadRunways().then(emit);

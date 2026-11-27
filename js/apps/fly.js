@@ -11,7 +11,7 @@ import { renderMap, dropMap } from "./map.js";
 import { perfView, runwaysView, sel as perfSel } from "./perf.js";
 import { routeSigmetsHtml } from "../sigmet.js";
 import { radioView, radioStrip, radioClick } from "./radio.js";
-import { vdgsView, vdgsMini, vdgsTick } from "./vdgs.js";
+import { vdgsView, vdgsMini, vdgsTick, tobtClick } from "./vdgs.js";
 
 export const name = "ASL Fly";
 export const tabs = [["overview", "Overview"], ["vdgs", "VDGS"], ["radio", "Radio & ACARS"], ["times", "Times"], ["plan", "Flight plan"], ["map", "Map"], ["wx", "Weather"], ["fuel", "Fuel"], ["perf", "Performance"], ["rwy", "Runways"]];
@@ -44,6 +44,7 @@ export function summary() {
 function onClick(e) {
   const b = e.target.closest("[data-do]"); if (!b) return;
   if (C.tab === "radio" && b.dataset.do !== "settings" && b.dataset.do !== "tab") { radioClick(e, C); return; }
+  if (b.dataset.do === "tobt") { tobtClick(b, C); return; }
   if (b.dataset.do === "check") fuelCheck();
   if (b.dataset.do === "settings") C.open("settings");
   if (b.dataset.do === "tab") C.setTab(b.dataset.tab);
@@ -67,7 +68,7 @@ export async function fuelCheck() {
 
 function noFlight() {
   const e = S.ofpErr;
-  const msg = e === "setup" ? t("Enter your SimBrief name in Settings to load your flight.") : e === "user" ? t("SimBrief user not found.") : e === "noofp" ? t("No OFP found at SimBrief.") : e === "net" ? t("SimBrief not reachable.") + (S.ofpErrMsg ? " (" + S.ofpErrMsg + ")" : "") : e === "parse" ? t("The OFP could not be read.") + " " + (S.ofpErrMsg || "") : t("Loading flight plan…");
+  const msg = e === "notasl" ? t("Your newest SimBrief plan ({cs}) is not an Air Serbia flight. Only callsigns starting with ASL are loaded.", { cs: S.ofpErrMsg }) : e === "setup" ? t("Enter your SimBrief name in Settings to load your flight.") : e === "user" ? t("SimBrief user not found.") : e === "noofp" ? t("No OFP found at SimBrief.") : e === "net" ? t("SimBrief not reachable.") + (S.ofpErrMsg ? " (" + S.ofpErrMsg + ")" : "") : e === "parse" ? t("The OFP could not be read.") + " " + (S.ofpErrMsg || "") : t("Loading flight plan…");
   return `<div class="card" style="max-width:560px;margin:8vh auto;text-align:center;padding:30px">
     <div style="width:46px;height:46px;margin:0 auto 12px;color:var(--accent)">${I.plane}</div>
     <h2 style="margin:0 0 6px;font:700 24px var(--f-cond)">${t("No flight loaded")}</h2><p class="dim">${esc(msg)}</p>
@@ -230,7 +231,7 @@ const VIEW = {
           [t("Temp / dew"), w.temp != null ? `${w.temp}° / ${w.dew ?? "—"}°` : "—"], w.wx ? [t("Weather"), esc(w.wx)] : null])}</div>
           <div class="lbl" style="margin-top:12px">METAR <span class="faint">· ${esc(w.src || "")}${age != null ? " · " + t("{n} min ago", { n: age }) : ""}</span></div><div class="wx-raw">${esc(w.raw)}</div>` : `<div class="empty">${t("No weather")}</div>`}
         ${a.taf ? `<div class="lbl" style="margin-top:12px">TAF <span class="faint">· SimBrief</span></div><div class="wx-raw">${esc(a.taf)}</div>` : ""}
-        ${at ? `<div class="lbl" style="margin-top:12px">ATIS ${esc(at.letter || "")} <span class="faint">· ${esc(at.freq || "")}</span></div><div class="wx-raw">${esc(at.list.flatMap((x) => x.text_atis || []).join(" "))}</div>` : ""}</div>`;
+        ${at ? `<div class="lbl" style="margin-top:12px">ATIS ${esc(at.letter || "")} <span class="faint">· ${esc(at.freq || (at.real ? t("real ATIS (not VATSIM)") : ""))}</span></div><div class="wx-raw">${esc(at.list.flatMap((x) => x.text_atis || []).join(" "))}</div>` : ""}</div>`;
     }).join("")}</div>`;
   },
 

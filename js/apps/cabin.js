@@ -50,7 +50,7 @@ export function render(body, ctx) {
 function header(o, tab) {
   const iata = IATA[o.airline] || "";
   return `<div class="cab-head"><div class="cab-badge">${esc(o.iataNo || o.callsign)}</div><div class="cab-route"><b>${esc(cityOf(o.dep))}</b> → <b>${esc(cityOf(o.dest))}</b><span>${esc(AC[o.type] || o.type)}</span></div>
-    ${iata ? `<img class="cab-logo" src="https://pics.avs.io/240/80/${esc(iata)}.png" alt="" referrerpolicy="no-referrer" onerror="this.remove()">` : ""}
+    ${iata ? `<span class="vbrand cab"><img class="cab-logo" src="https://pics.avs.io/240/80/${esc(iata)}.png" alt="" referrerpolicy="no-referrer" onerror="this.remove()">${iata === "JU" ? `<span class="vword">Virtual</span>` : ""}</span>` : ""}
     <button class="cab-auto${ui.auto ? " on" : ""}" data-cab="auto">${t("Slideshow")}</button></div>${welcome(o)}`;
 }
 function welcome(o) {

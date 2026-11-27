@@ -16,7 +16,15 @@ const ABOUT = {
   cabin: "The passenger screen: flight map, destination, connections.", simbrief: "Opens SimBrief to plan a flight.",
   radar: "All VATSIM flights and stations on one map.", ivao: "All IVAO flights and stations on one map.",
   weather: "METAR and TAF for every Air Serbia destination.", clock: "Zulu, world clock, stopwatch, timer and alarms.",
-  calc: "A simple calculator.", downloads: "Liveries, ACARS and tools for the airline.", store: "Install and remove apps.", settings: "SimBrief, VATSIM, vAMSYS, look and home screen.",
+  mail: "Your company inbox: notices of the airline and a monthly summary of your flying.", messages: "Notifications and ACARS messages as conversations.",
+  academy: "Short courses with questions, and Serbian for the crew.", news: "Flight-sim headlines from public news sites, every hour.",
+  photos: "Your screenshots, sorted by month and flight – only on this device.", scenery: "Swipe through the network and find sceneries for the airports you like.",
+  reference: "Alphabet, unit converter, transponder codes, light signals and METAR.", browser: "The crew services one tap away.",
+  turnaround: "GSX Pro on the pad: every ground service with its state, called with one tap (needs the VDGS bridge).",
+  fenix: "Opens the Fenix EFB and compares fuel and weight with your plan (needs the VDGS bridge).",
+  checklist: "The Air Serbia Virtual normal checklists per aircraft type to tick off, with fuel and QNH filled in.",
+  landing: "Wind component calculator for every type and the airline's landing data: wind limits, autobrake and Vapp.",
+  calc: "A simple calculator.", downloads: "Liveries, ACARS and tools for the airline.", store: "Install and remove apps.", settings: "SimBrief, VATSIM, account, look and home screen.",
 };
 let C = null;
 export function render(body, ctx) {

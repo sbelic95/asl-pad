@@ -1,6 +1,41 @@
 // App icons and small UI icons, drawn as SVG (own designs, Air Serbia colours).
 const grad = (id, a, b) => `<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs>`;
 export const APP_ICONS = {
+  checklist: `<svg viewBox="0 0 100 100">${grad("gCk", "#0059c2", "#002e5d")}<rect width="100" height="100" fill="url(#gCk)"/>
+    <rect x="22" y="16" width="56" height="70" rx="6" fill="#fff"/>${[30, 46, 62].map((y) => `<path d="M30 ${y} l5 5 l9 -10" fill="none" stroke="#0059c2" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M50 ${y + 1} h20" stroke="#75787b" stroke-width="4" stroke-linecap="round"/>`).join("")}
+    <circle cx="74" cy="78" r="9" fill="#e3001f"/></svg>`,
+  landing: `<svg viewBox="0 0 100 100">${grad("gLd", "#2a7bd4", "#0b3f80")}<rect width="100" height="100" fill="url(#gLd)"/>
+    <path d="M30 92 L46 40 H54 L70 92 Z" fill="#1d2430"/><path d="M50 46 V88" stroke="#fff" stroke-width="2" stroke-dasharray="6 5"/>
+    <path d="M16 26 h34 M24 18 h30 M16 34 h22" stroke="#fff" stroke-width="4" stroke-linecap="round"/><path d="M58 26 l14 -6 l2 4 z" fill="#ffd34d"/><path d="M78 16 v26" stroke="#fff" stroke-width="3"/>
+    <path d="M78 16 l14 5 l-14 5 z" fill="#e3001f"/></svg>`,
+  turnaround: `<svg viewBox="0 0 100 100">${grad("gTa", "#ffb020", "#d46a00")}<rect width="100" height="100" fill="url(#gTa)"/>
+    <rect x="14" y="58" width="44" height="18" rx="4" fill="#fff"/><rect x="46" y="48" width="16" height="12" rx="2" fill="#fff"/><circle cx="24" cy="78" r="6" fill="#2b2f36"/><circle cx="50" cy="78" r="6" fill="#2b2f36"/>
+    <path d="M62 30 h22 l-6 -6 M84 30 l-6 6" fill="none" stroke="#002e5d" stroke-width="4" stroke-linecap="round"/><path d="M60 40 L88 40" stroke="#002e5d" stroke-width="4" stroke-linecap="round" stroke-dasharray="4 5"/></svg>`,
+  fenix: `<svg viewBox="0 0 100 100">${grad("gFx", "#1a1d24", "#05070b")}<rect width="100" height="100" fill="url(#gFx)"/>
+    <rect x="20" y="16" width="60" height="68" rx="8" fill="#2a2f3a" stroke="#4c5566" stroke-width="2"/><rect x="26" y="24" width="48" height="44" rx="3" fill="#0b2a55"/>
+    <path d="M32 56 L44 40 L54 50 L68 32" fill="none" stroke="#5aa2ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="50" cy="76" r="3.5" fill="#e3001f"/></svg>`,
+  mail: `<svg viewBox="0 0 100 100">${grad("gMl", "#2f8cff", "#0050b8")}<rect width="100" height="100" fill="url(#gMl)"/>
+    <rect x="18" y="28" width="64" height="46" rx="6" fill="#fff"/><path d="M20 31 L50 54 L80 31" fill="none" stroke="#0059c2" stroke-width="4" stroke-linejoin="round"/></svg>`,
+  messages: `<svg viewBox="0 0 100 100">${grad("gMs", "#3fd17a", "#13924a")}<rect width="100" height="100" fill="url(#gMs)"/>
+    <path d="M50 22 C30 22 18 34 18 48 C18 57 23 64 31 68 L28 80 L42 72 C45 73 47 73 50 73 C70 73 82 61 82 48 C82 34 70 22 50 22 Z" fill="#fff"/>
+    <path d="M36 44 h28 M36 54 h18" stroke="#13924a" stroke-width="4" stroke-linecap="round"/></svg>`,
+  academy: `<svg viewBox="0 0 100 100">${grad("gAc", "#002e5d", "#001530")}<rect width="100" height="100" fill="url(#gAc)"/>
+    <path d="M50 24 L86 40 L50 56 L14 40 Z" fill="#fff"/><path d="M30 48 v14 c0 6 9 11 20 11 s20 -5 20 -11 v-14 L50 57 Z" fill="#9cc4ff"/>
+    <path d="M80 43 v18" stroke="#e3001f" stroke-width="3.5" stroke-linecap="round"/><circle cx="80" cy="64" r="4" fill="#e3001f"/></svg>`,
+  reference: `<svg viewBox="0 0 100 100">${grad("gRf", "#fdb913", "#d48a00")}<rect width="100" height="100" fill="url(#gRf)"/>
+    <rect x="24" y="18" width="52" height="64" rx="6" fill="#fff"/><text x="50" y="47" text-anchor="middle" font-family="Arial" font-weight="700" font-size="20" fill="#002e5d">A·B</text>
+    <path d="M34 60 h32 M34 70 h20" stroke="#d48a00" stroke-width="4" stroke-linecap="round"/></svg>`,
+  photos: `<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#fff"/>
+    ${[["#e3001f", 0], ["#f47920", 45], ["#fdb913", 90], ["#3fd17a", 135], ["#22aed1", 180], ["#0059c2", 225], ["#885dac", 270], ["#f49e90", 315]].map(([c, r]) => `<ellipse cx="50" cy="32" rx="9" ry="17" fill="${c}" fill-opacity=".85" transform="rotate(${r} 50 50)"/>`).join("")}</svg>`,
+  browser: `<svg viewBox="0 0 100 100">${grad("gBr", "#e9eef6", "#b9c7dc")}<rect width="100" height="100" fill="url(#gBr)"/>
+    <circle cx="50" cy="50" r="30" fill="#0059c2"/><path d="M20 50 h60 M50 20 c-14 16 -14 44 0 60 M50 20 c14 16 14 44 0 60" fill="none" stroke="#fff" stroke-width="3"/>
+    <path d="M50 50 l18 -18 l-6 24 z" fill="#e3001f"/></svg>`,
+  scenery: `<svg viewBox="0 0 100 100">${grad("gSc", "#7cc4ff", "#2a7bd4")}<rect width="100" height="100" fill="url(#gSc)"/>
+    <circle cx="72" cy="28" r="9" fill="#ffd34d"/><path d="M0 74 L28 46 L46 62 L64 40 L100 74 V100 H0 Z" fill="#1d5f3a"/>
+    <path d="M10 86 L90 70" stroke="#2b2f36" stroke-width="9"/><path d="M14 85 L86 71" stroke="#fff" stroke-width="1.6" stroke-dasharray="5 4"/></svg>`,
+  news: `<svg viewBox="0 0 100 100">${grad("gNw", "#e3001f", "#9c0016")}<rect width="100" height="100" fill="url(#gNw)"/>
+    <rect x="20" y="22" width="60" height="56" rx="6" fill="#fff"/><rect x="28" y="30" width="20" height="16" rx="2" fill="#002e5d"/>
+    <path d="M54 32 h18 M54 40 h18 M28 54 h44 M28 62 h44 M28 70 h30" stroke="#75787b" stroke-width="3.5" stroke-linecap="round"/></svg>`,
   radar: `<svg viewBox="0 0 100 100">${grad("gR", "#062a1e", "#01120c")}<rect width="100" height="100" fill="url(#gR)"/>
     <g fill="none" stroke="#3ddc97" stroke-opacity=".5" stroke-width="2"><circle cx="50" cy="50" r="34"/><circle cx="50" cy="50" r="22"/><circle cx="50" cy="50" r="10"/></g>
     <path d="M50 50 L50 16 A34 34 0 0 1 80 34 Z" fill="#3ddc97" fill-opacity=".35"/><circle cx="64" cy="30" r="3.5" fill="#fff"/><circle cx="36" cy="62" r="3" fill="#e3001f"/><circle cx="70" cy="64" r="2.5" fill="#fff"/></svg>`,
@@ -60,6 +95,8 @@ export const APP_ICONS = {
     <path d="M24 62 v12 a6 6 0 0 0 6 6 h40 a6 6 0 0 0 6 -6 v-12" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="6" stroke-linecap="round"/></svg>`,
 };
 export const I = {
+  wifi: `<svg viewBox="0 0 20 15" fill="currentColor"><path d="M10 2.2c3.1 0 5.9 1.2 8 3.2l1.4-1.5A13.6 13.6 0 0 0 10 .2 13.6 13.6 0 0 0 .6 3.9L2 5.4c2.1-2 4.9-3.2 8-3.2z"/><path d="M10 6.3c2 0 3.8.8 5.1 2l1.4-1.4A9.3 9.3 0 0 0 10 4.3c-2.5 0-4.8 1-6.5 2.6l1.4 1.4c1.3-1.2 3.1-2 5.1-2z"/><path d="M10 10.3c.9 0 1.7.3 2.3.9L10 13.6l-2.3-2.4c.6-.6 1.4-.9 2.3-.9z"/></svg>`,
+  wifiOff: `<svg viewBox="0 0 20 15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M1.3 4.6A12.4 12.4 0 0 1 10 1.2c3.4 0 6.4 1.3 8.7 3.4M4.2 7.6A8 8 0 0 1 10 5.3c2.3 0 4.3.9 5.8 2.3M10 13.5h0M3 1l14 13" opacity=".8"/></svg>`,
   lock: `<svg viewBox="0 0 18 22" fill="none" stroke="currentColor" stroke-width="2"><rect x="1.5" y="9" width="15" height="11.5" rx="2.5"/><path d="M4.5 9V6a4.5 4.5 0 0 1 9 0v3"/></svg>`,
   plane: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>`,
   back: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>`,

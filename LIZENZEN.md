@@ -19,13 +19,14 @@ Logo-Dienst (`pics.avs.io`) geladen. Die App-Symbole und Grafiken sind eigene En
 | `airports.json` (Koordinaten, Städte, Zeitzonen) | [mwgg/Airports](https://github.com/mwgg/Airports), MIT |
 | Stände, Gates, Terminals | © OpenStreetMap-Mitwirkende, [ODbL](https://www.openstreetmap.org/copyright) |
 | Pisten | [OurAirports](https://ourairports.com/data/), Public Domain |
+| CTAF der US-Flughäfen (`ctaf-us.json`, `tools/build-ctaf.py`) | [OurAirports](https://ourairports.com/data/) airport-frequencies, Public Domain |
 | Kartenkacheln | © OpenStreetMap-Mitwirkende, [ODbL](https://www.openstreetmap.org/copyright); Kacheln von tile.openstreetmap.org nach der [Tile Usage Policy](https://operations.osmfoundation.org/policies/tiles/) |
 | `vendor/world.json` (Länder, Küsten, Grenzen der Flugkarte) | [Natural Earth](https://www.naturalearthdata.com) 1:50m, Public Domain; umgewandelt aus [world-atlas](https://github.com/topojson/world-atlas) 2.0.2 (ISC) |
 | Flugplan (OFP) | SimBrief (Navigraph) – Daten des eigenen Kontos |
 | Netzwerkdaten, METAR, ATIS | VATSIM |
 | Luftraumgrenzen und Center-Präfixe (Frequenz-Führer) | [VATSpy Data Project](https://github.com/vatsimnetwork/vatspy-data-project), SimAware TRACON Project (über `vdgs-slot-board`, Zweig `atc`) – jeweilige Projektlizenz |
 | ACARS / CPDLC | [Hoppie ACARS](https://www.hoppie.nl/acars/) – mit dem eigenen Logon-Code |
-| Pilotendaten (nach Anmeldung) | vAMSYS Pilot API – Konto bei Air Serbia Virtual |
+| Pilotendaten (nach Anmeldung) | Piloten-Dashboard von Air Serbia Virtual (eigenes Projekt) |
 | IVAO-Radar | IVAO Tracker API (`api.ivao.aero/v2/tracker/whazzup`), öffentliche Daten |
 | TAF der Wetter-App | [aviationweather.gov](https://aviationweather.gov/data/api/) (NOAA), gemeinfrei |
 | NOTAMs im Crew Desk | Aus dem SimBrief-OFP des Piloten |

@@ -36,10 +36,8 @@ export const releases = () => [
     { icon: "pad", name: "ASL Pad", items: [
       t("Home screen with three pages – Operations, Network & weather, Tools & device – plus weather and calendar widgets"),
       t("App Store: install and remove apps; Control Center and Notification Center from the top edge"),
-      t("PIN with the digits of your vAMSYS pilot ID, and Face ID before ASL Ops and Manuals"),
     ] },
     { icon: "ops", name: "ASL Ops", items: [
-      t("Roster from your vAMSYS bookings with report time, turnarounds, duty time and check-in"),
       t("Crew Desk: inbox, preflight list, weather and the NOTAMs from your OFP; flight report with the actual times"),
     ] },
     { icon: "fly", name: "ASL Fly", items: [
@@ -60,7 +58,6 @@ export const releases = () => [
       t("New app for the passengers: flight map, destination with local time and weather, connecting flights and arrivals"),
     ] },
     { icon: "pad", name: "ASL Pad", items: [
-      t("Sign in with vAMSYS: your name, rank, hours and your booking come into the pad"),
       t("The old VDGS app is gone – everything from it now lives in ASL Fly and Cabin"),
     ] },
   ] },
