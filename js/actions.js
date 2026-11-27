@@ -8,6 +8,7 @@ import { freqPlan, atcReady } from "./atc.js";
 import { unread } from "./hoppie.js";
 import { openReports, duties, checkedIn } from "./crew.js";
 import { slotState } from "./apps/vdgs.js";
+import { realReg } from "./booking.js";
 
 export function actions(now = Date.now()) {
   const o = S.ofp, out = [];
@@ -21,6 +22,9 @@ export function actions(now = Date.now()) {
     return out;
   }
   const st = S.st, d = derived(now);
+  // only real aircraft of the VA: a registration from SimBrief that is not in the fleet is pointed out
+  if (S.vafleet?.aircraft?.length && !st?.offBlock && (!o.reg || !realReg(o.reg)))
+    out.push({ id: "reg", lv: "attn", ic: "warn", title: o.reg ? t("{reg} is not an aircraft of Air Serbia Virtual", { reg: o.reg }) : t("No registration in the flight plan"), text: t("Plan again with a registration of the fleet (ASL Ops → Fleet)."), app: "ops", tab: "fleet" });
   if (!d) return out;
   // before departure: flight plan on VATSIM, slot
   if (!st.offBlock) {

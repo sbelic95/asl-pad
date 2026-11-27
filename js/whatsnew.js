@@ -7,6 +7,12 @@ import { esc } from "./util.js";
 import { APP_ICONS } from "./icons.js";
 
 export const releases = () => [
+  { v: "2.7.1", date: "2026-11-27", groups: [
+    { icon: "ops", name: "ASL Ops", items: [
+      t("Only real aircraft: registrations come only from the fleet of Air Serbia Virtual – in booking, SimBrief, the logbook and SimBrief airframes"),
+      t("A flight plan with a registration outside the fleet is pointed out in To do"),
+    ] },
+  ] },
   { v: "2.7.0", date: "2026-11-27", groups: [
     { icon: "ops", name: "ASL Ops", items: [
       t("Timetable: every flight of Air Serbia Virtual – departures and arrivals per airport and day, with flight number, callsign, times, aircraft and gate"),

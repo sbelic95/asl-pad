@@ -4,6 +4,7 @@ import { t, nf, dateShort, LOCALE } from "../i18n.js";
 import { esc, hhmmz, dur, distNm, greatCircle, store } from "../util.js";
 import { aptDb } from "../tz.js";
 import { sheet } from "../sheet.js";
+import { fleetAll, realReg } from "../booking.js";
 import { career, careerHtml } from "../career.js";
 
 export const name = "Logbook";
@@ -149,7 +150,7 @@ function addFlight() {
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px">
       ${f("date", t("Date"), o?.times.out ? new Date(o.times.out).toISOString().slice(0, 10) : day, "", "date")}${f("no", t("Flight number"), o?.iataNo || o?.callsign || "", "JU500")}${f("cs", t("Callsign"), o?.callsign || "", "ASL500")}
       ${f("dep", t("From"), o?.dep?.icao || "", "LYBE")}${f("arr", t("To"), o?.dest?.icao || "", "EDDF")}${f("type", t("Aircraft"), o?.type || "", "A319")}
-      ${f("reg", t("Registration"), o?.reg || "", "YU-APA")}${f("out", t("Off block"), hm(o?.times.out), "08:00", "time")}${f("in", t("On block"), hm(o?.times.in), "10:05", "time")}</div>
+      <label><div class="lbl">${t("Registration")}</div><select name="reg" style="width:100%"><option value="">—</option>${fleetAll().map((a) => `<option value="${esc(a.reg)}" ${a.reg === realReg(o?.reg) ? "selected" : ""}>${esc(a.reg)} · ${esc(a.type)}</option>`).join("")}</select></label>${f("out", t("Off block"), hm(o?.times.out), "08:00", "time")}${f("in", t("On block"), hm(o?.times.in), "10:05", "time")}</div>
     <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px"><button class="btn" data-close>${t("Cancel")}</button><button class="btn pri" data-save>${t("Save")}</button></div>`,
   (e, close, el) => {
     if (!e.target.closest("[data-save]")) return;
@@ -163,7 +164,7 @@ function addFlight() {
     const A = aptDb(dep), B = aptDb(arr);
     const no = v("no").toUpperCase() || v("cs").toUpperCase();
     addToLogbook({ id: "manual:" + no + dep + arr + out, date: out, callsign: v("cs").toUpperCase() || no, flightNo: no, dep, arr,
-      depName: A?.[2]?.replace(/-/g, " ") || "", arrName: B?.[2]?.replace(/-/g, " ") || "", type: v("type").toUpperCase(), reg: v("reg").toUpperCase(), pax: null,
+      depName: A?.[2]?.replace(/-/g, " ") || "", arrName: B?.[2]?.replace(/-/g, " ") || "", type: v("type").toUpperCase(), reg: realReg(v("reg")), pax: null,
       schedOut: out, schedIn: inn, offBlock: out, takeoff: null, landing: null, onBlock: inn, distNm: A && B ? Math.round(distNm([A[0], A[1]], [B[0], B[1]])) : 0,
       units: "kg", blockFuel: null, landingFuel: null, checks: 0, route: "", path: A && B ? [[A[0], A[1]], [B[0], B[1]]] : [], manual: true });
     close();

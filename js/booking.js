@@ -50,10 +50,15 @@ export function departures(from, to, filter = () => true) {
 }
 const legOf = (dep, dest, now) => legs(now).find((l) => l.dep === dep && l.dest === dest) || null;
 export const inNetwork = (dep, dest) => !!legOf(dep, dest);
-// the VA fleet (va/fleet.json) with the SimBrief airframes we know, then the pilot's own aircraft
+// Only real aircraft: every registration comes from the VA fleet (va/fleet.json) – never one the pad or the pilot makes up.
+// SimBrief airframes we know (FLEET) and the pilot's own airframe links are attached to those registrations only.
+const vaList = () => (S.vafleet?.aircraft?.length ? S.vafleet.aircraft : FLEET);
+export const realReg = (reg) => { const r = String(reg || "").trim().toUpperCase(); return r && vaList().some((a) => a.reg === r) ? r : ""; };
+export const regFor = (type, prefer) => realReg(prefer) || vaList().find((a) => a.type === type)?.reg || "";
 export const fleetAll = () => {
-  const sb = Object.fromEntries(FLEET.map((a) => [a.reg, a.sb])), va = S.vafleet?.aircraft?.length ? S.vafleet.aircraft.map((a) => ({ ...a, sb: sb[a.reg] || "" })) : FLEET;
-  const own = store.get("asl.fleet", []); return [...va.filter((a) => !own.some((o) => o.reg === a.reg)), ...own];
+  const own = Object.fromEntries(store.get("asl.fleet", []).filter((o) => realReg(o.reg)).map((o) => [o.reg, o.sb]));
+  const sb = Object.fromEntries(FLEET.map((a) => [a.reg, a.sb]));
+  return vaList().map((a) => ({ ...a, sb: own[a.reg] || sb[a.reg] || a.sb || "", own: !!own[a.reg] }));
 };
 
 // a callsign that is neither flying nor prefiled on VATSIM right now (ASL + 3 digits, stable for a route)
@@ -147,7 +152,7 @@ export function vamBookingCard(now = Date.now()) {
 function simbriefUrl(b) {
   const m = /^([A-Z]{3})(\w+)$/.exec(b.callsign) || [];
   const d = new Date(b.off);
-  const q = { orig: b.dep, dest: b.dest, type: b.type, reg: b.reg || "", airline: "ASL", fltnum: m[2] || "", callsign: b.callsign,
+  const q = { orig: b.dep, dest: b.dest, type: b.type, reg: regFor(b.type, b.reg), airline: "ASL", fltnum: m[2] || "", callsign: b.callsign,
     deph: String(d.getUTCHours()), depm: String(d.getUTCMinutes()) };
   return SB + "?" + new URLSearchParams(Object.entries(q).filter(([, v]) => v !== "")).toString();
 }
@@ -167,8 +172,7 @@ export function openBooking(pre) {
   const acOpts = (dep, dest, reg) => {
     const types = legOf(dep, dest)?.r.types || [], list = fleetAll(), fit = list.filter((a) => !types.length || types.includes(a.type));
     const pick = reg && fit.some((a) => a.reg === reg) ? reg : fit[0]?.reg;
-    return (fit.length ? fit : list).map((a) => `<option value="${esc(a.reg)}|${esc(a.type)}" ${a.reg === pick ? "selected" : ""}>${esc(a.reg)} · ${esc(a.type)}</option>`).join("")
-      + types.filter((ty) => !list.some((a) => a.type === ty)).map((ty) => `<option value="|${esc(ty)}">${esc(ty)}</option>`).join("");
+    return (fit.length ? fit : list).map((a) => `<option value="${esc(a.reg)}|${esc(a.type)}" ${a.reg === pick ? "selected" : ""}>${esc(a.reg)} · ${esc(a.type)}</option>`).join("");
   };
   // the scheduled flights of the chosen leg (number, time UTC, days, type); picking one fills time, callsign and aircraft
   const flOpts = (dep, dest, no) => { const l = schedule().filter((f) => f.dep === dep && f.arr === dest).sort((a, b) => a.std.localeCompare(b.std));
@@ -286,7 +290,7 @@ export function bookingClick(e) {
   if (k === "new") openBooking();
   if (k === "vam-book") { const b = (pilot()?.bookings || []).filter((x) => !x.at || x.at > Date.now() - 6 * 36e5).sort((a, c) => (a.at || 9e15) - (c.at || 9e15))[0];
     if (b) { const cs = /^[A-Z]{3}\w+$/.test(b.callsign || "") ? b.callsign : ""; window.open(simbriefUrl({ dep: b.dep, dest: b.arr, type: b.type || "A319", reg: b.reg || "", callsign: cs || "ASL" + (b.number || ""), off: b.at || quarter(Date.now() + 40 * 60e3) }), "_blank", "noopener"); } }
-  if (k === "again" && o) openBooking({ dep: o.dep.icao, dest: o.dest.icao, type: o.type, reg: o.reg, off: o.times.out > Date.now() ? o.times.out : quarter(Date.now() + 40 * 60e3), callsign: o.callsign });
+  if (k === "again" && o) openBooking({ dep: o.dep.icao, dest: o.dest.icao, type: o.type, reg: realReg(o.reg), off: o.times.out > Date.now() ? o.times.out : quarter(Date.now() + 40 * 60e3), callsign: o.callsign });
   if (o && /^fuel/.test(k)) {
     const step = (settings.unit === "lb") === (o.units === "lb") ? (o.units === "lb" ? 200 : 100) : o.units === "lb" ? 220.46 : 90.72; // 100 kg or 200 lb as the pilot sees it
     const d = k === "fuel0" ? 0 : fuelAdj(o) + (k === "fuel+" ? step : -step);

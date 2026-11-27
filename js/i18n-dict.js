@@ -754,6 +754,12 @@ export const SR = {
   "Timetable: every flight of Air Serbia Virtual – departures and arrivals per airport and day, with flight number, callsign, times, aircraft and gate": "Red letenja: svi letovi Air Serbia Virtual – odlasci i dolasci po aerodromu i danu, sa brojem leta, pozivnim znakom, vremenima, avionom i izlazom",
   "Fleet: all 33 aircraft of the airline with registration, grouped by type": "Flota: sva 33 aviona kompanije sa registracijom, po tipu",
   "Suggestions and booking now use the real timetable: flight number, callsign, departure time and aircraft are filled in": "Predlozi i rezervacija sada koriste pravi red letenja: broj leta, pozivni znak, vreme polaska i avion se popunjavaju sami",
+  "{reg} is not an aircraft of Air Serbia Virtual": "{reg} nije avion Air Serbia Virtual",
+  "No registration in the flight plan": "Nema registracije u planu leta",
+  "Plan again with a registration of the fleet (ASL Ops → Fleet).": "Planiraj ponovo sa registracijom iz flote (ASL Ops → Fleet).",
+  "Pick the aircraft of Air Serbia Virtual and paste the share link of your SimBrief airframe for it. Only registrations of the fleet can be used.": "Izaberi avion Air Serbia Virtual i nalepi link svog SimBrief airframe-a za njega. Mogu se koristiti samo registracije iz flote.",
+  "Only real aircraft: registrations come only from the fleet of Air Serbia Virtual – in booking, SimBrief, the logbook and SimBrief airframes": "Samo pravi avioni: registracije dolaze samo iz flote Air Serbia Virtual – u rezervaciji, SimBriefu, dnevniku i SimBrief airframe-ima",
+  "A flight plan with a registration outside the fleet is pointed out in To do": "Plan leta sa registracijom van flote prikazuje se u listi Za uraditi",
 };
 export const DE = {
   "Source": "Quelle",
@@ -1510,4 +1516,10 @@ export const DE = {
   "Timetable: every flight of Air Serbia Virtual – departures and arrivals per airport and day, with flight number, callsign, times, aircraft and gate": "Flugplan: jeder Flug von Air Serbia Virtual – Abflüge und Ankünfte je Flughafen und Tag, mit Flugnummer, Rufzeichen, Zeiten, Flugzeug und Gate",
   "Fleet: all 33 aircraft of the airline with registration, grouped by type": "Flotte: alle 33 Flugzeuge der Airline mit Kennzeichen, nach Typ",
   "Suggestions and booking now use the real timetable: flight number, callsign, departure time and aircraft are filled in": "Vorschläge und Buchung nutzen jetzt den echten Flugplan: Flugnummer, Rufzeichen, Abflugzeit und Flugzeug sind schon eingetragen",
+  "{reg} is not an aircraft of Air Serbia Virtual": "{reg} ist kein Flugzeug von Air Serbia Virtual",
+  "No registration in the flight plan": "Keine Registrierung im Flugplan",
+  "Plan again with a registration of the fleet (ASL Ops → Fleet).": "Plane neu mit einer Registrierung aus der Flotte (ASL Ops → Fleet).",
+  "Pick the aircraft of Air Serbia Virtual and paste the share link of your SimBrief airframe for it. Only registrations of the fleet can be used.": "Wähle das Flugzeug von Air Serbia Virtual und füge den Freigabe-Link deines SimBrief-Airframes dafür ein. Nur Registrierungen aus der Flotte sind möglich.",
+  "Only real aircraft: registrations come only from the fleet of Air Serbia Virtual – in booking, SimBrief, the logbook and SimBrief airframes": "Nur echte Flugzeuge: Registrierungen kommen nur aus der Flotte von Air Serbia Virtual – bei Buchung, SimBrief, Logbuch und SimBrief-Airframes",
+  "A flight plan with a registration outside the fleet is pointed out in To do": "Ein Flugplan mit einer Registrierung außerhalb der Flotte erscheint unter To do",
 };
