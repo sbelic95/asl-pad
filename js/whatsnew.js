@@ -7,6 +7,15 @@ import { esc } from "./util.js";
 import { APP_ICONS } from "./icons.js";
 
 export const releases = () => [
+  { v: "2.1", date: "2026-11-27", groups: [
+    { icon: "ops", name: "ASL Ops", items: [
+      t("Timetable: every flight of Air Serbia Virtual – departures and arrivals per airport and day, with flight number, callsign, times, aircraft and gate"),
+      t("Fleet: all 33 aircraft of the airline with registration, grouped by type"),
+    ] },
+    { icon: "pad", name: "ASL Pad", items: [
+      t("Suggestions and booking now use the real timetable: flight number, callsign, departure time and aircraft are filled in"),
+    ] },
+  ] },
   { v: "2.0.2", date: "2026-11-21", groups: [
     { icon: "fly", name: "ASL Fly", items: [
       t("VDGS: TOBT, TSAT, TTOT, CTOT and taxi time from VATSIM (vIFF CDM) wherever VATSIM has them, as at Frankfurt and Heathrow – everything else from SimBrief"),

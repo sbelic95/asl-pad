@@ -126,6 +126,18 @@ Lizenzen der verwendeten Bibliotheken und Daten: [LIZENZEN.md](LIZENZEN.md).
   Erst einschalten, wenn die Anmeldung mit einem echten Konto funktioniert.
   **Ungetestet gegen das echte vAMSYS** (Client muss von der VA aktiviert sein; ob vAMSYS Aufrufe aus dem Browser erlaubt (CORS), ist offen).
 
+## Flugplan und Flotte der VA (2.1)
+
+`va/routes.json` (Flughäfen, Strecken, jeder Flug mit Nummer, Rufzeichen, STD/STA in UTC, Tagen, Typ und Gate) und `va/fleet.json`
+(alle Flugzeuge mit Kennzeichen) entstehen aus den vAMSYS-Importdateien der VA:
+
+```
+python3 tools/import-schedule.py <Ordner mit ASL_Passenger_Schedule_*.csv, ASL_airports_*.csv, ASL_fleet_*.csv, ASL_Aircraft_*.csv>
+```
+
+Daraus kommen der Reiter **Timetable** in ASL Ops (Abflüge/Ankünfte je Flughafen und Tag, „Book“ füllt die Buchung aus),
+die Flotte in ASL Ops und die Vorschläge auf dem Home-Bildschirm (echte Flüge der nächsten 30 Stunden ab dort, wo der letzte Flug endete).
+
 ## Server (2.0, vorbereitet)
 
 `server/` enthält einen Cloudflare Worker für die Synchronisierung zwischen Geräten (Logbuch, Kalender, Wecker, Check-ins),

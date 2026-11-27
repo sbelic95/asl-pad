@@ -1,16 +1,16 @@
 // ASL Ops: today's duty, things to do, departure and arrival (stand, runway, slot, ATIS, frequencies) and the fleet.
 import { S, derived, wxOf, atisOf, runwayOf, atcAt, arrivalStand, departureStand } from "../data.js";
 import { actions } from "../actions.js";
-import { t, nf } from "../i18n.js";
+import { t, nf, LOCALE } from "../i18n.js";
 import { esc, hhmmz, localHM, dur, store } from "../util.js";
 import { I } from "../icons.js";
 import { tzOf, cityOf } from "../tz.js";
 import { sheet } from "../sheet.js";
-import { planCard, suggestCard, bookingClick } from "../booking.js";
+import { planCard, suggestCard, bookingClick, fleetAll, schedule, daysTxt, openBooking } from "../booking.js";
 import { rosterView, deskView, reportView, reportInput, sendReport, duties, doCheckIn, setDesk } from "../crew.js";
 
 export const name = "ASL Ops";
-export const tabs = [["ops", "Operations"], ["roster", "Roster"], ["edesk", "Crew Desk"], ["report", "Report"], ["fleet", "Fleet"]];
+export const tabs = [["ops", "Operations"], ["timetable", "Timetable"], ["roster", "Roster"], ["edesk", "Crew Desk"], ["report", "Report"], ["fleet", "Fleet"]];
 
 // Air Serbia A319 fleet with SimBrief airframes (shared in the Air Serbia virtual community) for the Fenix A319
 export const FLEET = [
@@ -27,10 +27,10 @@ const myFleet = () => store.get("asl.fleet", []);
 let C = null;
 export function render(body, ctx) {
   C = ctx;
-  if (!body._ops) { body._ops = true; body.addEventListener("click", onClick); body.addEventListener("change", (e) => { if (e.target.dataset.rp) reportInput(e.target); }); }
+  if (!body._ops) { body._ops = true; body.addEventListener("click", onClick); body.addEventListener("change", (e) => { if (e.target.dataset.rp) reportInput(e.target); if (e.target.dataset.tt === "apt") { TT.apt = e.target.value; render(body, C); } }); }
   if (body.contains(document.activeElement) && document.activeElement.matches("input")) return; // typing a report: do not rebuild
   const tab = ctx.tab;
-  body.innerHTML = tab === "fleet" ? fleet() : tab === "roster" ? rosterView(ctx.now) : tab === "edesk" ? deskView(ctx.now) : tab === "report" ? reportView(ctx.now) : ops(ctx.now);
+  body.innerHTML = tab === "fleet" ? fleet() : tab === "timetable" ? timetable(ctx.now) : tab === "roster" ? rosterView(ctx.now) : tab === "edesk" ? deskView(ctx.now) : tab === "report" ? reportView(ctx.now) : ops(ctx.now);
 }
 export function summary() {
   const o = S.ofp; if (!o) return [t("ASL Ops"), t("No flight loaded")];
@@ -42,12 +42,16 @@ function onClick(e) {
   if (bookingClick(e)) { render(e.target.closest(".app-body") || document.querySelector("#app-ops .app-body"), C); return; }
   const a = e.target.closest("[data-open]");
   if (a && !a.closest("a")) { C.open(a.dataset.open, a.dataset.tab || undefined); return; }
+  const tt = e.target.closest("button[data-tt]"); if (tt) { TT[tt.dataset.tt] = tt.dataset.tt === "day" ? +tt.dataset.v : tt.dataset.v; render(tt.closest(".app-body"), C); return; }
   const dk = e.target.closest("[data-desk]"); if (dk) { setDesk(dk.dataset.desk); render(dk.closest(".app-body"), C); return; }
   const b = e.target.closest("[data-do]"); if (!b) return;
   const body = b.closest(".app-body");
   if (b.dataset.do === "checkin") { const d = duties().find((x) => x.key === b.dataset.key); if (d) doCheckIn(d); render(body, C); return; }
   if (b.dataset.do === "pre") { const k = "asl.pre." + (S.ofp ? `${S.ofp.callsign}.${S.ofp.dep.icao}.${S.ofp.dest.icao}` : ""), m = store.get(k, {}); m[b.dataset.k] = !m[b.dataset.k]; store.set(k, m); render(body, C); return; }
   if (b.dataset.do === "report") { body.querySelectorAll(`[data-rp="${CSS.escape(b.dataset.id)}"]`).forEach(reportInput); sendReport(b.dataset.id); render(body, C); return; }
+  if (b.dataset.do === "ttbook") { const f = schedule().find((x) => x.no === b.dataset.no && x.dep === b.dataset.dep && x.std === b.dataset.std);
+    if (f) { const [h, m] = f.std.split(":").map(Number), d = new Date(); let off = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), h, m); if (off < Date.now()) off += 864e5;
+      openBooking({ dep: f.dep, dest: f.arr, no: f.no, callsign: f.cs, type: f.type, off }); } return; }
   if (b.dataset.do === "addac") addAircraft();
   if (b.dataset.do === "delac") { store.set("asl.fleet", myFleet().filter((x) => x.reg !== b.dataset.reg)); render(b.closest(".app-body"), C); }
 }
@@ -123,22 +127,42 @@ function ops(now) {
   return duty + `<div class="ops-book">${planCard(o, now)}</div><div style="margin-top:14px">${todo}</div><div class="ops-cols">${dep}${arr}</div>`;
 }
 
-// ---------- fleet ----------
+// ---------- fleet: the VA fleet (va/fleet.json) by type, SimBrief airframe where we have one ----------
+const TYPE_ORDER = ["A319", "A320", "E195", "AT76", "A332"];
 function fleet() {
-  const cur = S.ofp?.reg;
-  const tile = (a, own) => `<a href="${esc(a.sb)}" target="_blank" rel="noopener" class="${a.reg === cur ? "cur" : ""}"><div style="width:30px;height:30px;color:var(--accent)">${I.plane}</div>
-      <div style="flex:1;min-width:0"><b>${esc(a.reg)}</b><div><span>${esc(TYPE_NAME[a.type] || a.type)} · ${t("SimBrief airframe")}</span></div></div>
-      ${own ? `<button class="btn small" data-do="delac" data-reg="${esc(a.reg)}" onclick="event.preventDefault()">×</button>` : ""}</a>`;
+  const cur = S.ofp?.reg, own = store.get("asl.fleet", []), all = fleetAll();
+  const tile = (a) => { const isOwn = own.some((o) => o.reg === a.reg), inner = `<div style="width:30px;height:30px;color:var(--accent)">${I.plane}</div>
+      <div style="flex:1;min-width:0"><b>${esc(a.reg)}</b><div><span>${esc(a.name || TYPE_NAME[a.type] || a.type)}${a.sb ? " · " + t("SimBrief airframe") : ""}</span></div></div>
+      ${isOwn ? `<button class="btn small" data-do="delac" data-reg="${esc(a.reg)}" onclick="event.preventDefault()">×</button>` : ""}`;
+    return a.sb ? `<a href="${esc(a.sb)}" target="_blank" rel="noopener" class="${a.reg === cur ? "cur" : ""}">${inner}</a>` : `<div class="nolink ${a.reg === cur ? "cur" : ""}">${inner}</div>`; };
+  const types = [...new Set(all.map((a) => a.type))].sort((x, y) => (TYPE_ORDER.indexOf(x) + 99) % 99 - (TYPE_ORDER.indexOf(y) + 99) % 99);
   const o = S.ofp;
-  return `<div class="card"><div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><div class="lbl">${t("Fleet")} · Airbus A319</div>
-      <a class="btn small" style="margin-left:auto" href="${LIVERY}" target="_blank" rel="noopener">${t("Livery pack (Fenix A319)")}</a></div>
-      <div class="fleet">${FLEET.map((a) => tile(a)).join("")}</div>
-      <p class="dim" style="font-size:12.5px;margin:12px 0 0">${t("Tap an aircraft to open its SimBrief airframe and save it to your account. Then plan with that airframe so the OFP has the right registration and weights.")}</p></div>
-    <div class="card"><div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><div class="lbl">${t("My aircraft")}</div><button class="btn small" style="margin-left:auto" data-do="addac">${t("Add aircraft")}</button></div>
-      ${myFleet().length ? `<div class="fleet">${myFleet().map((a) => tile(a, true)).join("")}</div>` : `<div class="dim" style="font-size:13px">${t("Add more SimBrief airframes, for example A320 or A330.")}</div>`}</div>
+  return `<div class="card"><div style="display:flex;align-items:center;gap:12px;margin-bottom:6px"><div class="lbl">${t("Fleet")} · Air Serbia Virtual · ${all.length} ${t("aircraft")}</div>
+      <a class="btn small" style="margin-left:auto" href="${LIVERY}" target="_blank" rel="noopener">${t("Livery pack (Fenix A319)")}</a><button class="btn small" data-do="addac">${t("Add aircraft")}</button></div>
+      ${types.map((ty) => `<div class="lbl" style="margin:14px 0 8px">${esc(TYPE_NAME[ty] || ty)} · ${all.filter((a) => a.type === ty).length}</div><div class="fleet">${all.filter((a) => a.type === ty).map(tile).join("")}</div>`).join("")}
+      <p class="dim" style="font-size:12.5px;margin:12px 0 0">${t("Aircraft with a SimBrief airframe open it on a tap – save it to your account and plan with it. For the others SimBrief uses its default for the type.")}</p></div>
     ${o ? `<div class="card"><div class="lbl" style="margin-bottom:12px">${t("Aircraft of this flight")}</div><div class="kv">
       ${cell(t("Type"), esc(o.type), esc(o.typeName || TYPE_NAME[o.type] || ""))}${cell(t("Registration"), esc(o.reg || "—"))}${cell("SELCAL", esc(o.selcal || "—"))}
       ${cell("MZFW", o.weights.maxZfw ? nf(o.weights.maxZfw) : "—", o.units)}${cell("MTOW", o.weights.maxTow ? nf(o.weights.maxTow) : "—", o.units)}${cell("MLW", o.weights.maxLdw ? nf(o.weights.maxLdw) : "—", o.units)}</div></div>` : ""}`;
+}
+
+// ---------- timetable: the VA schedule, departures and arrivals of an airport on a day ----------
+const TT = { apt: "LYBE", day: null, dir: "dep" };
+function timetable(now) {
+  const list = schedule(); if (!list.length) return `<div class="card dim">${t("Loading the route network…")}</div>`;
+  const wdNow = ((new Date(now).getUTCDay() + 6) % 7) + 1, wd = TT.day || wdNow;
+  const apts = [...new Set(list.flatMap((f) => [f.dep, f.arr]))].sort((a, b) => (a === "LYBE" ? -1 : b === "LYBE" ? 1 : a.localeCompare(b)));
+  const rows = list.filter((f) => (TT.dir === "dep" ? f.dep : f.arr) === TT.apt && f.days.includes(wd)).sort((a, b) => (TT.dir === "dep" ? a.std : a.sta).localeCompare(TT.dir === "dep" ? b.std : b.sta));
+  const dn = [1, 2, 3, 4, 5, 6, 7].map((d) => new Intl.DateTimeFormat(LOCALE(), { weekday: "short", timeZone: "UTC" }).format(Date.UTC(2024, 0, d)));
+  const name = (i) => S.routes?.airports?.[i]?.name || i;
+  return `<div class="card"><div class="tt-bar"><select data-tt="apt">${apts.map((a) => `<option value="${a}" ${a === TT.apt ? "selected" : ""}>${esc(name(a))} · ${a}</option>`).join("")}</select>
+      <div class="seg">${[["dep", t("Departures")], ["arr", t("Arrivals")]].map(([k, l]) => `<button data-tt="dir" data-v="${k}" class="${TT.dir === k ? "on" : ""}">${l}</button>`).join("")}</div>
+      <div class="seg">${dn.map((d, i) => `<button data-tt="day" data-v="${i + 1}" class="${wd === i + 1 ? "on" : ""}">${esc(d)}${i + 1 === wdNow ? " •" : ""}</button>`).join("")}</div></div>
+    <table class="tt"><thead><tr><th>${t("Flight")}</th><th>${TT.dir === "dep" ? t("To") : t("From")}</th><th>STD</th><th>STA</th><th>${t("Block")}</th><th>${t("Type")}</th><th>${t("Gate")}</th><th>${t("Days")}</th><th></th></tr></thead><tbody>
+    ${rows.map((f) => `<tr><td><b>${esc(f.no)}</b><small>${esc(f.cs)}</small></td><td><b>${esc(TT.dir === "dep" ? f.arr : f.dep)}</b><small>${esc(name(TT.dir === "dep" ? f.arr : f.dep))}</small></td>
+      <td class="num">${esc(f.std)}z</td><td class="num">${esc(f.sta)}z</td><td class="num">${esc(f.blk)}</td><td>${esc(f.type)}</td><td>${esc(f.gate || "—")}${f.term ? `<small>T${esc(f.term)}</small>` : ""}</td><td class="dim">${esc(daysTxt(f.days))}</td>
+      <td><button class="btn small" data-do="ttbook" data-no="${esc(f.no)}" data-dep="${esc(f.dep)}" data-std="${esc(f.std)}">${t("Book")}</button></td></tr>`).join("") || `<tr><td colspan="9" class="dim">${t("No flights on this day.")}</td></tr>`}
+    </tbody></table><p class="dim" style="font-size:12px;margin:10px 0 0">${t("Timetable of Air Serbia Virtual ({src}). All times UTC.", { src: S.routes?.source || "vAMSYS" })}</p></div>`;
 }
 
 function addAircraft() {

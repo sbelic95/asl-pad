@@ -1,0 +1,204 @@
+{
+ "_help": "Flota Air Serbia Virtual (iz vAMSYS uvoza VA). Pokreni tools/import-schedule.py za novu verziju.",
+ "source": "ASL_Aircraft_2026-11.csv",
+ "aircraft": [
+  {
+   "reg": "YU-APA",
+   "type": "A319",
+   "name": "Airbus A319-132",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-APB",
+   "type": "A319",
+   "name": "Airbus A319-132",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-APC",
+   "type": "A319",
+   "name": "Airbus A319-131",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-APD",
+   "type": "A319",
+   "name": "Airbus A319-132",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-APE",
+   "type": "A319",
+   "name": "Airbus A319-132",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-APF",
+   "type": "A319",
+   "name": "Airbus A319-132",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-APL",
+   "type": "A319",
+   "name": "Airbus A319-132",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-APM",
+   "type": "A319",
+   "name": "Airbus A319-132",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-APN",
+   "type": "A319",
+   "name": "Airbus A319-132",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-APH",
+   "type": "A320",
+   "name": "Airbus A320-232",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-APO",
+   "type": "A320",
+   "name": "Airbus A320-232",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-APS",
+   "type": "A320",
+   "name": "Airbus A320-232",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-APT",
+   "type": "A320",
+   "name": "Airbus A320-232",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-APU",
+   "type": "A320",
+   "name": "Airbus A320-232",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-APV",
+   "type": "A320",
+   "name": "Airbus A320-232",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-ATA",
+   "type": "E195",
+   "name": "Embraer E195LR",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-ATB",
+   "type": "E195",
+   "name": "Embraer E195LR",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-ATC",
+   "type": "E195",
+   "name": "Embraer E195LR",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-ATD",
+   "type": "E195",
+   "name": "Embraer E195LR",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-ALW",
+   "type": "AT76",
+   "name": "ATR 72-600",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-ALX",
+   "type": "AT76",
+   "name": "ATR 72-600",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-ALY",
+   "type": "AT76",
+   "name": "ATR 72-600",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-ALZ",
+   "type": "AT76",
+   "name": "ATR 72-600",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-ASA",
+   "type": "AT76",
+   "name": "ATR 72-600",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-ASB",
+   "type": "AT76",
+   "name": "ATR 72-600",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-ASC",
+   "type": "AT76",
+   "name": "ATR 72-600",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-ASD",
+   "type": "AT76",
+   "name": "ATR 72-600",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-ASE",
+   "type": "AT76",
+   "name": "ATR 72-600",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-ASF",
+   "type": "AT76",
+   "name": "ATR 72-600",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-ARB",
+   "type": "A332",
+   "name": "Airbus A330-243",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-ARC",
+   "type": "A332",
+   "name": "Airbus A330-243",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-ARD",
+   "type": "A332",
+   "name": "Airbus A330-243",
+   "selcal": ""
+  },
+  {
+   "reg": "YU-ARE",
+   "type": "A332",
+   "name": "Airbus A330-243",
+   "selcal": ""
+  }
+ ]
+}

@@ -770,3 +770,11 @@ i.event { background: var(--b-purple) !important; } i.own { background: var(--b-
 .vd-btn { display: inline-block; font-family: var(--f-ui); font-weight: 600; font-size: 14px; color: #ffb000; border: 1px solid rgba(255, 176, 0, .6); border-radius: 10px; padding: 8px 14px; text-decoration: none; }
 .vd-btn.hot { background: #ffb000; color: #050608; } .vd.tobt .vd-main { color: #ff3347; } .vd.tobt .vd-msg { animation: vdBlink 1.2s steps(2) infinite; }
 .vd-mini.tobt { color: #ff3347; }
+/* ASL Ops → Timetable, fleet without SimBrief link */
+.tt-bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; } .tt-bar select { min-width: 220px; }
+.tt { width: 100%; border-collapse: collapse; font-size: 14px; } .tt th { text-align: left; font: 600 11px var(--f-cond); letter-spacing: .08em; text-transform: uppercase; color: var(--dim); padding: 6px 8px; }
+.tt td { padding: 8px; border-top: 1px solid var(--line); vertical-align: middle; } .tt td small { display: block; color: var(--dim); font-size: 11.5px; }
+.fleet .nolink { display: flex; gap: 12px; align-items: center; padding: 10px 12px; border-radius: 12px; background: var(--panel2); border: 1px solid var(--line); }
+.fleet .nolink.cur { border-color: var(--accent); } .bk-chip.asl { background: var(--beacon); color: #fff; border-color: var(--beacon); }
+@media (max-width: 760px) { .tt th:nth-child(5), .tt td:nth-child(5), .tt th:nth-child(8), .tt td:nth-child(8) { display: none; } }
+.fleet .nolink b { font: 700 16px var(--f-num); } .fleet .nolink span { font-size: 12px; color: var(--dim); }

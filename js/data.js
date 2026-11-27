@@ -19,7 +19,8 @@ export const API = {
   notices: "va/notices.json", // written by the airline's staff on GitHub, like the two below
   downloads: "va/downloads.json",
   ranks: "va/ranks.json",
-  routes: "va/routes.json", // route network for the flight suggestions (a proposal until the VA confirms it)
+  routes: "va/routes.json", // the VA schedule: airports, routes and every flight (tools/import-schedule.py)
+  vafleet: "va/fleet.json", // the VA fleet with registrations (same tool)
 };
 
 const DEF = { simbrief: "", cid: "", unit: "kg", theme: "dark", wall: "night", wallDim: 0.3, homeHide: [], homeOrder: [], hoppie: "", ivao: "", appsOff: [], pin: true, dnd: false, push: false, lock: 10, demo: "" };
@@ -41,7 +42,7 @@ export const S = {
   st: null, pr: null, events: [],
   // the airline's notices and tips, and the coming VATSIM events (kept for offline use)
   notices: store.get("asl.notices", null), vatEvents: store.get("asl.vatevents", []),
-  downloads: store.get("asl.downloads", null), ranks: store.get("asl.ranks", null), routes: store.get("asl.routes", null), traffic: [], sigmets: null,
+  downloads: store.get("asl.downloads", null), ranks: store.get("asl.ranks", null), routes: store.get("asl.routes", null), vafleet: store.get("asl.vafleet", null), traffic: [], sigmets: null,
   inUse: new Set(), // ASL callsigns flying or prefiled on VATSIM right now (free callsign for a booking)
 };
 const listeners = new Set();
@@ -259,7 +260,7 @@ export async function loadStandsFor(a) {
 }
 // notices and tips of the airline (va/notices.json) and the coming VATSIM events
 export async function pollNotices() {
-  await Promise.all(["notices", "downloads", "ranks", "routes"].map(async (k) => {
+  await Promise.all(["notices", "downloads", "ranks", "routes", "vafleet"].map(async (k) => {
     try { const n = await getJSON(API[k]); if (n) { S[k] = n; store.set("asl." + k, n); } } catch {}
   }));
   emit();
