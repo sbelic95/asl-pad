@@ -1,301 +1,902 @@
 {
- "_help": "Mreža linija Air Serbia za predloge i rezervacije u padu – samo linije Air Serbia, ništa drugo. Lista je PREDLOG dok je uprava VA ne potvrdi: dodaj, obriši ili promeni linije. Svaka linija važi u oba smera. types = tipovi aviona (prvi je podrazumevani); season = summer/winter ako je sezonska.",
- "proposal": true,
+ "_help": "Red letenja Air Serbia Virtual (iz vAMSYS uvoza VA). Ne menjaj ručno – pokreni: python3 tools/import-schedule.py <folder sa CSV>. Vremena su UTC.",
+ "proposal": false,
+ "source": "ASL_Passenger_Schedule_2026-11.csv",
  "base": "LYBE",
  "airports": {
-  "LYBE": {
-   "name": "Belgrade",
-   "lat": 44.82,
-   "lon": 20.31
-  },
-  "LYNI": {
-   "name": "Niš",
-   "lat": 43.34,
-   "lon": 21.85
-  },
-  "LOWW": {
-   "name": "Vienna",
-   "lat": 48.11,
-   "lon": 16.57
-  },
-  "EDDF": {
-   "name": "Frankfurt",
-   "lat": 50.03,
-   "lon": 8.57
-  },
-  "EDDM": {
-   "name": "Munich",
-   "lat": 48.35,
-   "lon": 11.79
-  },
-  "EDDL": {
-   "name": "Düsseldorf",
-   "lat": 51.29,
-   "lon": 6.77
-  },
   "EDDB": {
    "name": "Berlin",
+   "full": "Berlin Brandenburg Airport",
    "lat": 52.37,
    "lon": 13.5
   },
-  "EDDH": {
-   "name": "Hamburg",
-   "lat": 53.63,
-   "lon": 9.99
+  "EDDF": {
+   "name": "Frankfurt",
+   "full": "Frankfurt am Main Airport",
+   "lat": 50.03,
+   "lon": 8.54
+  },
+  "EDDK": {
+   "name": "Cologne",
+   "full": "Cologne Bonn Airport",
+   "lat": 50.87,
+   "lon": 7.14
+  },
+  "EDDL": {
+   "name": "Düsseldorf",
+   "full": "Dusseldorf International Airport",
+   "lat": 51.29,
+   "lon": 6.77
+  },
+  "EDDM": {
+   "name": "Munich",
+   "full": "Munich Airport",
+   "lat": 48.35,
+   "lon": 11.79
+  },
+  "EDDN": {
+   "name": "Nuremberg",
+   "full": "Nuremberg",
+   "lat": 49.5,
+   "lon": 11.07
   },
   "EDDS": {
    "name": "Stuttgart",
+   "full": "Stuttgart Airport",
    "lat": 48.69,
    "lon": 9.22
   },
-  "LSZH": {
-   "name": "Zurich",
-   "lat": 47.46,
-   "lon": 8.55
+  "EDDV": {
+   "name": "Hannover",
+   "full": "Hannover Airport",
+   "lat": 52.46,
+   "lon": 9.69
   },
-  "LSGG": {
-   "name": "Geneva",
-   "lat": 46.24,
-   "lon": 6.11
-  },
-  "LFPG": {
-   "name": "Paris",
-   "lat": 49.01,
-   "lon": 2.55
+  "EDFH": {
+   "name": "Frankfurt-Hahn",
+   "full": "Frankfurt Hahn Airport",
+   "lat": 49.95,
+   "lon": 7.26
   },
   "EGLL": {
    "name": "London",
+   "full": "London Heathrow Airport",
    "lat": 51.47,
-   "lon": -0.45
+   "lon": -0.46
   },
   "EHAM": {
    "name": "Amsterdam",
+   "full": "Amsterdam Airport Schiphol",
    "lat": 52.31,
    "lon": 4.76
   },
-  "EBBR": {
-   "name": "Brussels",
-   "lat": 50.9,
-   "lon": 4.48
+  "EKCH": {
+   "name": "Copenhagen",
+   "full": "Copenhagen Airport",
+   "lat": 55.62,
+   "lon": 12.66
   },
-  "LIRF": {
-   "name": "Rome",
-   "lat": 41.8,
-   "lon": 12.24
+  "ENGM": {
+   "name": "Oslo",
+   "full": "Oslo Gardermoen Airport",
+   "lat": 60.19,
+   "lon": 11.1
   },
-  "LIMC": {
-   "name": "Milan",
-   "lat": 45.63,
-   "lon": 8.72
+  "EPKK": {
+   "name": "Krakow",
+   "full": "Krakow John Paul II",
+   "lat": 50.08,
+   "lon": 19.78
+  },
+  "ESSA": {
+   "name": "Stockholm",
+   "full": "Stockholm Arlanda Airport",
+   "lat": 59.65,
+   "lon": 17.92
+  },
+  "KJFK": {
+   "name": "New York",
+   "full": "New York John F. Kennedy International Airport",
+   "lat": 40.64,
+   "lon": -73.78
+  },
+  "KORD": {
+   "name": "Chicago",
+   "full": "Chicago O'Hare International Airport",
+   "lat": 41.98,
+   "lon": -87.9
+  },
+  "LATI": {
+   "name": "Tirana",
+   "full": "Tirana International Airport",
+   "lat": 41.41,
+   "lon": 19.72
+  },
+  "LBSF": {
+   "name": "Sofia",
+   "full": "Sofia Airport",
+   "lat": 42.7,
+   "lon": 23.41
+  },
+  "LCLK": {
+   "name": "Larnaca",
+   "full": "Larnaca International Airport",
+   "lat": 34.88,
+   "lon": 33.62
+  },
+  "LDDU": {
+   "name": "Dubrovnik",
+   "full": "Dubrovnik Rudjer Boskovic Airport",
+   "lat": 42.56,
+   "lon": 18.27
+  },
+  "LDSP": {
+   "name": "Split",
+   "full": "Split Airport",
+   "lat": 43.54,
+   "lon": 16.3
+  },
+  "LDZA": {
+   "name": "Zagreb",
+   "full": "Zagreb Franjo Tudman Airport",
+   "lat": 45.74,
+   "lon": 16.07
+  },
+  "LEAL": {
+   "name": "Alicante",
+   "full": "Alicante",
+   "lat": 38.28,
+   "lon": -0.56
+  },
+  "LEBL": {
+   "name": "Barcelona",
+   "full": "Barcelona International Airport",
+   "lat": 41.3,
+   "lon": 2.08
+  },
+  "LEMD": {
+   "name": "Madrid",
+   "full": "Adolfo Suárez Madrid–Barajas Airport",
+   "lat": 40.49,
+   "lon": -3.57
+  },
+  "LEMG": {
+   "name": "Malaga",
+   "full": "Malaga Costa Del Sol Airport",
+   "lat": 36.67,
+   "lon": -4.5
+  },
+  "LEVC": {
+   "name": "Valencia",
+   "full": "Valencia Airport",
+   "lat": 39.49,
+   "lon": -0.48
+  },
+  "LEZL": {
+   "name": "Seville",
+   "full": "Sevilla Airport",
+   "lat": 37.42,
+   "lon": -5.89
+  },
+  "LFMN": {
+   "name": "Nice",
+   "full": "Nice-Côte d'Azur Airport",
+   "lat": 43.66,
+   "lon": 7.22
+  },
+  "LFPG": {
+   "name": "Paris",
+   "full": "Charles de Gaulle International Airport",
+   "lat": 49.01,
+   "lon": 2.55
   },
   "LGAV": {
    "name": "Athens",
+   "full": "Athens Eleftherios Venizelos",
    "lat": 37.94,
    "lon": 23.94
   },
   "LGTS": {
    "name": "Thessaloniki",
+   "full": "Thessaloniki",
    "lat": 40.52,
    "lon": 22.97
   },
-  "LTFM": {
-   "name": "Istanbul",
-   "lat": 41.26,
-   "lon": 28.74
+  "LHBP": {
+   "name": "Budapest",
+   "full": "Budapest Liszt Ferenc International Airport",
+   "lat": 47.44,
+   "lon": 19.26
   },
-  "LCLK": {
-   "name": "Larnaca",
-   "lat": 34.88,
-   "lon": 33.62
+  "LIBD": {
+   "name": "Bari",
+   "full": "Bari Karol Wojtyła",
+   "lat": 41.14,
+   "lon": 16.76
   },
-  "UUEE": {
-   "name": "Moscow",
-   "lat": 55.97,
-   "lon": 37.41
+  "LIMC": {
+   "name": "Milan",
+   "full": "Malpensa International Airport",
+   "lat": 45.63,
+   "lon": 8.73
   },
-  "LDZA": {
-   "name": "Zagreb",
-   "lat": 45.74,
-   "lon": 16.07
+  "LIPE": {
+   "name": "Bologna",
+   "full": "Bologna Guglielmo Marconi Airport",
+   "lat": 44.54,
+   "lon": 11.29
+  },
+  "LIPZ": {
+   "name": "Venezia",
+   "full": "Venice Marco Polo Airport",
+   "lat": 45.51,
+   "lon": 12.35
+  },
+  "LIRF": {
+   "name": "Rome",
+   "full": "Leonardo da Vinci–Fiumicino Airport",
+   "lat": 41.8,
+   "lon": 12.25
+  },
+  "LIRQ": {
+   "name": "Firenze",
+   "full": "Florence Airport",
+   "lat": 43.81,
+   "lon": 11.21
+  },
+  "LJLJ": {
+   "name": "Ljubljana",
+   "full": "Ljubljana Jože Pučnik",
+   "lat": 46.22,
+   "lon": 14.46
+  },
+  "LKPR": {
+   "name": "Prague",
+   "full": "Prague Vaclav Havel Airport",
+   "lat": 50.1,
+   "lon": 14.26
+  },
+  "LMML": {
+   "name": "Malta",
+   "full": "Malta International Airport",
+   "lat": 35.86,
+   "lon": 14.48
+  },
+  "LOWS": {
+   "name": "Salzburg",
+   "full": "Salzburg Airport",
+   "lat": 47.79,
+   "lon": 13.0
+  },
+  "LOWW": {
+   "name": "Vienna",
+   "full": "Vienna International Airport",
+   "lat": 48.11,
+   "lon": 16.57
+  },
+  "LPPT": {
+   "name": "Lisbon",
+   "full": "Lisbon Humberto Delgado Airport",
+   "lat": 38.78,
+   "lon": -9.14
+  },
+  "LQBK": {
+   "name": "Banja Luka",
+   "full": "Banja Luka International Airport",
+   "lat": 44.94,
+   "lon": 17.3
   },
   "LQSA": {
    "name": "Sarajevo",
+   "full": "Sarajevo International Airport",
    "lat": 43.82,
    "lon": 18.33
   },
+  "LROP": {
+   "name": "Bucharest",
+   "full": "Bucharest Henri Coanda International Airport",
+   "lat": 44.57,
+   "lon": 26.1
+  },
+  "LSGG": {
+   "name": "Geneva",
+   "full": "Geneva International Airport",
+   "lat": 46.24,
+   "lon": 6.11
+  },
+  "LSZH": {
+   "name": "Zurich",
+   "full": "Zurich Airport",
+   "lat": 47.46,
+   "lon": 8.55
+  },
+  "LTFM": {
+   "name": "Istanbul",
+   "full": "Istanbul Airport",
+   "lat": 41.26,
+   "lon": 28.73
+  },
   "LWSK": {
    "name": "Skopje",
+   "full": "Skopje International Airport",
    "lat": 41.96,
    "lon": 21.62
   },
+  "LYBE": {
+   "name": "Belgrade",
+   "full": "Belgrade Nikola Tesla Airport",
+   "lat": 44.82,
+   "lon": 20.31
+  },
+  "LYKV": {
+   "name": "Kraljevo",
+   "full": "Kraljevo Morava Airport",
+   "lat": 43.82,
+   "lon": 20.59
+  },
+  "LYNI": {
+   "name": "Niš",
+   "full": "Nis Airport",
+   "lat": 43.34,
+   "lon": 21.85
+  },
   "LYPG": {
    "name": "Podgorica",
+   "full": "Podgorica Airport",
    "lat": 42.36,
    "lon": 19.25
   },
   "LYTV": {
    "name": "Tivat",
+   "full": "Tivat Airport",
    "lat": 42.4,
    "lon": 18.72
   },
-  "LJLJ": {
-   "name": "Ljubljana",
-   "lat": 46.22,
-   "lon": 14.46
-  },
-  "LBSF": {
-   "name": "Sofia",
-   "lat": 42.7,
-   "lon": 23.41
-  },
-  "LROP": {
-   "name": "Bucharest",
-   "lat": 44.57,
-   "lon": 26.1
-  },
-  "LHBP": {
-   "name": "Budapest",
-   "lat": 47.44,
-   "lon": 19.26
-  },
-  "LKPR": {
-   "name": "Prague",
-   "lat": 50.1,
-   "lon": 14.26
-  },
-  "EPWA": {
-   "name": "Warsaw",
-   "lat": 52.17,
-   "lon": 20.97
-  },
-  "ESSA": {
-   "name": "Stockholm",
-   "lat": 59.65,
-   "lon": 17.92
-  },
-  "EKCH": {
-   "name": "Copenhagen",
-   "lat": 55.62,
-   "lon": 12.65
-  },
-  "LEBL": {
-   "name": "Barcelona",
-   "lat": 41.3,
-   "lon": 2.08
-  },
-  "KJFK": {
-   "name": "New York",
-   "lat": 40.64,
-   "lon": -73.78
-  },
-  "LEMD": {
-   "name": "Madrid",
-   "lat": 40.47,
-   "lon": -3.57
-  },
-  "ENGM": {
-   "name": "Oslo",
-   "lat": 60.2,
-   "lon": 11.08
-  },
-  "LGIR": {
-   "name": "Heraklion",
-   "lat": 35.34,
-   "lon": 25.18
-  },
-  "LGSR": {
-   "name": "Santorini",
-   "lat": 36.4,
-   "lon": 25.48
-  },
   "UBBB": {
    "name": "Baku",
+   "full": "Heydar Aliyev International Airport",
    "lat": 40.47,
    "lon": 50.05
   },
-  "CYYZ": {
-   "name": "Toronto",
-   "lat": 43.68,
-   "lon": -79.63
+  "UGTB": {
+   "name": "Tbilisi",
+   "full": "Tbilisi International Airport",
+   "lat": 41.67,
+   "lon": 44.95
   },
-  "LEAL": {
-   "name": "Alicante",
-   "lat": 38.28,
-   "lon": -0.56
+  "ULLI": {
+   "name": "St. Petersburg",
+   "full": "Pulkovo Airport",
+   "lat": 59.8,
+   "lon": 30.26
   },
-  "LDSB": {
-   "name": "Brač",
-   "lat": 43.29,
-   "lon": 16.68
+  "URSS": {
+   "name": "Sochi",
+   "full": "Sochi International Airport",
+   "lat": 43.45,
+   "lon": 39.96
   },
-  "LDPL": {
-   "name": "Pula",
-   "lat": 44.89,
-   "lon": 13.92
-  },
-  "LDDU": {
-   "name": "Dubrovnik",
-   "lat": 42.56,
-   "lon": 18.27
-  },
-  "LEZL": {
-   "name": "Seville",
-   "lat": 37.42,
-   "lon": -5.89
-  },
-  "GCTS": {
-   "name": "Tenerife",
-   "lat": 28.04,
-   "lon": -16.57
-  },
-  "ENTC": {
-   "name": "Tromsø",
-   "lat": 69.68,
-   "lon": 18.92
+  "UUEE": {
+   "name": "Moscow",
+   "full": "Moscow Sheremetyevo International Airport",
+   "lat": 55.97,
+   "lon": 37.41
   },
   "UWGG": {
    "name": "Nizhny Novgorod",
+   "full": "Nizhny Novgorod International Airport",
    "lat": 56.23,
    "lon": 43.78
   },
-  "ESGG": {
-   "name": "Gothenburg",
-   "lat": 57.66,
-   "lon": 12.28
+  "UWKD": {
+   "name": "Kazan",
+   "full": "Kazan International Airport",
+   "lat": 55.61,
+   "lon": 49.28
   },
-  "LIRN": {
-   "name": "Naples",
-   "lat": 40.89,
-   "lon": 14.29
+  "ZGGG": {
+   "name": "Guangzhou",
+   "full": "Guangzhou Baiyun International Airport",
+   "lat": 23.39,
+   "lon": 113.3
   },
-  "LMML": {
-   "name": "Malta",
-   "lat": 35.86,
-   "lon": 14.48
-  },
-  "EDDK": {
-   "name": "Cologne",
-   "lat": 50.87,
-   "lon": 7.14
-  },
-  "EDFH": {
-   "name": "Frankfurt-Hahn",
-   "lat": 49.95,
-   "lon": 7.26
+  "ZSPD": {
+   "name": "Shanghai",
+   "full": "Shanghai Pudong International Airport",
+   "lat": 31.14,
+   "lon": 121.81
   }
  },
  "routes": [
   {
-   "from": "LYBE",
+   "from": "EDDB",
+   "to": "LYBE",
+   "types": [
+    "A319",
+    "A320",
+    "E195"
+   ]
+  },
+  {
+   "from": "EDDF",
+   "to": "LYBE",
+   "types": [
+    "E195"
+   ]
+  },
+  {
+   "from": "EDDK",
+   "to": "LYNI",
+   "types": [
+    "A319"
+   ]
+  },
+  {
+   "from": "EDDL",
+   "to": "LYBE",
+   "types": [
+    "A319"
+   ]
+  },
+  {
+   "from": "EDDM",
+   "to": "LYBE",
+   "types": [
+    "A320",
+    "E195",
+    "AT76"
+   ]
+  },
+  {
+   "from": "EDDN",
+   "to": "LYBE",
+   "types": [
+    "AT76"
+   ]
+  },
+  {
+   "from": "EDDS",
+   "to": "LYBE",
+   "types": [
+    "A319",
+    "E195"
+   ]
+  },
+  {
+   "from": "EDDV",
+   "to": "LYBE",
+   "types": [
+    "A319"
+   ]
+  },
+  {
+   "from": "EDFH",
+   "to": "LYNI",
+   "types": [
+    "A319"
+   ]
+  },
+  {
+   "from": "EGLL",
+   "to": "LYBE",
+   "types": [
+    "A319",
+    "A320"
+   ]
+  },
+  {
+   "from": "EHAM",
+   "to": "LYBE",
+   "types": [
+    "A319"
+   ]
+  },
+  {
+   "from": "EKCH",
+   "to": "LYBE",
+   "types": [
+    "A319"
+   ]
+  },
+  {
+   "from": "ENGM",
+   "to": "LYBE",
+   "types": [
+    "A319",
+    "A320"
+   ]
+  },
+  {
+   "from": "EPKK",
+   "to": "LYBE",
+   "types": [
+    "A320",
+    "AT76"
+   ]
+  },
+  {
+   "from": "ESSA",
+   "to": "LYBE",
+   "types": [
+    "A319"
+   ]
+  },
+  {
+   "from": "KJFK",
+   "to": "LYBE",
+   "types": [
+    "A332"
+   ]
+  },
+  {
+   "from": "KORD",
+   "to": "LYBE",
+   "types": [
+    "A332"
+   ]
+  },
+  {
+   "from": "LATI",
+   "to": "LYBE",
+   "types": [
+    "AT76"
+   ]
+  },
+  {
+   "from": "LBSF",
+   "to": "LYBE",
+   "types": [
+    "AT76"
+   ]
+  },
+  {
+   "from": "LCLK",
+   "to": "LYBE",
+   "types": [
+    "A319",
+    "A320"
+   ]
+  },
+  {
+   "from": "LDDU",
+   "to": "LYBE",
+   "types": [
+    "AT76"
+   ]
+  },
+  {
+   "from": "LDSP",
+   "to": "LYBE",
+   "types": [
+    "A319",
+    "AT76"
+   ]
+  },
+  {
+   "from": "LDZA",
+   "to": "LYBE",
+   "types": [
+    "AT76"
+   ]
+  },
+  {
+   "from": "LEAL",
+   "to": "LYBE",
+   "types": [
+    "E195"
+   ]
+  },
+  {
+   "from": "LEBL",
+   "to": "LYBE",
+   "types": [
+    "A319",
+    "A320"
+   ]
+  },
+  {
+   "from": "LEMD",
+   "to": "LYBE",
+   "types": [
+    "A320"
+   ]
+  },
+  {
+   "from": "LEMG",
+   "to": "LYBE",
+   "types": [
+    "A319"
+   ]
+  },
+  {
+   "from": "LEVC",
+   "to": "LYBE",
+   "types": [
+    "A319",
+    "A320"
+   ]
+  },
+  {
+   "from": "LEZL",
+   "to": "LYBE",
+   "types": [
+    "A319"
+   ]
+  },
+  {
+   "from": "LFMN",
+   "to": "LYBE",
+   "types": [
+    "A319",
+    "E195"
+   ]
+  },
+  {
+   "from": "LFPG",
+   "to": "LYBE",
+   "types": [
+    "A319",
+    "A320"
+   ]
+  },
+  {
+   "from": "LGAV",
+   "to": "LYBE",
+   "types": [
+    "A319",
+    "A320",
+    "E195"
+   ]
+  },
+  {
+   "from": "LGTS",
+   "to": "LYBE",
+   "types": [
+    "A319",
+    "AT76"
+   ]
+  },
+  {
+   "from": "LHBP",
+   "to": "LYBE",
+   "types": [
+    "A319",
+    "AT76"
+   ]
+  },
+  {
+   "from": "LIBD",
+   "to": "LYBE",
+   "types": [
+    "AT76"
+   ]
+  },
+  {
+   "from": "LIMC",
+   "to": "LYBE",
+   "types": [
+    "A319",
+    "A320",
+    "E195"
+   ]
+  },
+  {
+   "from": "LIPE",
+   "to": "LYBE",
+   "types": [
+    "AT76"
+   ]
+  },
+  {
+   "from": "LIPZ",
+   "to": "LYBE",
+   "types": [
+    "AT76"
+   ]
+  },
+  {
+   "from": "LIRF",
+   "to": "LYBE",
+   "types": [
+    "A319",
+    "A320"
+   ]
+  },
+  {
+   "from": "LIRQ",
+   "to": "LYBE",
+   "types": [
+    "AT76"
+   ]
+  },
+  {
+   "from": "LJLJ",
+   "to": "LYBE",
+   "types": [
+    "E195",
+    "AT76"
+   ]
+  },
+  {
+   "from": "LJLJ",
+   "to": "LYNI",
+   "types": [
+    "AT76"
+   ]
+  },
+  {
+   "from": "LKPR",
    "to": "LOWW",
    "types": [
+    "AT76"
+   ]
+  },
+  {
+   "from": "LKPR",
+   "to": "LYBE",
+   "types": [
+    "AT76"
+   ]
+  },
+  {
+   "from": "LMML",
+   "to": "LYBE",
+   "types": [
+    "A319"
+   ]
+  },
+  {
+   "from": "LMML",
+   "to": "LYNI",
+   "types": [
+    "A319"
+   ]
+  },
+  {
+   "from": "LOWS",
+   "to": "LYBE",
+   "types": [
+    "AT76"
+   ]
+  },
+  {
+   "from": "LOWW",
+   "to": "LYBE",
+   "types": [
+    "E195",
+    "AT76"
+   ]
+  },
+  {
+   "from": "LOWW",
+   "to": "LYNI",
+   "types": [
+    "AT76"
+   ]
+  },
+  {
+   "from": "LPPT",
+   "to": "LYBE",
+   "types": [
     "A319",
     "A320"
    ]
   },
   {
+   "from": "LQBK",
+   "to": "LYBE",
+   "types": [
+    "AT76"
+   ]
+  },
+  {
+   "from": "LQSA",
+   "to": "LYBE",
+   "types": [
+    "E195",
+    "AT76"
+   ]
+  },
+  {
+   "from": "LROP",
+   "to": "LYBE",
+   "types": [
+    "AT76"
+   ]
+  },
+  {
+   "from": "LSGG",
+   "to": "LYBE",
+   "types": [
+    "E195"
+   ]
+  },
+  {
+   "from": "LSZH",
+   "to": "LYBE",
+   "types": [
+    "A319",
+    "E195"
+   ]
+  },
+  {
+   "from": "LTFM",
+   "to": "LYBE",
+   "types": [
+    "A319",
+    "A320"
+   ]
+  },
+  {
+   "from": "LTFM",
+   "to": "LYKV",
+   "types": [
+    "AT76"
+   ]
+  },
+  {
+   "from": "LTFM",
+   "to": "LYNI",
+   "types": [
+    "A319"
+   ]
+  },
+  {
+   "from": "LWSK",
+   "to": "LYBE",
+   "types": [
+    "AT76"
+   ]
+  },
+  {
    "from": "LYBE",
-   "to": "EDDF",
+   "to": "LYKV",
+   "types": [
+    "AT76"
+   ]
+  },
+  {
+   "from": "LYBE",
+   "to": "LYNI",
+   "types": [
+    "A319",
+    "AT76"
+   ]
+  },
+  {
+   "from": "LYBE",
+   "to": "LYPG",
+   "types": [
+    "A319",
+    "E195",
+    "AT76"
+   ]
+  },
+  {
+   "from": "LYBE",
+   "to": "LYTV",
+   "types": [
+    "E195",
+    "AT76"
+   ]
+  },
+  {
+   "from": "LYBE",
+   "to": "UBBB",
+   "types": [
+    "A319"
+   ]
+  },
+  {
+   "from": "LYBE",
+   "to": "UGTB",
+   "types": [
+    "A319"
+   ]
+  },
+  {
+   "from": "LYBE",
+   "to": "ULLI",
    "types": [
     "A319",
     "A320"
@@ -303,135 +904,7 @@
   },
   {
    "from": "LYBE",
-   "to": "EDDM",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "EDDL",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "EDDB",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "EDDH",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "EDDS",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "LSZH",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "LSGG",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "LFPG",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "EGLL",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "EHAM",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "EBBR",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "LIRF",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "LIMC",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "LGAV",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "LGTS",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "LTFM",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "LCLK",
+   "to": "URSS",
    "types": [
     "A319",
     "A320"
@@ -447,236 +920,6 @@
   },
   {
    "from": "LYBE",
-   "to": "LDZA",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "LQSA",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "LWSK",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "LYPG",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "LYTV",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "LJLJ",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "LBSF",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "LROP",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "LHBP",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "LKPR",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "EPWA",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "ESSA",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "EKCH",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "LEBL",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "KJFK",
-   "types": [
-    "A332"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "LEMD",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "ENGM",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "LGIR",
-   "types": [
-    "A319",
-    "A320"
-   ],
-   "season": "summer"
-  },
-  {
-   "from": "LYBE",
-   "to": "LGSR",
-   "types": [
-    "A319",
-    "A320"
-   ],
-   "season": "summer"
-  },
-  {
-   "from": "LYBE",
-   "to": "UBBB",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "CYYZ",
-   "types": [
-    "A332"
-   ],
-   "season": "summer"
-  },
-  {
-   "from": "LYBE",
-   "to": "LEAL",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "LDSB",
-   "types": [
-    "A319",
-    "A320"
-   ],
-   "season": "summer"
-  },
-  {
-   "from": "LYBE",
-   "to": "LDPL",
-   "types": [
-    "A319",
-    "A320"
-   ],
-   "season": "summer"
-  },
-  {
-   "from": "LYBE",
-   "to": "LDDU",
-   "types": [
-    "A319",
-    "A320"
-   ]
-  },
-  {
-   "from": "LYBE",
-   "to": "LEZL",
-   "types": [
-    "A319",
-    "A320"
-   ],
-   "season": "winter"
-  },
-  {
-   "from": "LYBE",
-   "to": "GCTS",
-   "types": [
-    "A319",
-    "A320"
-   ],
-   "season": "winter"
-  },
-  {
-   "from": "LYBE",
-   "to": "ENTC",
-   "types": [
-    "A319",
-    "A320"
-   ],
-   "season": "winter"
-  },
-  {
-   "from": "LYBE",
    "to": "UWGG",
    "types": [
     "A319",
@@ -685,77 +928,5920 @@
   },
   {
    "from": "LYBE",
-   "to": "ESGG",
+   "to": "UWKD",
    "types": [
-    "A319",
-    "A320"
-   ],
-   "season": "summer"
+    "A319"
+   ]
   },
   {
    "from": "LYBE",
-   "to": "LIRN",
+   "to": "ZGGG",
    "types": [
-    "A319",
-    "A320"
+    "A332"
+   ]
+  },
+  {
+   "from": "LYBE",
+   "to": "ZSPD",
+   "types": [
+    "A332"
+   ]
+  }
+ ],
+ "flights": [
+  {
+   "no": "JU116",
+   "cs": "ASL43E",
+   "dep": "LYBE",
+   "arr": "LBSF",
+   "std": "00:01",
+   "sta": "00:47",
+   "blk": "00:46",
+   "nm": 185,
+   "days": [
+    1,
+    3,
+    5,
+    6
    ],
-   "season": "summer"
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
   },
   {
-   "from": "LYNI",
-   "to": "LYBE",
-   "types": [
-    "A319",
-    "A320"
-   ]
+   "no": "JU796",
+   "cs": "ASL92Z",
+   "dep": "LYBE",
+   "arr": "LWSK",
+   "std": "00:03",
+   "sta": "00:49",
+   "blk": "00:46",
+   "nm": 181,
+   "days": [
+    1,
+    2,
+    4,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
   },
   {
-   "from": "LYNI",
-   "to": "LOWW",
-   "types": [
-    "A319",
-    "A320"
-   ]
+   "no": "JU120",
+   "cs": "ASL120",
+   "dep": "LYBE",
+   "arr": "ULLI",
+   "std": "04:53",
+   "sta": "07:31",
+   "blk": "02:38",
+   "nm": 968,
+   "days": [
+    7
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "1",
+   "gate": "C4"
   },
   {
-   "from": "LYNI",
-   "to": "LMML",
-   "types": [
-    "A319",
-    "A320"
-   ]
+   "no": "JU390",
+   "cs": "ASL56A",
+   "dep": "LYBE",
+   "arr": "ENGM",
+   "std": "05:13",
+   "sta": "07:53",
+   "blk": "02:40",
+   "nm": 981,
+   "days": [
+    4
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "A4"
   },
   {
-   "from": "LYNI",
-   "to": "EDDK",
-   "types": [
-    "A319",
-    "A320"
-   ]
+   "no": "JU380",
+   "cs": "ASL38R",
+   "dep": "LYBE",
+   "arr": "ESSA",
+   "std": "05:27",
+   "sta": "07:55",
+   "blk": "02:28",
+   "nm": 895,
+   "days": [
+    4
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "A1"
   },
   {
-   "from": "LYNI",
-   "to": "EDFH",
-   "types": [
-    "A319",
-    "A320"
-   ]
+   "no": "JU586",
+   "cs": "ASL28V",
+   "dep": "LYBE",
+   "arr": "LEAL",
+   "std": "05:28",
+   "sta": "08:13",
+   "blk": "02:45",
+   "nm": 1013,
+   "days": [
+    5
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "A3"
   },
   {
-   "from": "LYNI",
-   "to": "LTFM",
-   "types": [
-    "A319",
-    "A320"
-   ]
+   "no": "JU590",
+   "cs": "ASL37E",
+   "dep": "LYBE",
+   "arr": "LEVC",
+   "std": "05:29",
+   "sta": "08:08",
+   "blk": "02:39",
+   "nm": 976,
+   "days": [
+    4
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "2",
+   "gate": "C12"
   },
   {
-   "from": "LYNI",
-   "to": "LJLJ",
-   "types": [
-    "A319",
-    "A320"
-   ]
+   "no": "JU326",
+   "cs": "ASL29Z",
+   "dep": "LYBE",
+   "arr": "LSGG",
+   "std": "05:34",
+   "sta": "07:20",
+   "blk": "01:46",
+   "nm": 603,
+   "days": [
+    1,
+    5
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "C3"
+  },
+  {
+   "no": "JU400",
+   "cs": "ASL78C",
+   "dep": "LYBE",
+   "arr": "LIRF",
+   "std": "05:36",
+   "sta": "06:53",
+   "blk": "01:17",
+   "nm": 396,
+   "days": [
+    4,
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "C5"
+  },
+  {
+   "no": "JU286",
+   "cs": "ASL49Q",
+   "dep": "LYBE",
+   "arr": "EDDN",
+   "std": "05:38",
+   "sta": "07:05",
+   "blk": "01:27",
+   "nm": 470,
+   "days": [
+    5
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU580",
+   "cs": "ASL48U",
+   "dep": "LYBE",
+   "arr": "LEBL",
+   "std": "05:39",
+   "sta": "07:57",
+   "blk": "02:18",
+   "nm": 825,
+   "days": [
+    1,
+    4
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "2",
+   "gate": "C11"
+  },
+  {
+   "no": "JU600",
+   "cs": "ASL33D",
+   "dep": "LYBE",
+   "arr": "LDZA",
+   "std": "05:42",
+   "sta": "06:29",
+   "blk": "00:47",
+   "nm": 188,
+   "days": [
+    1,
+    4,
+    5,
+    6,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU680",
+   "cs": "ASL23F",
+   "dep": "LYBE",
+   "arr": "LYTV",
+   "std": "05:42",
+   "sta": "06:25",
+   "blk": "00:43",
+   "nm": 160,
+   "days": [
+    1,
+    3,
+    4,
+    6,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU680",
+   "cs": "ASL23F",
+   "dep": "LYBE",
+   "arr": "LYTV",
+   "std": "05:44",
+   "sta": "06:27",
+   "blk": "00:43",
+   "nm": 160,
+   "days": [
+    5
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU170",
+   "cs": "ASL89Y",
+   "dep": "LYBE",
+   "arr": "LKPR",
+   "std": "05:45",
+   "sta": "07:02",
+   "blk": "01:17",
+   "nm": 401,
+   "days": [
+    3,
+    4,
+    5,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU240",
+   "cs": "ASL43V",
+   "dep": "LYBE",
+   "arr": "LFPG",
+   "std": "05:45",
+   "sta": "07:55",
+   "blk": "02:10",
+   "nm": 768,
+   "days": [
+    3
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "C7"
+  },
+  {
+   "no": "JU360",
+   "cs": "ASL42A",
+   "dep": "LYBE",
+   "arr": "EDDL",
+   "std": "05:48",
+   "sta": "07:43",
+   "blk": "01:55",
+   "nm": 666,
+   "days": [
+    1,
+    6
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "C13"
+  },
+  {
+   "no": "JU466",
+   "cs": "ASL46B",
+   "dep": "LYBE",
+   "arr": "LIRQ",
+   "std": "05:49",
+   "sta": "07:06",
+   "blk": "01:17",
+   "nm": 396,
+   "days": [
+    5
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU240",
+   "cs": "ASL43V",
+   "dep": "LYBE",
+   "arr": "LFPG",
+   "std": "05:50",
+   "sta": "08:00",
+   "blk": "02:10",
+   "nm": 768,
+   "days": [
+    1,
+    2,
+    4,
+    6,
+    7
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "2",
+   "gate": "C4"
+  },
+  {
+   "no": "JU400",
+   "cs": "ASL78C",
+   "dep": "LYBE",
+   "arr": "LIRF",
+   "std": "05:52",
+   "sta": "07:09",
+   "blk": "01:17",
+   "nm": 396,
+   "days": [
+    1,
+    6
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "2",
+   "gate": "C9"
+  },
+  {
+   "no": "JU370",
+   "cs": "ASL52E",
+   "dep": "LYBE",
+   "arr": "EKCH",
+   "std": "05:53",
+   "sta": "07:55",
+   "blk": "02:02",
+   "nm": 711,
+   "days": [
+    1,
+    4,
+    6
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "C2"
+  },
+  {
+   "no": "JU416",
+   "cs": "ASL51H",
+   "dep": "LYBE",
+   "arr": "LIMC",
+   "std": "05:54",
+   "sta": "07:24",
+   "blk": "01:30",
+   "nm": 492,
+   "days": [
+    5,
+    6
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "C1"
+  },
+  {
+   "no": "JU260",
+   "cs": "ASL26U",
+   "dep": "LYBE",
+   "arr": "EHAM",
+   "std": "05:56",
+   "sta": "08:05",
+   "blk": "02:09",
+   "nm": 761,
+   "days": [
+    1,
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "A1"
+  },
+  {
+   "no": "JU280",
+   "cs": "ASL20Q",
+   "dep": "LYBE",
+   "arr": "EDDV",
+   "std": "05:59",
+   "sta": "07:48",
+   "blk": "01:49",
+   "nm": 622,
+   "days": [
+    1
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "A5"
+  },
+  {
+   "no": "JU470",
+   "cs": "ASL64T",
+   "dep": "LYBE",
+   "arr": "LIPE",
+   "std": "06:03",
+   "sta": "07:18",
+   "blk": "01:15",
+   "nm": 385,
+   "days": [
+    1,
+    4
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU320",
+   "cs": "ASL30B",
+   "dep": "LYBE",
+   "arr": "LOWS",
+   "std": "06:04",
+   "sta": "07:14",
+   "blk": "01:10",
+   "nm": 352,
+   "days": [
+    5
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU660",
+   "cs": "ASL53Q",
+   "dep": "LYBE",
+   "arr": "LYPG",
+   "std": "06:04",
+   "sta": "06:46",
+   "blk": "00:42",
+   "nm": 155,
+   "days": [
+    3,
+    4,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU660",
+   "cs": "ASL53Q",
+   "dep": "LYBE",
+   "arr": "LYPG",
+   "std": "06:06",
+   "sta": "06:48",
+   "blk": "00:42",
+   "nm": 155,
+   "days": [
+    5,
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "C8"
+  },
+  {
+   "no": "JU354",
+   "cs": "ASL34B",
+   "dep": "LYBE",
+   "arr": "EDDB",
+   "std": "06:09",
+   "sta": "07:44",
+   "blk": "01:35",
+   "nm": 527,
+   "days": [
+    6
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "C11"
+  },
+  {
+   "no": "JU350",
+   "cs": "ASL96P",
+   "dep": "LYBE",
+   "arr": "EDDF",
+   "std": "06:10",
+   "sta": "07:51",
+   "blk": "01:41",
+   "nm": 570,
+   "days": [
+    3,
+    4
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "A6"
+  },
+  {
+   "no": "JU660",
+   "cs": "ASL53Q",
+   "dep": "LYBE",
+   "arr": "LYPG",
+   "std": "06:10",
+   "sta": "06:52",
+   "blk": "00:42",
+   "nm": 155,
+   "days": [
+    1
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "C6"
+  },
+  {
+   "no": "JU460",
+   "cs": "ASL55G",
+   "dep": "LYBE",
+   "arr": "LIPZ",
+   "std": "06:11",
+   "sta": "07:19",
+   "blk": "01:08",
+   "nm": 339,
+   "days": [
+    1,
+    4
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU330",
+   "cs": "ASL44C",
+   "dep": "LYBE",
+   "arr": "LSZH",
+   "std": "06:15",
+   "sta": "07:48",
+   "blk": "01:33",
+   "nm": 514,
+   "days": [
+    3,
+    6,
+    7
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "C1"
+  },
+  {
+   "no": "JU354",
+   "cs": "ASL34B",
+   "dep": "LYBE",
+   "arr": "EDDB",
+   "std": "06:17",
+   "sta": "07:52",
+   "blk": "01:35",
+   "nm": 527,
+   "days": [
+    1
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "C12"
+  },
+  {
+   "no": "JU340",
+   "cs": "ASL22D",
+   "dep": "LYBE",
+   "arr": "EDDM",
+   "std": "06:23",
+   "sta": "07:42",
+   "blk": "01:19",
+   "nm": 410,
+   "days": [
+    1,
+    6
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "A3"
+  },
+  {
+   "no": "JU156",
+   "cs": "ASL156",
+   "dep": "LYBE",
+   "arr": "EPKK",
+   "std": "06:24",
+   "sta": "07:29",
+   "blk": "01:05",
+   "nm": 316,
+   "days": [
+    5
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU354",
+   "cs": "ASL34B",
+   "dep": "LYBE",
+   "arr": "EDDB",
+   "std": "06:24",
+   "sta": "07:59",
+   "blk": "01:35",
+   "nm": 527,
+   "days": [
+    4
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-131",
+   "term": "2",
+   "gate": "C13"
+  },
+  {
+   "no": "JU346",
+   "cs": "ASL14D",
+   "dep": "LYBE",
+   "arr": "EDDS",
+   "std": "06:25",
+   "sta": "07:58",
+   "blk": "01:33",
+   "nm": 511,
+   "days": [
+    5,
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "C5"
+  },
+  {
+   "no": "JU250",
+   "cs": "ASL57L",
+   "dep": "LYBE",
+   "arr": "LFMN",
+   "std": "06:27",
+   "sta": "08:08",
+   "blk": "01:41",
+   "nm": 567,
+   "days": [
+    4
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "C2"
+  },
+  {
+   "no": "JU490",
+   "cs": "ASL49G",
+   "dep": "LYBE",
+   "arr": "LIBD",
+   "std": "06:28",
+   "sta": "07:27",
+   "blk": "00:59",
+   "nm": 270,
+   "days": [
+    4
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "A7"
+  },
+  {
+   "no": "JU156",
+   "cs": "ASL156",
+   "dep": "LYBE",
+   "arr": "EPKK",
+   "std": "06:44",
+   "sta": "07:49",
+   "blk": "01:05",
+   "nm": 316,
+   "days": [
+    1
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "2",
+   "gate": "A2"
+  },
+  {
+   "no": "JU310",
+   "cs": "ASL80D",
+   "dep": "LYBE",
+   "arr": "LOWW",
+   "std": "06:48",
+   "sta": "07:44",
+   "blk": "00:56",
+   "nm": 251,
+   "days": [
+    4
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "A4"
+  },
+  {
+   "no": "JU130",
+   "cs": "ASL130",
+   "dep": "LYBE",
+   "arr": "UUEE",
+   "std": "06:49",
+   "sta": "09:22",
+   "blk": "02:33",
+   "nm": 932,
+   "days": [
+    2,
+    3,
+    5,
+    6,
+    7
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "1",
+   "gate": "C3"
+  },
+  {
+   "no": "JU620",
+   "cs": "ASL19L",
+   "dep": "LYBE",
+   "arr": "LJLJ",
+   "std": "06:49",
+   "sta": "07:46",
+   "blk": "00:57",
+   "nm": 260,
+   "days": [
+    4
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "C5"
+  },
+  {
+   "no": "JU310",
+   "cs": "ASL80D",
+   "dep": "LYBE",
+   "arr": "LOWW",
+   "std": "06:51",
+   "sta": "07:47",
+   "blk": "00:56",
+   "nm": 251,
+   "days": [
+    1,
+    3,
+    5,
+    6,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU620",
+   "cs": "ASL19L",
+   "dep": "LYBE",
+   "arr": "LJLJ",
+   "std": "06:52",
+   "sta": "07:49",
+   "blk": "00:57",
+   "nm": 260,
+   "days": [
+    1,
+    3,
+    5,
+    6,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU576",
+   "cs": "ASL55A",
+   "dep": "LYBE",
+   "arr": "LEMG",
+   "std": "06:55",
+   "sta": "10:10",
+   "blk": "03:15",
+   "nm": 1223,
+   "days": [
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "A1"
+  },
+  {
+   "no": "JU588",
+   "cs": "ASL15V",
+   "dep": "LYBE",
+   "arr": "LEZL",
+   "std": "07:24",
+   "sta": "10:44",
+   "blk": "03:20",
+   "nm": 1259,
+   "days": [
+    2,
+    6
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "A3"
+  },
+  {
+   "no": "JU140",
+   "cs": "ASL43B",
+   "dep": "LYBE",
+   "arr": "LHBP",
+   "std": "08:56",
+   "sta": "09:39",
+   "blk": "00:43",
+   "nm": 163,
+   "days": [
+    1,
+    4
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU2000",
+   "cs": "ASL2000",
+   "dep": "LYBE",
+   "arr": "LYKV",
+   "std": "08:58",
+   "sta": "09:27",
+   "blk": "00:29",
+   "nm": 61,
+   "days": [
+    3,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU686",
+   "cs": "ASL80X",
+   "dep": "LYBE",
+   "arr": "LYTV",
+   "std": "09:10",
+   "sta": "09:53",
+   "blk": "00:43",
+   "nm": 160,
+   "days": [
+    1,
+    4,
+    5
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "C4"
+  },
+  {
+   "no": "JU686",
+   "cs": "ASL80X",
+   "dep": "LYBE",
+   "arr": "LYTV",
+   "std": "09:13",
+   "sta": "09:56",
+   "blk": "00:43",
+   "nm": 160,
+   "days": [
+    2,
+    3,
+    6,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU340",
+   "cs": "ASL22D",
+   "dep": "LYBE",
+   "arr": "EDDM",
+   "std": "09:22",
+   "sta": "10:41",
+   "blk": "01:19",
+   "nm": 410,
+   "days": [
+    4
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "2",
+   "gate": "C1"
+  },
+  {
+   "no": "JU610",
+   "cs": "ASL85B",
+   "dep": "LYBE",
+   "arr": "LQBK",
+   "std": "09:26",
+   "sta": "10:04",
+   "blk": "00:38",
+   "nm": 128,
+   "days": [
+    1
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU178",
+   "cs": "ASL178",
+   "dep": "LYBE",
+   "arr": "URSS",
+   "std": "09:33",
+   "sta": "11:54",
+   "blk": "02:21",
+   "nm": 849,
+   "days": [
+    5
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "1",
+   "gate": "C4"
+  },
+  {
+   "no": "JU480",
+   "cs": "ASL23C",
+   "dep": "LYBE",
+   "arr": "LCLK",
+   "std": "09:37",
+   "sta": "11:59",
+   "blk": "02:22",
+   "nm": 854,
+   "days": [
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "C1"
+  },
+  {
+   "no": "JU480",
+   "cs": "ASL23C",
+   "dep": "LYBE",
+   "arr": "LCLK",
+   "std": "09:49",
+   "sta": "12:11",
+   "blk": "02:22",
+   "nm": 854,
+   "days": [
+    1,
+    3,
+    7
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "2",
+   "gate": "C2"
+  },
+  {
+   "no": "JU210",
+   "cs": "ASL32Y",
+   "dep": "LYBE",
+   "arr": "EGLL",
+   "std": "09:58",
+   "sta": "12:29",
+   "blk": "02:31",
+   "nm": 919,
+   "days": [
+    1
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-131",
+   "term": "2",
+   "gate": "A4"
+  },
+  {
+   "no": "JU506",
+   "cs": "ASL506",
+   "dep": "LYBE",
+   "arr": "KORD",
+   "std": "10:06",
+   "sta": "20:45",
+   "blk": "10:39",
+   "nm": 4332,
+   "days": [
+    5
+   ],
+   "type": "A332",
+   "fleet": "Airbus A330-243",
+   "term": "2",
+   "gate": "C11"
+  },
+  {
+   "no": "JU210",
+   "cs": "ASL32Y",
+   "dep": "LYBE",
+   "arr": "EGLL",
+   "std": "10:37",
+   "sta": "13:08",
+   "blk": "02:31",
+   "nm": 919,
+   "days": [
+    7
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "2",
+   "gate": "C2"
+  },
+  {
+   "no": "JU210",
+   "cs": "ASL32Y",
+   "dep": "LYBE",
+   "arr": "EGLL",
+   "std": "10:47",
+   "sta": "13:18",
+   "blk": "02:31",
+   "nm": 919,
+   "days": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "C13"
+  },
+  {
+   "no": "JU422",
+   "cs": "ASL422",
+   "dep": "LYBE",
+   "arr": "LTFM",
+   "std": "11:32",
+   "sta": "12:53",
+   "blk": "01:21",
+   "nm": 426,
+   "days": [
+    2,
+    3,
+    4,
+    6,
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "C5"
+  },
+  {
+   "no": "JU450",
+   "cs": "ASL12C",
+   "dep": "LYBE",
+   "arr": "LMML",
+   "std": "11:39",
+   "sta": "13:25",
+   "blk": "01:46",
+   "nm": 600,
+   "days": [
+    1,
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "A2"
+  },
+  {
+   "no": "JU532",
+   "cs": "ASL38Y",
+   "dep": "LYBE",
+   "arr": "LGAV",
+   "std": "11:49",
+   "sta": "13:12",
+   "blk": "01:23",
+   "nm": 444,
+   "days": [
+    3
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "A3"
+  },
+  {
+   "no": "JU532",
+   "cs": "ASL38Y",
+   "dep": "LYBE",
+   "arr": "LGAV",
+   "std": "11:51",
+   "sta": "13:14",
+   "blk": "01:23",
+   "nm": 444,
+   "days": [
+    5
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "2",
+   "gate": "A1"
+  },
+  {
+   "no": "JU332",
+   "cs": "ASL72D",
+   "dep": "LYBE",
+   "arr": "LSZH",
+   "std": "11:54",
+   "sta": "13:27",
+   "blk": "01:33",
+   "nm": 514,
+   "days": [
+    5,
+    6,
+    7
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "C6"
+  },
+  {
+   "no": "JU9010",
+   "cs": "ASL9010",
+   "dep": "LYBE",
+   "arr": "LDSP",
+   "std": "12:05",
+   "sta": "12:52",
+   "blk": "00:47",
+   "nm": 189,
+   "days": [
+    3,
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU542",
+   "cs": "ASL86V",
+   "dep": "LYBE",
+   "arr": "LGTS",
+   "std": "12:07",
+   "sta": "13:08",
+   "blk": "01:01",
+   "nm": 284,
+   "days": [
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "C13"
+  },
+  {
+   "no": "JU102",
+   "cs": "ASL10K",
+   "dep": "LYBE",
+   "arr": "LROP",
+   "std": "12:10",
+   "sta": "13:05",
+   "blk": "00:55",
+   "nm": 248,
+   "days": [
+    2,
+    3,
+    5,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU312",
+   "cs": "ASL79F",
+   "dep": "LYBE",
+   "arr": "LOWW",
+   "std": "12:14",
+   "sta": "13:10",
+   "blk": "00:56",
+   "nm": 251,
+   "days": [
+    1,
+    4,
+    5,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU532",
+   "cs": "ASL38Y",
+   "dep": "LYBE",
+   "arr": "LGAV",
+   "std": "12:15",
+   "sta": "13:38",
+   "blk": "01:23",
+   "nm": 444,
+   "days": [
+    1,
+    2,
+    4,
+    6,
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "A4"
+  },
+  {
+   "no": "JU622",
+   "cs": "ASL60N",
+   "dep": "LYBE",
+   "arr": "LJLJ",
+   "std": "12:17",
+   "sta": "13:14",
+   "blk": "00:57",
+   "nm": 260,
+   "days": [
+    1,
+    5
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU722",
+   "cs": "ASL59Y",
+   "dep": "LYBE",
+   "arr": "LDDU",
+   "std": "12:19",
+   "sta": "13:02",
+   "blk": "00:43",
+   "nm": 162,
+   "days": [
+    1,
+    4,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "A7"
+  },
+  {
+   "no": "JU542",
+   "cs": "ASL86V",
+   "dep": "LYBE",
+   "arr": "LGTS",
+   "std": "12:20",
+   "sta": "13:21",
+   "blk": "01:01",
+   "nm": 284,
+   "days": [
+    4,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU702",
+   "cs": "ASL73R",
+   "dep": "LYBE",
+   "arr": "LDSP",
+   "std": "12:23",
+   "sta": "13:10",
+   "blk": "00:47",
+   "nm": 189,
+   "days": [
+    1,
+    5,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU112",
+   "cs": "ASL36C",
+   "dep": "LYBE",
+   "arr": "LBSF",
+   "std": "12:25",
+   "sta": "13:11",
+   "blk": "00:46",
+   "nm": 185,
+   "days": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "A7"
+  },
+  {
+   "no": "JU422",
+   "cs": "ASL422",
+   "dep": "LYBE",
+   "arr": "LTFM",
+   "std": "12:32",
+   "sta": "13:53",
+   "blk": "01:21",
+   "nm": 426,
+   "days": [
+    1
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "2",
+   "gate": "C11"
+  },
+  {
+   "no": "JU792",
+   "cs": "ASL77A",
+   "dep": "LYBE",
+   "arr": "LWSK",
+   "std": "12:34",
+   "sta": "13:20",
+   "blk": "00:46",
+   "nm": 181,
+   "days": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU482",
+   "cs": "ASL78P",
+   "dep": "LYBE",
+   "arr": "LCLK",
+   "std": "12:38",
+   "sta": "15:00",
+   "blk": "02:22",
+   "nm": 854,
+   "days": [
+    6
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "2",
+   "gate": "A4"
+  },
+  {
+   "no": "JU572",
+   "cs": "ASL55R",
+   "dep": "LYBE",
+   "arr": "LEMD",
+   "std": "12:39",
+   "sta": "15:34",
+   "blk": "02:55",
+   "nm": 1082,
+   "days": [
+    1,
+    4,
+    6
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "2",
+   "gate": "C2"
+  },
+  {
+   "no": "JU142",
+   "cs": "ASL19P",
+   "dep": "LYBE",
+   "arr": "LHBP",
+   "std": "12:42",
+   "sta": "13:25",
+   "blk": "00:43",
+   "nm": 163,
+   "days": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU652",
+   "cs": "ASL47U",
+   "dep": "LYBE",
+   "arr": "LQSA",
+   "std": "12:42",
+   "sta": "13:17",
+   "blk": "00:35",
+   "nm": 104,
+   "days": [
+    1,
+    5
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "A5"
+  },
+  {
+   "no": "JU562",
+   "cs": "ASL11R",
+   "dep": "LYBE",
+   "arr": "LPPT",
+   "std": "12:44",
+   "sta": "16:18",
+   "blk": "03:34",
+   "nm": 1359,
+   "days": [
+    4
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "C13"
+  },
+  {
+   "no": "JU662",
+   "cs": "ASL43Z",
+   "dep": "LYBE",
+   "arr": "LYPG",
+   "std": "12:48",
+   "sta": "13:30",
+   "blk": "00:42",
+   "nm": 155,
+   "days": [
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "C9"
+  },
+  {
+   "no": "JU142",
+   "cs": "ASL19P",
+   "dep": "LYBE",
+   "arr": "LHBP",
+   "std": "12:49",
+   "sta": "13:32",
+   "blk": "00:43",
+   "nm": 163,
+   "days": [
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "C8"
+  },
+  {
+   "no": "JU682",
+   "cs": "ASL33T",
+   "dep": "LYBE",
+   "arr": "LYTV",
+   "std": "12:51",
+   "sta": "13:34",
+   "blk": "00:43",
+   "nm": 160,
+   "days": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "C6"
+  },
+  {
+   "no": "JU890",
+   "cs": "ASL49E",
+   "dep": "LYBE",
+   "arr": "UGTB",
+   "std": "12:51",
+   "sta": "15:47",
+   "blk": "02:56",
+   "nm": 1090,
+   "days": [
+    2,
+    6
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "C12"
+  },
+  {
+   "no": "JU482",
+   "cs": "ASL78P",
+   "dep": "LYBE",
+   "arr": "LCLK",
+   "std": "12:54",
+   "sta": "15:16",
+   "blk": "02:22",
+   "nm": 854,
+   "days": [
+    4
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "A2"
+  },
+  {
+   "no": "JU162",
+   "cs": "ASL22B",
+   "dep": "LYBE",
+   "arr": "LATI",
+   "std": "12:56",
+   "sta": "13:45",
+   "blk": "00:49",
+   "nm": 206,
+   "days": [
+    1,
+    2,
+    3,
+    5,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU178",
+   "cs": "ASL178",
+   "dep": "LYBE",
+   "arr": "URSS",
+   "std": "12:59",
+   "sta": "15:20",
+   "blk": "02:21",
+   "nm": 849,
+   "days": [
+    1
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "1",
+   "gate": "C3"
+  },
+  {
+   "no": "JU652",
+   "cs": "ASL47U",
+   "dep": "LYBE",
+   "arr": "LQSA",
+   "std": "13:00",
+   "sta": "13:35",
+   "blk": "00:35",
+   "nm": 104,
+   "days": [
+    2,
+    4,
+    6,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU986",
+   "cs": "ASL986",
+   "dep": "LYBE",
+   "arr": "ZSPD",
+   "std": "13:00",
+   "sta": "00:11",
+   "blk": "11:11",
+   "nm": 4557,
+   "days": [
+    2,
+    6
+   ],
+   "type": "A332",
+   "fleet": "Airbus A330-243",
+   "term": "2",
+   "gate": "C9"
+  },
+  {
+   "no": "JU662",
+   "cs": "ASL43Z",
+   "dep": "LYBE",
+   "arr": "LYPG",
+   "std": "13:01",
+   "sta": "13:43",
+   "blk": "00:42",
+   "nm": 155,
+   "days": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    7
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "C5"
+  },
+  {
+   "no": "JU840",
+   "cs": "ASL840",
+   "dep": "LYBE",
+   "arr": "UBBB",
+   "std": "13:03",
+   "sta": "16:33",
+   "blk": "03:30",
+   "nm": 1331,
+   "days": [
+    3,
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "C2"
+  },
+  {
+   "no": "JU890",
+   "cs": "ASL49E",
+   "dep": "LYBE",
+   "arr": "UGTB",
+   "std": "13:03",
+   "sta": "15:59",
+   "blk": "02:56",
+   "nm": 1090,
+   "days": [
+    4
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-131",
+   "term": "2",
+   "gate": "C1"
+  },
+  {
+   "no": "JU132",
+   "cs": "ASL132",
+   "dep": "LYBE",
+   "arr": "UUEE",
+   "std": "13:46",
+   "sta": "16:19",
+   "blk": "02:33",
+   "nm": 932,
+   "days": [
+    1,
+    2,
+    4,
+    5,
+    6
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "1",
+   "gate": "A1"
+  },
+  {
+   "no": "JU186",
+   "cs": "ASL186",
+   "dep": "LYBE",
+   "arr": "UWGG",
+   "std": "14:13",
+   "sta": "17:13",
+   "blk": "03:00",
+   "nm": 1119,
+   "days": [
+    1
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "1",
+   "gate": "C3"
+  },
+  {
+   "no": "JU500",
+   "cs": "ASL500",
+   "dep": "LYBE",
+   "arr": "KJFK",
+   "std": "15:18",
+   "sta": "00:57",
+   "blk": "09:39",
+   "nm": 3910,
+   "days": [
+    4,
+    7
+   ],
+   "type": "A332",
+   "fleet": "Airbus A330-243",
+   "term": "2",
+   "gate": "C11"
+  },
+  {
+   "no": "JU1104",
+   "cs": "ASL23G",
+   "dep": "LYBE",
+   "arr": "LYNI",
+   "std": "16:02",
+   "sta": "16:38",
+   "blk": "00:36",
+   "nm": 111,
+   "days": [
+    2,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "A11"
+  },
+  {
+   "no": "JU604",
+   "cs": "ASL16G",
+   "dep": "LYBE",
+   "arr": "LDZA",
+   "std": "16:05",
+   "sta": "16:52",
+   "blk": "00:47",
+   "nm": 188,
+   "days": [
+    1,
+    3,
+    5,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU592",
+   "cs": "ASL36E",
+   "dep": "LYBE",
+   "arr": "LEVC",
+   "std": "16:14",
+   "sta": "18:53",
+   "blk": "02:39",
+   "nm": 976,
+   "days": [
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "A1"
+  },
+  {
+   "no": "JU242",
+   "cs": "ASL10C",
+   "dep": "LYBE",
+   "arr": "LFPG",
+   "std": "16:21",
+   "sta": "18:31",
+   "blk": "02:10",
+   "nm": 768,
+   "days": [
+    2,
+    4,
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "A4"
+  },
+  {
+   "no": "JU242",
+   "cs": "ASL10C",
+   "dep": "LYBE",
+   "arr": "LFPG",
+   "std": "16:22",
+   "sta": "18:32",
+   "blk": "02:10",
+   "nm": 768,
+   "days": [
+    1,
+    3,
+    6,
+    7
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "2",
+   "gate": "C9"
+  },
+  {
+   "no": "JU584",
+   "cs": "ASL85W",
+   "dep": "LYBE",
+   "arr": "LEBL",
+   "std": "16:25",
+   "sta": "18:43",
+   "blk": "02:18",
+   "nm": 825,
+   "days": [
+    3
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-131",
+   "term": "2",
+   "gate": "C1"
+  },
+  {
+   "no": "JU392",
+   "cs": "ASL80R",
+   "dep": "LYBE",
+   "arr": "ENGM",
+   "std": "16:27",
+   "sta": "19:07",
+   "blk": "02:40",
+   "nm": 981,
+   "days": [
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-131",
+   "term": "2",
+   "gate": "A3"
+  },
+  {
+   "no": "JU584",
+   "cs": "ASL85W",
+   "dep": "LYBE",
+   "arr": "LEBL",
+   "std": "16:31",
+   "sta": "18:49",
+   "blk": "02:18",
+   "nm": 825,
+   "days": [
+    5,
+    7
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "2",
+   "gate": "C13"
+  },
+  {
+   "no": "JU614",
+   "cs": "ASL35F",
+   "dep": "LYBE",
+   "arr": "LQBK",
+   "std": "16:32",
+   "sta": "17:10",
+   "blk": "00:38",
+   "nm": 128,
+   "days": [
+    5
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU664",
+   "cs": "ASL40K",
+   "dep": "LYBE",
+   "arr": "LYPG",
+   "std": "16:36",
+   "sta": "17:18",
+   "blk": "00:42",
+   "nm": 155,
+   "days": [
+    2,
+    3,
+    4,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU362",
+   "cs": "ASL70E",
+   "dep": "LYBE",
+   "arr": "EDDL",
+   "std": "16:43",
+   "sta": "18:38",
+   "blk": "01:55",
+   "nm": 666,
+   "days": [
+    3,
+    5,
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "A6"
+  },
+  {
+   "no": "JU664",
+   "cs": "ASL40K",
+   "dep": "LYBE",
+   "arr": "LYPG",
+   "std": "16:44",
+   "sta": "17:26",
+   "blk": "00:42",
+   "nm": 155,
+   "days": [
+    5,
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "C11"
+  },
+  {
+   "no": "JU474",
+   "cs": "ASL76A",
+   "dep": "LYBE",
+   "arr": "LIPE",
+   "std": "16:47",
+   "sta": "18:02",
+   "blk": "01:15",
+   "nm": 385,
+   "days": [
+    5,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU328",
+   "cs": "ASL31G",
+   "dep": "LYBE",
+   "arr": "LSGG",
+   "std": "16:53",
+   "sta": "18:39",
+   "blk": "01:46",
+   "nm": 603,
+   "days": [
+    7
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "C6"
+  },
+  {
+   "no": "JU174",
+   "cs": "ASL38X",
+   "dep": "LYBE",
+   "arr": "LKPR",
+   "std": "16:57",
+   "sta": "18:14",
+   "blk": "01:17",
+   "nm": 401,
+   "days": [
+    3,
+    4,
+    5
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU342",
+   "cs": "ASL45D",
+   "dep": "LYBE",
+   "arr": "EDDM",
+   "std": "16:58",
+   "sta": "18:17",
+   "blk": "01:19",
+   "nm": 410,
+   "days": [
+    3,
+    5,
+    7
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "C8"
+  },
+  {
+   "no": "JU144",
+   "cs": "ASL23H",
+   "dep": "LYBE",
+   "arr": "LHBP",
+   "std": "17:00",
+   "sta": "17:43",
+   "blk": "00:43",
+   "nm": 163,
+   "days": [
+    5,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU464",
+   "cs": "ASL44Q",
+   "dep": "LYBE",
+   "arr": "LIPZ",
+   "std": "17:05",
+   "sta": "18:13",
+   "blk": "01:08",
+   "nm": 339,
+   "days": [
+    5,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU252",
+   "cs": "ASL41A",
+   "dep": "LYBE",
+   "arr": "LFMN",
+   "std": "17:07",
+   "sta": "18:48",
+   "blk": "01:41",
+   "nm": 567,
+   "days": [
+    7
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "A4"
+  },
+  {
+   "no": "JU392",
+   "cs": "ASL80R",
+   "dep": "LYBE",
+   "arr": "ENGM",
+   "std": "17:07",
+   "sta": "19:47",
+   "blk": "02:40",
+   "nm": 981,
+   "days": [
+    5
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "2",
+   "gate": "A3"
+  },
+  {
+   "no": "JU334",
+   "cs": "ASL30Y",
+   "dep": "LYBE",
+   "arr": "LSZH",
+   "std": "17:12",
+   "sta": "18:45",
+   "blk": "01:33",
+   "nm": 514,
+   "days": [
+    4,
+    6
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "A2"
+  },
+  {
+   "no": "JU404",
+   "cs": "ASL21D",
+   "dep": "LYBE",
+   "arr": "LIRF",
+   "std": "17:14",
+   "sta": "18:31",
+   "blk": "01:17",
+   "nm": 396,
+   "days": [
+    3,
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "C8"
+  },
+  {
+   "no": "JU404",
+   "cs": "ASL21D",
+   "dep": "LYBE",
+   "arr": "LIRF",
+   "std": "17:17",
+   "sta": "18:34",
+   "blk": "01:17",
+   "nm": 396,
+   "days": [
+    7
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU382",
+   "cs": "ASL22A",
+   "dep": "LYBE",
+   "arr": "ESSA",
+   "std": "17:19",
+   "sta": "19:47",
+   "blk": "02:28",
+   "nm": 895,
+   "days": [
+    3,
+    5,
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "C7"
+  },
+  {
+   "no": "JU418",
+   "cs": "ASL78U",
+   "dep": "LYBE",
+   "arr": "LIMC",
+   "std": "17:20",
+   "sta": "18:50",
+   "blk": "01:30",
+   "nm": 492,
+   "days": [
+    7
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "2",
+   "gate": "A2"
+  },
+  {
+   "no": "JU418",
+   "cs": "ASL78U",
+   "dep": "LYBE",
+   "arr": "LIMC",
+   "std": "17:20",
+   "sta": "18:50",
+   "blk": "01:30",
+   "nm": 492,
+   "days": [
+    3,
+    4,
+    5
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "C6"
+  },
+  {
+   "no": "JU356",
+   "cs": "ASL13B",
+   "dep": "LYBE",
+   "arr": "EDDB",
+   "std": "17:21",
+   "sta": "18:56",
+   "blk": "01:35",
+   "nm": 527,
+   "days": [
+    3
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "2",
+   "gate": "C2"
+  },
+  {
+   "no": "JU494",
+   "cs": "ASL28N",
+   "dep": "LYBE",
+   "arr": "LIBD",
+   "std": "17:23",
+   "sta": "18:22",
+   "blk": "00:59",
+   "nm": 270,
+   "days": [
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU348",
+   "cs": "ASL44H",
+   "dep": "LYBE",
+   "arr": "EDDS",
+   "std": "17:26",
+   "sta": "18:59",
+   "blk": "01:33",
+   "nm": 511,
+   "days": [
+    3
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "C6"
+  },
+  {
+   "no": "JU356",
+   "cs": "ASL13B",
+   "dep": "LYBE",
+   "arr": "EDDB",
+   "std": "17:28",
+   "sta": "19:03",
+   "blk": "01:35",
+   "nm": 527,
+   "days": [
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "C12"
+  },
+  {
+   "no": "JU314",
+   "cs": "ASL58E",
+   "dep": "LYBE",
+   "arr": "LOWW",
+   "std": "17:39",
+   "sta": "18:35",
+   "blk": "00:56",
+   "nm": 251,
+   "days": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "A7"
+  },
+  {
+   "no": "JU356",
+   "cs": "ASL13B",
+   "dep": "LYBE",
+   "arr": "EDDB",
+   "std": "17:41",
+   "sta": "19:16",
+   "blk": "01:35",
+   "nm": 527,
+   "days": [
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-131",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU624",
+   "cs": "ASL26J",
+   "dep": "LYBE",
+   "arr": "LJLJ",
+   "std": "17:41",
+   "sta": "18:38",
+   "blk": "00:57",
+   "nm": 260,
+   "days": [
+    2,
+    3,
+    5,
+    6,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "A7"
+  },
+  {
+   "no": "JU134",
+   "cs": "ASL134",
+   "dep": "LYBE",
+   "arr": "UUEE",
+   "std": "17:44",
+   "sta": "20:17",
+   "blk": "02:33",
+   "nm": 932,
+   "days": [
+    2,
+    3,
+    4,
+    6
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "1",
+   "gate": "A1"
+  },
+  {
+   "no": "JU564",
+   "cs": "ASL34R",
+   "dep": "LYBE",
+   "arr": "LPPT",
+   "std": "17:52",
+   "sta": "21:26",
+   "blk": "03:34",
+   "nm": 1359,
+   "days": [
+    7
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "2",
+   "gate": "C3"
+  },
+  {
+   "no": "JU334",
+   "cs": "ASL30Y",
+   "dep": "LYBE",
+   "arr": "LSZH",
+   "std": "18:04",
+   "sta": "19:37",
+   "blk": "01:33",
+   "nm": 514,
+   "days": [
+    2,
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "A7"
+  },
+  {
+   "no": "JU188",
+   "cs": "ASL188",
+   "dep": "LYBE",
+   "arr": "UWKD",
+   "std": "19:20",
+   "sta": "22:42",
+   "blk": "03:22",
+   "nm": 1274,
+   "days": [
+    4,
+    6
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "1",
+   "gate": "C3"
+  },
+  {
+   "no": "JU668",
+   "cs": "ASL92Q",
+   "dep": "LYBE",
+   "arr": "LYPG",
+   "std": "19:54",
+   "sta": "20:36",
+   "blk": "00:42",
+   "nm": 155,
+   "days": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU186",
+   "cs": "ASL186",
+   "dep": "LYBE",
+   "arr": "UWGG",
+   "std": "20:55",
+   "sta": "23:55",
+   "blk": "03:00",
+   "nm": 1119,
+   "days": [
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "1",
+   "gate": "C4"
+  },
+  {
+   "no": "JU138",
+   "cs": "ASL138",
+   "dep": "LYBE",
+   "arr": "UUEE",
+   "std": "21:16",
+   "sta": "23:49",
+   "blk": "02:33",
+   "nm": 932,
+   "days": [
+    6,
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "1",
+   "gate": "A1"
+  },
+  {
+   "no": "JU138",
+   "cs": "ASL138",
+   "dep": "LYBE",
+   "arr": "UUEE",
+   "std": "21:23",
+   "sta": "23:56",
+   "blk": "02:33",
+   "nm": 932,
+   "days": [
+    3,
+    4,
+    5
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "1",
+   "gate": "C3"
+  },
+  {
+   "no": "JU124",
+   "cs": "ASL124",
+   "dep": "LYBE",
+   "arr": "ULLI",
+   "std": "21:33",
+   "sta": "00:11",
+   "blk": "02:38",
+   "nm": 968,
+   "days": [
+    4
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "1",
+   "gate": "C3"
+  },
+  {
+   "no": "JU124",
+   "cs": "ASL124",
+   "dep": "LYBE",
+   "arr": "ULLI",
+   "std": "21:36",
+   "sta": "00:14",
+   "blk": "02:38",
+   "nm": 968,
+   "days": [
+    3,
+    5,
+    6
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "1",
+   "gate": "C12"
+  },
+  {
+   "no": "JU486",
+   "cs": "ASL79E",
+   "dep": "LYBE",
+   "arr": "LCLK",
+   "std": "22:35",
+   "sta": "00:57",
+   "blk": "02:22",
+   "nm": 854,
+   "days": [
+    5
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "2",
+   "gate": "C7"
+  },
+  {
+   "no": "JU486",
+   "cs": "ASL79E",
+   "dep": "LYBE",
+   "arr": "LCLK",
+   "std": "22:49",
+   "sta": "01:11",
+   "blk": "02:22",
+   "nm": 854,
+   "days": [
+    3,
+    4,
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "A5"
+  },
+  {
+   "no": "JU166",
+   "cs": "ASL35B",
+   "dep": "LYBE",
+   "arr": "LATI",
+   "std": "23:44",
+   "sta": "00:33",
+   "blk": "00:49",
+   "nm": 206,
+   "days": [
+    4,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU546",
+   "cs": "ASL90Y",
+   "dep": "LYBE",
+   "arr": "LGTS",
+   "std": "23:47",
+   "sta": "00:48",
+   "blk": "01:01",
+   "nm": 284,
+   "days": [
+    5
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU1106",
+   "cs": "ASL37J",
+   "dep": "LYBE",
+   "arr": "LYNI",
+   "std": "23:50",
+   "sta": "00:26",
+   "blk": "00:36",
+   "nm": 111,
+   "days": [
+    3,
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "A11"
+  },
+  {
+   "no": "JU106",
+   "cs": "ASL38A",
+   "dep": "LYBE",
+   "arr": "LROP",
+   "std": "23:51",
+   "sta": "00:46",
+   "blk": "00:55",
+   "nm": 248,
+   "days": [
+    3,
+    4,
+    5,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "C10"
+  },
+  {
+   "no": "JU988",
+   "cs": "ASL988",
+   "dep": "LYBE",
+   "arr": "ZGGG",
+   "std": "23:57",
+   "sta": "11:07",
+   "blk": "11:10",
+   "nm": 4549,
+   "days": [
+    4,
+    7
+   ],
+   "type": "A332",
+   "fleet": "Airbus A330-243",
+   "term": "2",
+   "gate": "C7"
+  },
+  {
+   "no": "JU536",
+   "cs": "ASL96Q",
+   "dep": "LYBE",
+   "arr": "LGAV",
+   "std": "23:59",
+   "sta": "01:22",
+   "blk": "01:23",
+   "nm": 444,
+   "days": [
+    7
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "C9"
+  },
+  {
+   "no": "JU355",
+   "cs": "ASL31R",
+   "dep": "EDDB",
+   "arr": "LYBE",
+   "std": "08:50",
+   "sta": "10:25",
+   "blk": "01:35",
+   "nm": 527,
+   "days": [
+    1,
+    2
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "1",
+   "gate": "C10"
+  },
+  {
+   "no": "JU355",
+   "cs": "ASL31R",
+   "dep": "EDDB",
+   "arr": "LYBE",
+   "std": "08:50",
+   "sta": "10:25",
+   "blk": "01:35",
+   "nm": 527,
+   "days": [
+    6
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "1",
+   "gate": "C1"
+  },
+  {
+   "no": "JU355",
+   "cs": "ASL31R",
+   "dep": "EDDB",
+   "arr": "LYBE",
+   "std": "09:11",
+   "sta": "10:46",
+   "blk": "01:35",
+   "nm": 527,
+   "days": [
+    4
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-131",
+   "term": "1",
+   "gate": "D7"
+  },
+  {
+   "no": "JU357",
+   "cs": "ASL60U",
+   "dep": "EDDB",
+   "arr": "LYBE",
+   "std": "19:58",
+   "sta": "21:33",
+   "blk": "01:35",
+   "nm": 527,
+   "days": [
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "1",
+   "gate": "C17"
+  },
+  {
+   "no": "JU357",
+   "cs": "ASL60U",
+   "dep": "EDDB",
+   "arr": "LYBE",
+   "std": "20:11",
+   "sta": "21:46",
+   "blk": "01:35",
+   "nm": 527,
+   "days": [
+    3
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "1",
+   "gate": "C17"
+  },
+  {
+   "no": "JU357",
+   "cs": "ASL60U",
+   "dep": "EDDB",
+   "arr": "LYBE",
+   "std": "20:29",
+   "sta": "22:04",
+   "blk": "01:35",
+   "nm": 527,
+   "days": [
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-131",
+   "term": "1",
+   "gate": "C1"
+  },
+  {
+   "no": "JU351",
+   "cs": "ASL78B",
+   "dep": "EDDF",
+   "arr": "LYBE",
+   "std": "09:05",
+   "sta": "10:46",
+   "blk": "01:41",
+   "nm": 570,
+   "days": [
+    3,
+    4
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "3",
+   "gate": "J2"
+  },
+  {
+   "no": "JU1299",
+   "cs": "ASL18M",
+   "dep": "EDDK",
+   "arr": "LYNI",
+   "std": "09:20",
+   "sta": "11:27",
+   "blk": "02:07",
+   "nm": 750,
+   "days": [
+    6
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "D30"
+  },
+  {
+   "no": "JU1299",
+   "cs": "ASL18M",
+   "dep": "EDDK",
+   "arr": "LYNI",
+   "std": "19:59",
+   "sta": "22:06",
+   "blk": "02:07",
+   "nm": 750,
+   "days": [
+    2
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-131",
+   "term": "2",
+   "gate": "D50"
+  },
+  {
+   "no": "JU361",
+   "cs": "ASL30V",
+   "dep": "EDDL",
+   "arr": "LYBE",
+   "std": "08:44",
+   "sta": "10:39",
+   "blk": "01:55",
+   "nm": 666,
+   "days": [
+    1,
+    2,
+    6
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": "C31"
+  },
+  {
+   "no": "JU363",
+   "cs": "ASL64J",
+   "dep": "EDDL",
+   "arr": "LYBE",
+   "std": "19:31",
+   "sta": "21:26",
+   "blk": "01:55",
+   "nm": 666,
+   "days": [
+    3,
+    5,
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": "C40"
+  },
+  {
+   "no": "JU341",
+   "cs": "ASL79H",
+   "dep": "EDDM",
+   "arr": "LYBE",
+   "std": "08:44",
+   "sta": "10:03",
+   "blk": "01:19",
+   "nm": 410,
+   "days": [
+    1,
+    6
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "1",
+   "gate": "A41"
+  },
+  {
+   "no": "JU341",
+   "cs": "ASL79H",
+   "dep": "EDDM",
+   "arr": "LYBE",
+   "std": "09:17",
+   "sta": "10:36",
+   "blk": "01:19",
+   "nm": 410,
+   "days": [
+    2
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "1",
+   "gate": "A62"
+  },
+  {
+   "no": "JU341",
+   "cs": "ASL79H",
+   "dep": "EDDM",
+   "arr": "LYBE",
+   "std": "11:36",
+   "sta": "12:55",
+   "blk": "01:19",
+   "nm": 410,
+   "days": [
+    4
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "1",
+   "gate": "A42"
+  },
+  {
+   "no": "JU343",
+   "cs": "ASL78M",
+   "dep": "EDDM",
+   "arr": "LYBE",
+   "std": "19:35",
+   "sta": "20:54",
+   "blk": "01:19",
+   "nm": 410,
+   "days": [
+    3,
+    5,
+    7
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "1",
+   "gate": "A45"
+  },
+  {
+   "no": "JU287",
+   "cs": "ASL30F",
+   "dep": "EDDN",
+   "arr": "LYBE",
+   "std": "08:56",
+   "sta": "10:23",
+   "blk": "01:27",
+   "nm": 470,
+   "days": [
+    5
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": "A122"
+  },
+  {
+   "no": "JU347",
+   "cs": "ASL76N",
+   "dep": "EDDS",
+   "arr": "LYBE",
+   "std": "08:59",
+   "sta": "10:32",
+   "blk": "01:33",
+   "nm": 511,
+   "days": [
+    5,
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "1",
+   "gate": "337"
+  },
+  {
+   "no": "JU349",
+   "cs": "ASL89B",
+   "dep": "EDDS",
+   "arr": "LYBE",
+   "std": "20:12",
+   "sta": "21:45",
+   "blk": "01:33",
+   "nm": 511,
+   "days": [
+    3
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "1",
+   "gate": "109"
+  },
+  {
+   "no": "JU281",
+   "cs": "ASL89D",
+   "dep": "EDDV",
+   "arr": "LYBE",
+   "std": "08:48",
+   "sta": "10:37",
+   "blk": "01:49",
+   "nm": 622,
+   "days": [
+    1
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU1353",
+   "cs": "ASL17W",
+   "dep": "EDFH",
+   "arr": "LYNI",
+   "std": "09:24",
+   "sta": "11:27",
+   "blk": "02:03",
+   "nm": 719,
+   "days": [
+    2
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-131",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU1353",
+   "cs": "ASL17W",
+   "dep": "EDFH",
+   "arr": "LYNI",
+   "std": "19:55",
+   "sta": "21:58",
+   "blk": "02:03",
+   "nm": 719,
+   "days": [
+    6
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU211",
+   "cs": "ASL12B",
+   "dep": "EGLL",
+   "arr": "LYBE",
+   "std": "14:32",
+   "sta": "17:03",
+   "blk": "02:31",
+   "nm": 919,
+   "days": [
+    1
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-131",
+   "term": "4",
+   "gate": "19"
+  },
+  {
+   "no": "JU211",
+   "cs": "ASL12B",
+   "dep": "EGLL",
+   "arr": "LYBE",
+   "std": "14:40",
+   "sta": "17:11",
+   "blk": "02:31",
+   "nm": 919,
+   "days": [
+    7
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "4",
+   "gate": "15"
+  },
+  {
+   "no": "JU211",
+   "cs": "ASL12B",
+   "dep": "EGLL",
+   "arr": "LYBE",
+   "std": "15:30",
+   "sta": "18:01",
+   "blk": "02:31",
+   "nm": 919,
+   "days": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "4",
+   "gate": "19"
+  },
+  {
+   "no": "JU261",
+   "cs": "ASL36X",
+   "dep": "EHAM",
+   "arr": "LYBE",
+   "std": "09:17",
+   "sta": "11:26",
+   "blk": "02:09",
+   "nm": 761,
+   "days": [
+    1,
+    2,
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "3",
+   "gate": "D14"
+  },
+  {
+   "no": "JU371",
+   "cs": "ASL11E",
+   "dep": "EKCH",
+   "arr": "LYBE",
+   "std": "09:05",
+   "sta": "11:07",
+   "blk": "02:02",
+   "nm": 711,
+   "days": [
+    1,
+    4,
+    6
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "D102"
+  },
+  {
+   "no": "JU391",
+   "cs": "ASL19Z",
+   "dep": "ENGM",
+   "arr": "LYBE",
+   "std": "08:58",
+   "sta": "11:38",
+   "blk": "02:40",
+   "nm": 981,
+   "days": [
+    4
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": "F26"
+  },
+  {
+   "no": "JU393",
+   "cs": "ASL10B",
+   "dep": "ENGM",
+   "arr": "LYBE",
+   "std": "20:04",
+   "sta": "22:44",
+   "blk": "02:40",
+   "nm": 981,
+   "days": [
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-131",
+   "term": "",
+   "gate": "F28"
+  },
+  {
+   "no": "JU393",
+   "cs": "ASL10B",
+   "dep": "ENGM",
+   "arr": "LYBE",
+   "std": "21:39",
+   "sta": "00:19",
+   "blk": "02:40",
+   "nm": 981,
+   "days": [
+    5
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "",
+   "gate": "F18"
+  },
+  {
+   "no": "JU157",
+   "cs": "ASL157",
+   "dep": "EPKK",
+   "arr": "LYBE",
+   "std": "08:49",
+   "sta": "09:54",
+   "blk": "01:05",
+   "nm": 316,
+   "days": [
+    1
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU157",
+   "cs": "ASL157",
+   "dep": "EPKK",
+   "arr": "LYBE",
+   "std": "08:50",
+   "sta": "09:55",
+   "blk": "01:05",
+   "nm": 316,
+   "days": [
+    5
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU381",
+   "cs": "ASL20A",
+   "dep": "ESSA",
+   "arr": "LYBE",
+   "std": "09:06",
+   "sta": "11:34",
+   "blk": "02:28",
+   "nm": 895,
+   "days": [
+    2,
+    4
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "5",
+   "gate": "F69"
+  },
+  {
+   "no": "JU383",
+   "cs": "ASL37J",
+   "dep": "ESSA",
+   "arr": "LYBE",
+   "std": "20:56",
+   "sta": "23:24",
+   "blk": "02:28",
+   "nm": 895,
+   "days": [
+    3,
+    5,
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "5",
+   "gate": "D18"
+  },
+  {
+   "no": "JU501",
+   "cs": "ASL501",
+   "dep": "KJFK",
+   "arr": "LYBE",
+   "std": "03:08",
+   "sta": "12:47",
+   "blk": "09:39",
+   "nm": 3910,
+   "days": [
+    1,
+    4
+   ],
+   "type": "A332",
+   "fleet": "Airbus A330-243",
+   "term": "1",
+   "gate": "9"
+  },
+  {
+   "no": "JU507",
+   "cs": "ASL507",
+   "dep": "KORD",
+   "arr": "LYBE",
+   "std": "23:43",
+   "sta": "10:22",
+   "blk": "10:39",
+   "nm": 4332,
+   "days": [
+    6
+   ],
+   "type": "A332",
+   "fleet": "Airbus A330-243",
+   "term": "5",
+   "gate": ""
+  },
+  {
+   "no": "JU167",
+   "cs": "ASL69Q",
+   "dep": "LATI",
+   "arr": "LYBE",
+   "std": "02:58",
+   "sta": "03:47",
+   "blk": "00:49",
+   "nm": 206,
+   "days": [
+    1,
+    4,
+    5
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU163",
+   "cs": "ASL49R",
+   "dep": "LATI",
+   "arr": "LYBE",
+   "std": "14:58",
+   "sta": "15:47",
+   "blk": "00:49",
+   "nm": 206,
+   "days": [
+    1,
+    2,
+    3,
+    5,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU117",
+   "cs": "ASL23A",
+   "dep": "LBSF",
+   "arr": "LYBE",
+   "std": "03:11",
+   "sta": "03:57",
+   "blk": "00:46",
+   "nm": 185,
+   "days": [
+    1,
+    4,
+    5,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "B13"
+  },
+  {
+   "no": "JU113",
+   "cs": "ASL32T",
+   "dep": "LBSF",
+   "arr": "LYBE",
+   "std": "14:03",
+   "sta": "14:49",
+   "blk": "00:46",
+   "nm": 185,
+   "days": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2",
+   "gate": "B13"
+  },
+  {
+   "no": "JU4041",
+   "cs": "ASL4041",
+   "dep": "LBSF",
+   "arr": "LYBE",
+   "std": "14:39",
+   "sta": "15:25",
+   "blk": "00:46",
+   "nm": 185,
+   "days": [
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU487",
+   "cs": "ASL25M",
+   "dep": "LCLK",
+   "arr": "LYBE",
+   "std": "01:59",
+   "sta": "04:21",
+   "blk": "02:22",
+   "nm": 854,
+   "days": [
+    6
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU487",
+   "cs": "ASL25M",
+   "dep": "LCLK",
+   "arr": "LYBE",
+   "std": "02:05",
+   "sta": "04:27",
+   "blk": "02:22",
+   "nm": 854,
+   "days": [
+    1,
+    4,
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU481",
+   "cs": "ASL87A",
+   "dep": "LCLK",
+   "arr": "LYBE",
+   "std": "12:54",
+   "sta": "15:16",
+   "blk": "02:22",
+   "nm": 854,
+   "days": [
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU481",
+   "cs": "ASL87A",
+   "dep": "LCLK",
+   "arr": "LYBE",
+   "std": "13:11",
+   "sta": "15:33",
+   "blk": "02:22",
+   "nm": 854,
+   "days": [
+    1,
+    3,
+    7
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU483",
+   "cs": "ASL55D",
+   "dep": "LCLK",
+   "arr": "LYBE",
+   "std": "15:52",
+   "sta": "18:14",
+   "blk": "02:22",
+   "nm": 854,
+   "days": [
+    6
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU483",
+   "cs": "ASL55D",
+   "dep": "LCLK",
+   "arr": "LYBE",
+   "std": "16:32",
+   "sta": "18:54",
+   "blk": "02:22",
+   "nm": 854,
+   "days": [
+    4
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU723",
+   "cs": "ASL17Q",
+   "dep": "LDDU",
+   "arr": "LYBE",
+   "std": "13:58",
+   "sta": "14:41",
+   "blk": "00:43",
+   "nm": 162,
+   "days": [
+    1,
+    4,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": "3"
+  },
+  {
+   "no": "JU9011",
+   "cs": "ASL9011",
+   "dep": "LDSP",
+   "arr": "LYBE",
+   "std": "13:33",
+   "sta": "14:20",
+   "blk": "00:47",
+   "nm": 189,
+   "days": [
+    3,
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU703",
+   "cs": "ASL28M",
+   "dep": "LDSP",
+   "arr": "LYBE",
+   "std": "14:07",
+   "sta": "14:54",
+   "blk": "00:47",
+   "nm": 189,
+   "days": [
+    1,
+    5,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": "9"
+  },
+  {
+   "no": "JU601",
+   "cs": "ASL16A",
+   "dep": "LDZA",
+   "arr": "LYBE",
+   "std": "07:44",
+   "sta": "08:31",
+   "blk": "00:47",
+   "nm": 188,
+   "days": [
+    1,
+    2,
+    4,
+    5,
+    6,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU605",
+   "cs": "ASL98M",
+   "dep": "LDZA",
+   "arr": "LYBE",
+   "std": "21:36",
+   "sta": "22:23",
+   "blk": "00:47",
+   "nm": 188,
+   "days": [
+    3,
+    5,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU587",
+   "cs": "ASL20H",
+   "dep": "LEAL",
+   "arr": "LYBE",
+   "std": "09:16",
+   "sta": "12:01",
+   "blk": "02:45",
+   "nm": 1013,
+   "days": [
+    5
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "N",
+   "gate": "B26"
+  },
+  {
+   "no": "JU581",
+   "cs": "ASL33M",
+   "dep": "LEBL",
+   "arr": "LYBE",
+   "std": "09:52",
+   "sta": "12:10",
+   "blk": "02:18",
+   "nm": 825,
+   "days": [
+    1,
+    4
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "2",
+   "gate": "Y58"
+  },
+  {
+   "no": "JU585",
+   "cs": "ASL83K",
+   "dep": "LEBL",
+   "arr": "LYBE",
+   "std": "20:03",
+   "sta": "22:21",
+   "blk": "02:18",
+   "nm": 825,
+   "days": [
+    3
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-131",
+   "term": "2",
+   "gate": "Y58"
+  },
+  {
+   "no": "JU585",
+   "cs": "ASL83K",
+   "dep": "LEBL",
+   "arr": "LYBE",
+   "std": "20:20",
+   "sta": "22:38",
+   "blk": "02:18",
+   "nm": 825,
+   "days": [
+    5,
+    7
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "2",
+   "gate": "W45"
+  },
+  {
+   "no": "JU573",
+   "cs": "ASL85Q",
+   "dep": "LEMD",
+   "arr": "LYBE",
+   "std": "17:04",
+   "sta": "19:59",
+   "blk": "02:55",
+   "nm": 1082,
+   "days": [
+    1,
+    4,
+    6
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "1",
+   "gate": ""
+  },
+  {
+   "no": "JU577",
+   "cs": "ASL79P",
+   "dep": "LEMG",
+   "arr": "LYBE",
+   "std": "11:44",
+   "sta": "14:59",
+   "blk": "03:15",
+   "nm": 1223,
+   "days": [
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": "C38"
+  },
+  {
+   "no": "JU591",
+   "cs": "ASL62T",
+   "dep": "LEVC",
+   "arr": "LYBE",
+   "std": "09:27",
+   "sta": "12:06",
+   "blk": "02:39",
+   "nm": 976,
+   "days": [
+    4
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "1",
+   "gate": "3"
+  },
+  {
+   "no": "JU593",
+   "cs": "ASL44Z",
+   "dep": "LEVC",
+   "arr": "LYBE",
+   "std": "20:11",
+   "sta": "22:50",
+   "blk": "02:39",
+   "nm": 976,
+   "days": [
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "1",
+   "gate": "2"
+  },
+  {
+   "no": "JU589",
+   "cs": "ASL77L",
+   "dep": "LEZL",
+   "arr": "LYBE",
+   "std": "12:09",
+   "sta": "15:29",
+   "blk": "03:20",
+   "nm": 1259,
+   "days": [
+    2,
+    6
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": "C22"
+  },
+  {
+   "no": "JU251",
+   "cs": "ASL71K",
+   "dep": "LFMN",
+   "arr": "LYBE",
+   "std": "09:10",
+   "sta": "10:51",
+   "blk": "01:41",
+   "nm": 567,
+   "days": [
+    4
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": ""
+  },
+  {
+   "no": "JU253",
+   "cs": "ASL88B",
+   "dep": "LFMN",
+   "arr": "LYBE",
+   "std": "20:19",
+   "sta": "22:00",
+   "blk": "01:41",
+   "nm": 567,
+   "days": [
+    7
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "24"
+  },
+  {
+   "no": "JU241",
+   "cs": "ASL88P",
+   "dep": "LFPG",
+   "arr": "LYBE",
+   "std": "09:24",
+   "sta": "11:34",
+   "blk": "02:10",
+   "nm": 768,
+   "days": [
+    3
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2D",
+   "gate": "B23"
+  },
+  {
+   "no": "JU241",
+   "cs": "ASL88P",
+   "dep": "LFPG",
+   "arr": "LYBE",
+   "std": "09:30",
+   "sta": "11:40",
+   "blk": "02:10",
+   "nm": 768,
+   "days": [
+    1,
+    2,
+    4,
+    6,
+    7
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "2D",
+   "gate": "B25"
+  },
+  {
+   "no": "JU243",
+   "cs": "ASL36B",
+   "dep": "LFPG",
+   "arr": "LYBE",
+   "std": "19:44",
+   "sta": "21:54",
+   "blk": "02:10",
+   "nm": 768,
+   "days": [
+    2,
+    4,
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2D",
+   "gate": "B28"
+  },
+  {
+   "no": "JU243",
+   "cs": "ASL36B",
+   "dep": "LFPG",
+   "arr": "LYBE",
+   "std": "20:04",
+   "sta": "22:14",
+   "blk": "02:10",
+   "nm": 768,
+   "days": [
+    1,
+    3,
+    6,
+    7
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "2D",
+   "gate": "B31"
+  },
+  {
+   "no": "JU537",
+   "cs": "ASL68C",
+   "dep": "LGAV",
+   "arr": "LYBE",
+   "std": "02:38",
+   "sta": "04:01",
+   "blk": "01:23",
+   "nm": 444,
+   "days": [
+    1
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "M",
+   "gate": "A9"
+  },
+  {
+   "no": "JU533",
+   "cs": "ASL51M",
+   "dep": "LGAV",
+   "arr": "LYBE",
+   "std": "14:29",
+   "sta": "15:52",
+   "blk": "01:23",
+   "nm": 444,
+   "days": [
+    3
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "M",
+   "gate": "A11"
+  },
+  {
+   "no": "JU533",
+   "cs": "ASL51M",
+   "dep": "LGAV",
+   "arr": "LYBE",
+   "std": "14:39",
+   "sta": "16:02",
+   "blk": "01:23",
+   "nm": 444,
+   "days": [
+    1,
+    2,
+    4,
+    6,
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "M",
+   "gate": "A7"
+  },
+  {
+   "no": "JU533",
+   "cs": "ASL51M",
+   "dep": "LGAV",
+   "arr": "LYBE",
+   "std": "14:43",
+   "sta": "16:06",
+   "blk": "01:23",
+   "nm": 444,
+   "days": [
+    5
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "M",
+   "gate": "A3"
+  },
+  {
+   "no": "JU547",
+   "cs": "ASL90Z",
+   "dep": "LGTS",
+   "arr": "LYBE",
+   "std": "02:48",
+   "sta": "03:49",
+   "blk": "01:01",
+   "nm": 284,
+   "days": [
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": "23"
+  },
+  {
+   "no": "JU543",
+   "cs": "ASL56N",
+   "dep": "LGTS",
+   "arr": "LYBE",
+   "std": "14:08",
+   "sta": "15:09",
+   "blk": "01:01",
+   "nm": 284,
+   "days": [
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": "23"
+  },
+  {
+   "no": "JU543",
+   "cs": "ASL56N",
+   "dep": "LGTS",
+   "arr": "LYBE",
+   "std": "14:40",
+   "sta": "15:41",
+   "blk": "01:01",
+   "nm": 284,
+   "days": [
+    4,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": "23"
+  },
+  {
+   "no": "JU141",
+   "cs": "ASL87J",
+   "dep": "LHBP",
+   "arr": "LYBE",
+   "std": "10:32",
+   "sta": "11:15",
+   "blk": "00:43",
+   "nm": 163,
+   "days": [
+    1,
+    4
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2A",
+   "gate": "B14"
+  },
+  {
+   "no": "JU143",
+   "cs": "ASL33U",
+   "dep": "LHBP",
+   "arr": "LYBE",
+   "std": "14:29",
+   "sta": "15:12",
+   "blk": "00:43",
+   "nm": 163,
+   "days": [
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2B",
+   "gate": "B14"
+  },
+  {
+   "no": "JU143",
+   "cs": "ASL33U",
+   "dep": "LHBP",
+   "arr": "LYBE",
+   "std": "14:42",
+   "sta": "15:25",
+   "blk": "00:43",
+   "nm": 163,
+   "days": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2B",
+   "gate": "B23"
+  },
+  {
+   "no": "JU145",
+   "cs": "ASL90X",
+   "dep": "LHBP",
+   "arr": "LYBE",
+   "std": "18:44",
+   "sta": "19:27",
+   "blk": "00:43",
+   "nm": 163,
+   "days": [
+    5,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "2A",
+   "gate": "B5"
+  },
+  {
+   "no": "JU491",
+   "cs": "ASL10T",
+   "dep": "LIBD",
+   "arr": "LYBE",
+   "std": "08:34",
+   "sta": "09:33",
+   "blk": "00:59",
+   "nm": 270,
+   "days": [
+    4
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": "B4"
+  },
+  {
+   "no": "JU495",
+   "cs": "ASL90A",
+   "dep": "LIBD",
+   "arr": "LYBE",
+   "std": "19:27",
+   "sta": "20:26",
+   "blk": "00:59",
+   "nm": 270,
+   "days": [
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": "B4"
+  },
+  {
+   "no": "JU417",
+   "cs": "ASL25D",
+   "dep": "LIMC",
+   "arr": "LYBE",
+   "std": "08:38",
+   "sta": "10:08",
+   "blk": "01:30",
+   "nm": 492,
+   "days": [
+    5,
+    6
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "1",
+   "gate": "B51"
+  },
+  {
+   "no": "JU417",
+   "cs": "ASL25D",
+   "dep": "LIMC",
+   "arr": "LYBE",
+   "std": "09:01",
+   "sta": "10:31",
+   "blk": "01:30",
+   "nm": 492,
+   "days": [
+    2
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "1",
+   "gate": "B52"
+  },
+  {
+   "no": "JU419",
+   "cs": "ASL61N",
+   "dep": "LIMC",
+   "arr": "LYBE",
+   "std": "20:22",
+   "sta": "21:52",
+   "blk": "01:30",
+   "nm": 492,
+   "days": [
+    7
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "1",
+   "gate": "B51"
+  },
+  {
+   "no": "JU419",
+   "cs": "ASL61N",
+   "dep": "LIMC",
+   "arr": "LYBE",
+   "std": "20:30",
+   "sta": "22:00",
+   "blk": "01:30",
+   "nm": 492,
+   "days": [
+    3,
+    4,
+    5
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "1",
+   "gate": "B71"
+  },
+  {
+   "no": "JU471",
+   "cs": "ASL27N",
+   "dep": "LIPE",
+   "arr": "LYBE",
+   "std": "08:54",
+   "sta": "10:09",
+   "blk": "01:15",
+   "nm": 385,
+   "days": [
+    1,
+    4
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": "17"
+  },
+  {
+   "no": "JU475",
+   "cs": "ASL46C",
+   "dep": "LIPE",
+   "arr": "LYBE",
+   "std": "19:53",
+   "sta": "21:08",
+   "blk": "01:15",
+   "nm": 385,
+   "days": [
+    5,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": "21"
+  },
+  {
+   "no": "JU461",
+   "cs": "ASL18J",
+   "dep": "LIPZ",
+   "arr": "LYBE",
+   "std": "08:48",
+   "sta": "09:56",
+   "blk": "01:08",
+   "nm": 339,
+   "days": [
+    1,
+    4
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": "C44"
+  },
+  {
+   "no": "JU465",
+   "cs": "ASL40N",
+   "dep": "LIPZ",
+   "arr": "LYBE",
+   "std": "19:43",
+   "sta": "20:51",
+   "blk": "01:08",
+   "nm": 339,
+   "days": [
+    5,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": "C44"
+  },
+  {
+   "no": "JU401",
+   "cs": "ASL86C",
+   "dep": "LIRF",
+   "arr": "LYBE",
+   "std": "08:53",
+   "sta": "10:10",
+   "blk": "01:17",
+   "nm": 396,
+   "days": [
+    4,
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "3",
+   "gate": "E6"
+  },
+  {
+   "no": "JU401",
+   "cs": "ASL86C",
+   "dep": "LIRF",
+   "arr": "LYBE",
+   "std": "09:01",
+   "sta": "10:18",
+   "blk": "01:17",
+   "nm": 396,
+   "days": [
+    1,
+    6
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "3",
+   "gate": "E52"
+  },
+  {
+   "no": "JU405",
+   "cs": "ASL67A",
+   "dep": "LIRF",
+   "arr": "LYBE",
+   "std": "20:11",
+   "sta": "21:28",
+   "blk": "01:17",
+   "nm": 396,
+   "days": [
+    7
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "3",
+   "gate": "E16"
+  },
+  {
+   "no": "JU405",
+   "cs": "ASL67A",
+   "dep": "LIRF",
+   "arr": "LYBE",
+   "std": "20:14",
+   "sta": "21:31",
+   "blk": "01:17",
+   "nm": 396,
+   "days": [
+    3,
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "3",
+   "gate": "E12"
+  },
+  {
+   "no": "JU467",
+   "cs": "ASL79L",
+   "dep": "LIRQ",
+   "arr": "LYBE",
+   "std": "08:38",
+   "sta": "09:55",
+   "blk": "01:17",
+   "nm": 396,
+   "days": [
+    5
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU621",
+   "cs": "ASL88A",
+   "dep": "LJLJ",
+   "arr": "LYBE",
+   "std": "08:33",
+   "sta": "09:30",
+   "blk": "00:57",
+   "nm": 260,
+   "days": [
+    4
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "",
+   "gate": "B2"
+  },
+  {
+   "no": "JU621",
+   "cs": "ASL88A",
+   "dep": "LJLJ",
+   "arr": "LYBE",
+   "std": "08:46",
+   "sta": "09:43",
+   "blk": "00:57",
+   "nm": 260,
+   "days": [
+    1,
+    3,
+    5,
+    6,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": "B1"
+  },
+  {
+   "no": "JU623",
+   "cs": "ASL20K",
+   "dep": "LJLJ",
+   "arr": "LYBE",
+   "std": "14:11",
+   "sta": "15:08",
+   "blk": "00:57",
+   "nm": 260,
+   "days": [
+    1,
+    5
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": "B3"
+  },
+  {
+   "no": "JU625",
+   "cs": "ASL35U",
+   "dep": "LJLJ",
+   "arr": "LYBE",
+   "std": "19:38",
+   "sta": "20:35",
+   "blk": "00:57",
+   "nm": 260,
+   "days": [
+    2,
+    3,
+    5,
+    6,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": "B2"
+  },
+  {
+   "no": "JU1627",
+   "cs": "ASL67B",
+   "dep": "LJLJ",
+   "arr": "LYNI",
+   "std": "19:50",
+   "sta": "21:01",
+   "blk": "01:11",
+   "nm": 359,
+   "days": [
+    2,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": "B2"
+  },
+  {
+   "no": "JU171",
+   "cs": "ASL39P",
+   "dep": "LKPR",
+   "arr": "LYBE",
+   "std": "08:23",
+   "sta": "09:40",
+   "blk": "01:17",
+   "nm": 401,
+   "days": [
+    3,
+    4,
+    5,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "1",
+   "gate": "B16"
+  },
+  {
+   "no": "JU175",
+   "cs": "ASL33V",
+   "dep": "LKPR",
+   "arr": "LYBE",
+   "std": "19:54",
+   "sta": "21:11",
+   "blk": "01:17",
+   "nm": 401,
+   "days": [
+    3,
+    4,
+    5
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "1",
+   "gate": "B16"
+  },
+  {
+   "no": "JU1455",
+   "cs": "ASL66Q",
+   "dep": "LMML",
+   "arr": "LYNI",
+   "std": "09:00",
+   "sta": "10:41",
+   "blk": "01:41",
+   "nm": 564,
+   "days": [
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU1455",
+   "cs": "ASL66Q",
+   "dep": "LMML",
+   "arr": "LYNI",
+   "std": "10:43",
+   "sta": "12:24",
+   "blk": "01:41",
+   "nm": 564,
+   "days": [
+    3
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-131",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU451",
+   "cs": "ASL57P",
+   "dep": "LMML",
+   "arr": "LYBE",
+   "std": "14:16",
+   "sta": "16:02",
+   "blk": "01:46",
+   "nm": 600,
+   "days": [
+    1,
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU321",
+   "cs": "ASL65E",
+   "dep": "LOWS",
+   "arr": "LYBE",
+   "std": "08:28",
+   "sta": "09:38",
+   "blk": "01:10",
+   "nm": 352,
+   "days": [
+    5
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU1315",
+   "cs": "ASL41C",
+   "dep": "LOWW",
+   "arr": "LYNI",
+   "std": "08:03",
+   "sta": "09:15",
+   "blk": "01:12",
+   "nm": 362,
+   "days": [
+    3,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "1",
+   "gate": "D70"
+  },
+  {
+   "no": "JU311",
+   "cs": "ASL38E",
+   "dep": "LOWW",
+   "arr": "LYBE",
+   "std": "09:04",
+   "sta": "10:00",
+   "blk": "00:56",
+   "nm": 251,
+   "days": [
+    1,
+    3,
+    5,
+    6,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "1",
+   "gate": "D70"
+  },
+  {
+   "no": "JU311",
+   "cs": "ASL38E",
+   "dep": "LOWW",
+   "arr": "LYBE",
+   "std": "09:05",
+   "sta": "10:01",
+   "blk": "00:56",
+   "nm": 251,
+   "days": [
+    4
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "1",
+   "gate": "D66"
+  },
+  {
+   "no": "JU170",
+   "cs": "ASL170",
+   "dep": "LOWW",
+   "arr": "LKPR",
+   "std": "10:18",
+   "sta": "10:59",
+   "blk": "00:41",
+   "nm": 150,
+   "days": [
+    5
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU313",
+   "cs": "ASL44D",
+   "dep": "LOWW",
+   "arr": "LYBE",
+   "std": "14:21",
+   "sta": "15:17",
+   "blk": "00:56",
+   "nm": 251,
+   "days": [
+    1,
+    4,
+    5,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "1",
+   "gate": "D68"
+  },
+  {
+   "no": "JU315",
+   "cs": "ASL79C",
+   "dep": "LOWW",
+   "arr": "LYBE",
+   "std": "19:52",
+   "sta": "20:48",
+   "blk": "00:56",
+   "nm": 251,
+   "days": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "1",
+   "gate": "D70"
+  },
+  {
+   "no": "JU563",
+   "cs": "ASL98A",
+   "dep": "LPPT",
+   "arr": "LYBE",
+   "std": "17:56",
+   "sta": "21:30",
+   "blk": "03:34",
+   "nm": 1359,
+   "days": [
+    4
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "1",
+   "gate": ""
+  },
+  {
+   "no": "JU565",
+   "cs": "ASL57B",
+   "dep": "LPPT",
+   "arr": "LYBE",
+   "std": "23:28",
+   "sta": "03:02",
+   "blk": "03:34",
+   "nm": 1359,
+   "days": [
+    7
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "1",
+   "gate": ""
+  },
+  {
+   "no": "JU611",
+   "cs": "ASL15H",
+   "dep": "LQBK",
+   "arr": "LYBE",
+   "std": "10:44",
+   "sta": "11:22",
+   "blk": "00:38",
+   "nm": 128,
+   "days": [
+    1
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU615",
+   "cs": "ASL97E",
+   "dep": "LQBK",
+   "arr": "LYBE",
+   "std": "17:59",
+   "sta": "18:37",
+   "blk": "00:38",
+   "nm": 128,
+   "days": [
+    5
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU653",
+   "cs": "ASL12Z",
+   "dep": "LQSA",
+   "arr": "LYBE",
+   "std": "14:13",
+   "sta": "14:48",
+   "blk": "00:35",
+   "nm": 104,
+   "days": [
+    1,
+    5
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU653",
+   "cs": "ASL12Z",
+   "dep": "LQSA",
+   "arr": "LYBE",
+   "std": "14:21",
+   "sta": "14:56",
+   "blk": "00:35",
+   "nm": 104,
+   "days": [
+    2,
+    4,
+    6,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU107",
+   "cs": "ASL97A",
+   "dep": "LROP",
+   "arr": "LYBE",
+   "std": "02:32",
+   "sta": "03:27",
+   "blk": "00:55",
+   "nm": 248,
+   "days": [
+    1,
+    4,
+    5,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": "34"
+  },
+  {
+   "no": "JU103",
+   "cs": "ASL41Y",
+   "dep": "LROP",
+   "arr": "LYBE",
+   "std": "14:32",
+   "sta": "15:27",
+   "blk": "00:55",
+   "nm": 248,
+   "days": [
+    2,
+    3,
+    5,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": "34"
+  },
+  {
+   "no": "JU327",
+   "cs": "ASL84N",
+   "dep": "LSGG",
+   "arr": "LYBE",
+   "std": "08:29",
+   "sta": "10:15",
+   "blk": "01:46",
+   "nm": 603,
+   "days": [
+    1,
+    5
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "1",
+   "gate": "C58"
+  },
+  {
+   "no": "JU329",
+   "cs": "ASL32A",
+   "dep": "LSGG",
+   "arr": "LYBE",
+   "std": "19:44",
+   "sta": "21:30",
+   "blk": "01:46",
+   "nm": 603,
+   "days": [
+    7
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "1",
+   "gate": "C58"
+  },
+  {
+   "no": "JU331",
+   "cs": "ASL37A",
+   "dep": "LSZH",
+   "arr": "LYBE",
+   "std": "09:36",
+   "sta": "11:09",
+   "blk": "01:33",
+   "nm": 514,
+   "days": [
+    2,
+    3,
+    6,
+    7
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "E67"
+  },
+  {
+   "no": "JU333",
+   "cs": "ASL18K",
+   "dep": "LSZH",
+   "arr": "LYBE",
+   "std": "14:20",
+   "sta": "15:53",
+   "blk": "01:33",
+   "nm": 514,
+   "days": [
+    5,
+    6,
+    7
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "E56"
+  },
+  {
+   "no": "JU335",
+   "cs": "ASL16H",
+   "dep": "LSZH",
+   "arr": "LYBE",
+   "std": "20:02",
+   "sta": "21:35",
+   "blk": "01:33",
+   "nm": 514,
+   "days": [
+    4,
+    6
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "2",
+   "gate": "E22"
+  },
+  {
+   "no": "JU335",
+   "cs": "ASL16H",
+   "dep": "LSZH",
+   "arr": "LYBE",
+   "std": "20:42",
+   "sta": "22:15",
+   "blk": "01:33",
+   "nm": 514,
+   "days": [
+    2,
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "2",
+   "gate": "E23"
+  },
+  {
+   "no": "JU2429",
+   "cs": "ASL2429",
+   "dep": "LTFM",
+   "arr": "LYKV",
+   "std": "13:19",
+   "sta": "14:35",
+   "blk": "01:16",
+   "nm": 391,
+   "days": [
+    3,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": "A1E"
+  },
+  {
+   "no": "JU423",
+   "cs": "ASL423",
+   "dep": "LTFM",
+   "arr": "LYBE",
+   "std": "14:33",
+   "sta": "15:54",
+   "blk": "01:21",
+   "nm": 426,
+   "days": [
+    2,
+    3,
+    4,
+    6,
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": "A5B"
+  },
+  {
+   "no": "JU1425",
+   "cs": "ASL1425",
+   "dep": "LTFM",
+   "arr": "LYNI",
+   "std": "14:40",
+   "sta": "15:47",
+   "blk": "01:07",
+   "nm": 330,
+   "days": [
+    6
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": "B7B"
+  },
+  {
+   "no": "JU1425",
+   "cs": "ASL1425",
+   "dep": "LTFM",
+   "arr": "LYNI",
+   "std": "14:44",
+   "sta": "15:51",
+   "blk": "01:07",
+   "nm": 330,
+   "days": [
+    2
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-131",
+   "term": "",
+   "gate": "B8B"
+  },
+  {
+   "no": "JU423",
+   "cs": "ASL423",
+   "dep": "LTFM",
+   "arr": "LYBE",
+   "std": "14:59",
+   "sta": "16:20",
+   "blk": "01:21",
+   "nm": 426,
+   "days": [
+    1
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "",
+   "gate": "B7A"
+  },
+  {
+   "no": "JU797",
+   "cs": "ASL79B",
+   "dep": "LWSK",
+   "arr": "LYBE",
+   "std": "02:59",
+   "sta": "03:45",
+   "blk": "00:46",
+   "nm": 181,
+   "days": [
+    1,
+    3,
+    4,
+    5,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": "101"
+  },
+  {
+   "no": "JU793",
+   "cs": "ASL74B",
+   "dep": "LWSK",
+   "arr": "LYBE",
+   "std": "14:10",
+   "sta": "14:56",
+   "blk": "00:46",
+   "nm": 181,
+   "days": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": "101"
+  },
+  {
+   "no": "JU2428",
+   "cs": "ASL2428",
+   "dep": "LYKV",
+   "arr": "LTFM",
+   "std": "10:10",
+   "sta": "11:26",
+   "blk": "01:16",
+   "nm": 391,
+   "days": [
+    3,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU2001",
+   "cs": "ASL2001",
+   "dep": "LYKV",
+   "arr": "LYBE",
+   "std": "15:37",
+   "sta": "16:06",
+   "blk": "00:29",
+   "nm": 61,
+   "days": [
+    3,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU1314",
+   "cs": "ASL37G",
+   "dep": "LYNI",
+   "arr": "LOWW",
+   "std": "05:33",
+   "sta": "06:45",
+   "blk": "01:12",
+   "nm": 362,
+   "days": [
+    3,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU1298",
+   "cs": "ASL65N",
+   "dep": "LYNI",
+   "arr": "EDDK",
+   "std": "06:06",
+   "sta": "08:13",
+   "blk": "02:07",
+   "nm": 750,
+   "days": [
+    6
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU1454",
+   "cs": "ASL68E",
+   "dep": "LYNI",
+   "arr": "LMML",
+   "std": "06:30",
+   "sta": "08:11",
+   "blk": "01:41",
+   "nm": 564,
+   "days": [
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU1454",
+   "cs": "ASL68E",
+   "dep": "LYNI",
+   "arr": "LMML",
+   "std": "08:04",
+   "sta": "09:45",
+   "blk": "01:41",
+   "nm": 564,
+   "days": [
+    3
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-131",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU1101",
+   "cs": "ASL44P",
+   "dep": "LYNI",
+   "arr": "LYBE",
+   "std": "10:18",
+   "sta": "10:54",
+   "blk": "00:36",
+   "nm": 111,
+   "days": [
+    3,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU1103",
+   "cs": "ASL30L",
+   "dep": "LYNI",
+   "arr": "LYBE",
+   "std": "11:26",
+   "sta": "12:02",
+   "blk": "00:36",
+   "nm": 111,
+   "days": [
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU1424",
+   "cs": "ASL1424",
+   "dep": "LYNI",
+   "arr": "LTFM",
+   "std": "12:15",
+   "sta": "13:22",
+   "blk": "01:07",
+   "nm": 330,
+   "days": [
+    6
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU1424",
+   "cs": "ASL1424",
+   "dep": "LYNI",
+   "arr": "LTFM",
+   "std": "12:21",
+   "sta": "13:28",
+   "blk": "01:07",
+   "nm": 330,
+   "days": [
+    2
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-131",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU1103",
+   "cs": "ASL30L",
+   "dep": "LYNI",
+   "arr": "LYBE",
+   "std": "13:24",
+   "sta": "14:00",
+   "blk": "00:36",
+   "nm": 111,
+   "days": [
+    3
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-131",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU1352",
+   "cs": "ASL82Z",
+   "dep": "LYNI",
+   "arr": "EDFH",
+   "std": "16:45",
+   "sta": "18:48",
+   "blk": "02:03",
+   "nm": 719,
+   "days": [
+    6
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU1298",
+   "cs": "ASL65N",
+   "dep": "LYNI",
+   "arr": "EDDK",
+   "std": "16:52",
+   "sta": "18:59",
+   "blk": "02:07",
+   "nm": 750,
+   "days": [
+    2
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-131",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU1626",
+   "cs": "ASL45A",
+   "dep": "LYNI",
+   "arr": "LJLJ",
+   "std": "17:33",
+   "sta": "18:44",
+   "blk": "01:11",
+   "nm": 359,
+   "days": [
+    2,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU661",
+   "cs": "ASL21B",
+   "dep": "LYPG",
+   "arr": "LYBE",
+   "std": "07:38",
+   "sta": "08:20",
+   "blk": "00:42",
+   "nm": 155,
+   "days": [
+    1
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU661",
+   "cs": "ASL21B",
+   "dep": "LYPG",
+   "arr": "LYBE",
+   "std": "07:38",
+   "sta": "08:20",
+   "blk": "00:42",
+   "nm": 155,
+   "days": [
+    3,
+    4,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU661",
+   "cs": "ASL21B",
+   "dep": "LYPG",
+   "arr": "LYBE",
+   "std": "07:42",
+   "sta": "08:24",
+   "blk": "00:42",
+   "nm": 155,
+   "days": [
+    5,
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU663",
+   "cs": "ASL29Q",
+   "dep": "LYPG",
+   "arr": "LYBE",
+   "std": "14:18",
+   "sta": "15:00",
+   "blk": "00:42",
+   "nm": 155,
+   "days": [
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU663",
+   "cs": "ASL29Q",
+   "dep": "LYPG",
+   "arr": "LYBE",
+   "std": "14:22",
+   "sta": "15:04",
+   "blk": "00:42",
+   "nm": 155,
+   "days": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    7
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU665",
+   "cs": "ASL91C",
+   "dep": "LYPG",
+   "arr": "LYBE",
+   "std": "17:59",
+   "sta": "18:41",
+   "blk": "00:42",
+   "nm": 155,
+   "days": [
+    2,
+    3,
+    4,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU665",
+   "cs": "ASL91C",
+   "dep": "LYPG",
+   "arr": "LYBE",
+   "std": "18:28",
+   "sta": "19:10",
+   "blk": "00:42",
+   "nm": 155,
+   "days": [
+    5,
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU669",
+   "cs": "ASL44B",
+   "dep": "LYPG",
+   "arr": "LYBE",
+   "std": "21:14",
+   "sta": "21:56",
+   "blk": "00:42",
+   "nm": 155,
+   "days": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU681",
+   "cs": "ASL32C",
+   "dep": "LYTV",
+   "arr": "LYBE",
+   "std": "07:07",
+   "sta": "07:50",
+   "blk": "00:43",
+   "nm": 160,
+   "days": [
+    5
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU681",
+   "cs": "ASL32C",
+   "dep": "LYTV",
+   "arr": "LYBE",
+   "std": "07:08",
+   "sta": "07:51",
+   "blk": "00:43",
+   "nm": 160,
+   "days": [
+    1,
+    3,
+    4,
+    6,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU687",
+   "cs": "ASL65W",
+   "dep": "LYTV",
+   "arr": "LYBE",
+   "std": "10:42",
+   "sta": "11:25",
+   "blk": "00:43",
+   "nm": 160,
+   "days": [
+    1,
+    4,
+    5
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU687",
+   "cs": "ASL65W",
+   "dep": "LYTV",
+   "arr": "LYBE",
+   "std": "10:54",
+   "sta": "11:37",
+   "blk": "00:43",
+   "nm": 160,
+   "days": [
+    2,
+    3,
+    6,
+    7
+   ],
+   "type": "AT76",
+   "fleet": "ATR 72-600",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU683",
+   "cs": "ASL37M",
+   "dep": "LYTV",
+   "arr": "LYBE",
+   "std": "14:16",
+   "sta": "14:59",
+   "blk": "00:43",
+   "nm": 160,
+   "days": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "type": "E195",
+   "fleet": "Embraer E195LR",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU841",
+   "cs": "ASL841",
+   "dep": "UBBB",
+   "arr": "LYBE",
+   "std": "18:02",
+   "sta": "21:32",
+   "blk": "03:30",
+   "nm": 1331,
+   "days": [
+    3,
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "1",
+   "gate": "2"
+  },
+  {
+   "no": "JU891",
+   "cs": "ASL19J",
+   "dep": "UGTB",
+   "arr": "LYBE",
+   "std": "11:47",
+   "sta": "14:43",
+   "blk": "02:56",
+   "nm": 1090,
+   "days": [
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-131",
+   "term": "",
+   "gate": "202"
+  },
+  {
+   "no": "JU891",
+   "cs": "ASL19J",
+   "dep": "UGTB",
+   "arr": "LYBE",
+   "std": "12:17",
+   "sta": "15:13",
+   "blk": "02:56",
+   "nm": 1090,
+   "days": [
+    3,
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": "202"
+  },
+  {
+   "no": "JU4891",
+   "cs": "ASL4891",
+   "dep": "UGTB",
+   "arr": "LYBE",
+   "std": "14:43",
+   "sta": "17:39",
+   "blk": "02:56",
+   "nm": 1090,
+   "days": [
+    3
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU125",
+   "cs": "ASL125",
+   "dep": "ULLI",
+   "arr": "LYBE",
+   "std": "01:24",
+   "sta": "04:02",
+   "blk": "02:38",
+   "nm": 968,
+   "days": [
+    4,
+    6,
+    7
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "1",
+   "gate": "64"
+  },
+  {
+   "no": "JU125",
+   "cs": "ASL125",
+   "dep": "ULLI",
+   "arr": "LYBE",
+   "std": "01:26",
+   "sta": "04:04",
+   "blk": "02:38",
+   "nm": 968,
+   "days": [
+    5
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "1",
+   "gate": "54"
+  },
+  {
+   "no": "JU121",
+   "cs": "ASL121",
+   "dep": "ULLI",
+   "arr": "LYBE",
+   "std": "08:55",
+   "sta": "11:33",
+   "blk": "02:38",
+   "nm": 968,
+   "days": [
+    7
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "1",
+   "gate": "55"
+  },
+  {
+   "no": "JU179",
+   "cs": "ASL179",
+   "dep": "URSS",
+   "arr": "LYBE",
+   "std": "13:06",
+   "sta": "15:27",
+   "blk": "02:21",
+   "nm": 849,
+   "days": [
+    5
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU139",
+   "cs": "ASL139",
+   "dep": "UUEE",
+   "arr": "LYBE",
+   "std": "01:32",
+   "sta": "04:05",
+   "blk": "02:33",
+   "nm": 932,
+   "days": [
+    1,
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "C",
+   "gate": "140"
+  },
+  {
+   "no": "JU139",
+   "cs": "ASL139",
+   "dep": "UUEE",
+   "arr": "LYBE",
+   "std": "02:01",
+   "sta": "04:34",
+   "blk": "02:33",
+   "nm": 932,
+   "days": [
+    2,
+    4,
+    5,
+    6
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "C",
+   "gate": "137"
+  },
+  {
+   "no": "JU131",
+   "cs": "ASL131",
+   "dep": "UUEE",
+   "arr": "LYBE",
+   "std": "11:45",
+   "sta": "14:18",
+   "blk": "02:33",
+   "nm": 932,
+   "days": [
+    2,
+    3,
+    5,
+    6,
+    7
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "C",
+   "gate": "141"
+  },
+  {
+   "no": "JU133",
+   "cs": "ASL133",
+   "dep": "UUEE",
+   "arr": "LYBE",
+   "std": "19:02",
+   "sta": "21:35",
+   "blk": "02:33",
+   "nm": 932,
+   "days": [
+    2,
+    4,
+    5,
+    6
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "C",
+   "gate": "140"
+  },
+  {
+   "no": "JU135",
+   "cs": "ASL135",
+   "dep": "UUEE",
+   "arr": "LYBE",
+   "std": "21:56",
+   "sta": "00:29",
+   "blk": "02:33",
+   "nm": 932,
+   "days": [
+    3,
+    4,
+    6
+   ],
+   "type": "A320",
+   "fleet": "Airbus A320-232",
+   "term": "C",
+   "gate": "135"
+  },
+  {
+   "no": "JU187",
+   "cs": "ASL187",
+   "dep": "UWGG",
+   "arr": "LYBE",
+   "std": "01:30",
+   "sta": "04:30",
+   "blk": "03:00",
+   "nm": 1119,
+   "days": [
+    6
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "",
+   "gate": ""
+  },
+  {
+   "no": "JU189",
+   "cs": "ASL189",
+   "dep": "UWKD",
+   "arr": "LYBE",
+   "std": "00:39",
+   "sta": "04:01",
+   "blk": "03:22",
+   "nm": 1274,
+   "days": [
+    5,
+    7
+   ],
+   "type": "A319",
+   "fleet": "Airbus A319-132",
+   "term": "A",
+   "gate": "13"
+  },
+  {
+   "no": "JU989",
+   "cs": "ASL989",
+   "dep": "ZGGG",
+   "arr": "LYBE",
+   "std": "15:03",
+   "sta": "02:13",
+   "blk": "11:10",
+   "nm": 4549,
+   "days": [
+    1,
+    5
+   ],
+   "type": "A332",
+   "fleet": "Airbus A330-243",
+   "term": "2",
+   "gate": ""
+  },
+  {
+   "no": "JU987",
+   "cs": "ASL987",
+   "dep": "ZSPD",
+   "arr": "LYBE",
+   "std": "02:40",
+   "sta": "13:51",
+   "blk": "11:11",
+   "nm": 4557,
+   "days": [
+    3,
+    7
+   ],
+   "type": "A332",
+   "fleet": "Airbus A330-243",
+   "term": "2",
+   "gate": ""
   }
  ]
 }

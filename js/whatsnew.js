@@ -7,6 +7,15 @@ import { esc } from "./util.js";
 import { APP_ICONS } from "./icons.js";
 
 export const releases = () => [
+  { v: "2.7.0", date: "2026-11-27", groups: [
+    { icon: "ops", name: "ASL Ops", items: [
+      t("Timetable: every flight of Air Serbia Virtual – departures and arrivals per airport and day, with flight number, callsign, times, aircraft and gate"),
+      t("Fleet: all 33 aircraft of the airline with registration, grouped by type"),
+    ] },
+    { icon: "pad", name: "ASL Pad", items: [
+      t("Suggestions and booking now use the real timetable: flight number, callsign, departure time and aircraft are filled in"),
+    ] },
+  ] },
   { v: "2.6.1", date: "2026-11-24", groups: [
     { icon: "settings", name: "ASL Pad", items: [
       t("Sign in with your Air Serbia Virtual account (vAMSYS) again: the VATSIM ID in vAMSYS links your dashboard profile and bookings"),

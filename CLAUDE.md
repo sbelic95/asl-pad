@@ -49,7 +49,9 @@ EOSID/NADP nur echte Verfahren der Airline in `procedures` – nichts erfinden.
 
 ## 1.7 Buchung
 
-`js/booking.js`: Flugvorschläge aus `va/routes.json` (Vorschlag, bis die VA-Leitung bestätigt – keine Linien erfinden), Buchung → SimBrief → Plan-Karte
+`js/booking.js`: Flugvorschläge und Buchung aus dem **echten Flugplan der VA** in `va/routes.json` (`flights`: Nummer, Rufzeichen, STD/STA UTC, Tage, Typ, Gate) –
+erzeugt mit `python3 tools/import-schedule.py <Ordner>` aus den vAMSYS-CSV-Dateien des Nutzers (Passenger Schedule, airports, fleet, Aircraft); dazu `va/fleet.json` (alle Registrierungen).
+Nie von Hand ändern oder Linien erfinden; neuer Flugplan = Skript neu laufen lassen. ASL Ops Reiter „Timetable“. Buchung → SimBrief → Plan-Karte
 mit Sprit ±. Sprit/Gewichte nur als Summen aus dem OFP, keine Performance. Kein LH-Layout nachbauen, eigener Stil.
 
 ## 1.8 Funk, ACARS, Cabin
