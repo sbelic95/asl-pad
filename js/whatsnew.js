@@ -7,13 +7,68 @@ import { esc } from "./util.js";
 import { APP_ICONS } from "./icons.js";
 
 export const releases = () => [
-  { v: "2.1", date: "2026-11-27", groups: [
+  { v: "2.7.0", date: "2026-11-27", groups: [
     { icon: "ops", name: "ASL Ops", items: [
       t("Timetable: every flight of Air Serbia Virtual – departures and arrivals per airport and day, with flight number, callsign, times, aircraft and gate"),
       t("Fleet: all 33 aircraft of the airline with registration, grouped by type"),
     ] },
     { icon: "pad", name: "ASL Pad", items: [
       t("Suggestions and booking now use the real timetable: flight number, callsign, departure time and aircraft are filled in"),
+    ] },
+  ] },
+  { v: "2.6.1", date: "2026-11-24", groups: [
+    { icon: "settings", name: "ASL Pad", items: [
+      t("Sign in with your Air Serbia Virtual account (vAMSYS) again: the VATSIM ID in vAMSYS links your dashboard profile and bookings"),
+      t("Logbook: your flights flown with Air Serbia Virtual in vAMSYS (PIREPs) come in by themselves, marked vAMSYS"),
+    ] },
+  ] },
+  { v: "2.6.0", date: "2026-11-23", groups: [
+    { icon: "fly", name: "ASL Fly", items: [
+      t("No VATSIM ATIS online? ASL Fly shows the airport's real ATIS (US airports) – otherwise the runway from the real METAR wind"),
+    ] },
+    { icon: "settings", name: "ASL Pad", items: [
+      t("Your Air Serbia Virtual account (VATSIM CID + PIN) replaces vAMSYS everywhere: crew card, roster, calendar and your booking on the home screen"),
+      t("The Hoppie logon code no longer makes the browser offer to save a password"),
+      t("No PIN any more: a swipe on the lock screen opens the pad"),
+      t("Sounds on the iPad: now also in silent mode and after the iPad was locked"),
+      t("TOBT changeable in the pad (VDGS tab): −15/−5/+5/+15 or an exact time; where VATSIM CDM runs, the pad shows if the VATSIM VDGS still has another TOBT"),
+      t("Overview: the radio strip in two halves – the frequency now and the next frequency change"),
+      t("US airports: the CTAF of each airport next to UNICOM when no controller is online"),
+    ] },
+  ] },
+  { v: "2.5.0", date: "2026-11-23", groups: [
+    { icon: "settings", name: "ASL Pad", items: [
+      t("The screen stays on while the pad is open (iPad from iOS 16.4)"),
+      t("Sounds: the ATC message chime for CPDLC, a chime for a new ATIS and beeps when TSAT, CTOT or off-block time change"),
+    ] },
+  ] },
+  { v: "2.4.0", date: "2026-11-23", groups: [
+    { icon: "checklist", name: "ASL Pad", items: [
+      t("Checklist and Landing: the A320 normal checklist of Air Serbia Virtual and its Embraer landing data, kept by the airline per aircraft type"),
+      t("Wind component calculator for every aircraft type, with the destination's METAR and runways filled in"),
+      t("Sign in with your Air Serbia Virtual account (VATSIM CID and PIN): SimBrief, Hoppie and your bookings come from the dashboard"),
+      t("Only Air Serbia flight plans: the pad loads SimBrief plans with an ASL callsign"),
+    ] },
+  ] },
+  { v: "2.3.0", date: "2026-11-22", groups: [
+    { icon: "turnaround", name: "ASL Pad", items: [
+      t("Turnaround (GSX) and Fenix EFB: with the VDGS bridge on the simulator PC the pad shows every GSX service live and calls it with one tap"),
+      t("Open the pad from the bridge (…:8770/pad/): live fuel, weight, parking brake and a SIM light in the status bar"),
+    ] },
+  ] },
+  { v: "2.2.0", date: "2026-11-22", groups: [
+    { icon: "pad", name: "ASL Pad", items: [
+      t("Mail, Messages, Academy, News, Photos, Scenery, Reference and Browser – eight new apps on their own home page and in the App Store"),
+      t("News: flight-sim headlines from five public sites every hour, each with its source"),
+      t("Academy: courses with questions and a Serbian course for the crew, with badges"),
+      t("The dock on the home screen is always fully visible"),
+    ] },
+  ] },
+  { v: "2.1.0", date: "2026-11-22", groups: [
+    { icon: "pad", name: "ASL Pad", items: [
+      t("On a computer the pad now lies as a tablet on a desk: frame, lock button on the top edge, brightness buttons on the side and your crew card next to it"),
+      t("Status bar with network and battery, like on a real tablet"),
+      t("Settings → Device frame: Auto, On or Off. On tablets, phones and as an installed app the pad stays full screen"),
     ] },
   ] },
   { v: "2.0.2", date: "2026-11-21", groups: [

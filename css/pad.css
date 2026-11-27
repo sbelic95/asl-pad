@@ -775,6 +775,74 @@ i.event { background: var(--b-purple) !important; } i.own { background: var(--b-
 .vd-btn { display: inline-block; font-family: var(--f-ui); font-weight: 600; font-size: 14px; color: #ffb000; border: 1px solid rgba(255, 176, 0, .6); border-radius: 10px; padding: 8px 14px; text-decoration: none; }
 .vd-btn.hot { background: #ffb000; color: #050608; } .vd.tobt .vd-main { color: #ff3347; } .vd.tobt .vd-msg { animation: vdBlink 1.2s steps(2) infinite; }
 .vd-mini.tobt { color: #ff3347; }
+
+/* ---------- 2.1 device frame: the pad as a tablet on a desk (big computer screens, js/frame.js) ---------- */
+#desk, .dv-btn, .dv-cam { display: none; }
+body:not(.framed) #device { display: contents; }
+body.framed { background: #050b16; }
+body.framed #desk { display: block; position: fixed; inset: 0;
+  background: radial-gradient(60% 55% at 50% 42%, rgba(70, 120, 200, .16), rgba(0, 0, 0, 0) 70%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .012) 0 2px, rgba(0, 0, 0, 0) 2px 7px),
+    linear-gradient(180deg, #0b1626 0%, #08111f 60%, #050b16 100%); }
+body.framed #desk::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 22%; background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, .35)); }
+body.framed #device { position: fixed; inset: 0; margin: auto; width: var(--dw); height: var(--dh); padding: 16px; border-radius: 44px;
+  background: linear-gradient(145deg, #2a2f38 0%, #14171d 45%, #0c0e12 100%);
+  box-shadow: 0 0 0 1px #3a404b, inset 0 0 0 2px #050607, 0 40px 90px rgba(0, 0, 0, .6), 0 12px 30px rgba(0, 0, 0, .45); }
+body.framed #pad { position: absolute; inset: 16px; border-radius: 28px; transform: translateZ(0); }
+body.framed .dv-cam { display: block; position: absolute; top: 6px; left: 50%; width: 6px; height: 6px; margin-left: -3px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #2d4a7a, #05070b 70%); }
+body.framed .dv-btn { display: block; position: absolute; background: linear-gradient(180deg, #3a404b, #1d2128); border-radius: 3px; box-shadow: 0 1px 2px rgba(0, 0, 0, .6); }
+body.framed .dv-btn:hover { background: linear-gradient(180deg, #4a5260, #262b33); }
+body.framed .dv-btn:active { transform: scale(.96); }
+body.framed .dv-power { top: -4px; right: 90px; width: 56px; height: 5px; }
+body.framed .dv-vol { right: -4px; width: 5px; height: 46px; top: 90px; }
+body.framed .dv-vol + .dv-vol { top: 146px; }
+/* the crew ID card on the desk, left of the tablet */
+body.framed #crewcard:not([hidden]) { position: absolute; left: calc((100vw - var(--dw)) / 4 - 95px); top: 18%; width: 190px; transform: rotate(-7deg); font-family: var(--f-ui); }
+#crewcard .cc-strap { position: absolute; left: 50%; top: -60vh; width: 26px; height: 60vh; margin-left: -13px; background: repeating-linear-gradient(180deg, var(--beacon) 0 60px, #b60019 60px 62px); box-shadow: 0 6px 18px rgba(0, 0, 0, .4); }
+#crewcard .cc-clip { position: absolute; left: 50%; top: -14px; width: 34px; height: 22px; margin-left: -17px; border-radius: 4px; background: linear-gradient(180deg, #c9ccd1, #75787b); }
+#crewcard .cc-card { position: relative; border-radius: 14px; background: #fff; color: #0a2447; padding: 16px 16px 0; overflow: hidden; box-shadow: 0 20px 40px rgba(0, 0, 0, .55); text-align: center; }
+#crewcard .cc-top { display: flex; flex-direction: column; align-items: center; gap: 4px; font: 600 9px var(--f-cond); letter-spacing: .14em; text-transform: uppercase; color: var(--silver); }
+#crewcard .cc-top img { height: 22px; }
+#crewcard .cc-photo { width: 74px; height: 74px; margin: 12px auto 8px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(145deg, #0059c2, #002e5d); color: #fff; font: 500 26px var(--f-ui); }
+#crewcard .cc-name { font: 700 16px var(--f-ui); color: #002e5d; }
+#crewcard .cc-rank { font: 500 12px var(--f-ui); color: var(--silver); min-height: 16px; margin-bottom: 8px; }
+#crewcard .cc-row { display: flex; justify-content: space-between; gap: 8px; border-top: 1px solid #e5e9f0; padding: 6px 0; font-size: 11px; color: var(--silver); }
+#crewcard .cc-row b { color: #002e5d; font-weight: 600; }
+#crewcard .cc-bar { height: 10px; margin: 10px -16px 0; background: linear-gradient(90deg, #002e5d 0 70%, #e3001f 70% 100%); }
+/* status bar: network and battery */
+.status .sysi { display: inline-flex; align-items: center; gap: 6px; }
+.status .sysi svg { width: 17px; height: 13px; }
+.status .bat { display: inline-flex; align-items: center; gap: 4px; }
+.status .bat i { position: relative; width: 24px; height: 12px; border: 1.5px solid currentColor; border-radius: 3.5px; opacity: .9; }
+.status .bat i::after { content: ""; position: absolute; right: -4px; top: 3px; width: 2px; height: 4px; border-radius: 0 1px 1px 0; background: currentColor; }
+.status .bat i b { position: absolute; left: 1.5px; top: 1.5px; bottom: 1.5px; border-radius: 1.5px; background: currentColor; }
+.status .bat.low i b { background: var(--red); } .status .bat.chg i b { background: var(--ok); }
+
+/* "Virtual" under the Air Serbia logo (it is a virtual airline) and the note at the bottom: not a real airline */
+.vbrand { display: inline-flex; flex-direction: column; align-items: flex-end; line-height: 1; }
+.vword { font: italic 500 .42em/1 var(--f-ui, "Roboto", system-ui, sans-serif); letter-spacing: .02em; color: inherit; text-transform: none; margin-top: 2px; }
+.lk-brand .vbrand { font-size: clamp(46px, 6vw, 70px); color: #fff; } :root[data-theme="light"] .lk-brand .vbrand { color: #002E5D; }
+#crewcard .cc-top .vbrand { font-size: 22px; color: #002E5D; } .vbrand.cab { font-size: 34px; color: #fff; }
+.vdisc { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); z-index: 9999; max-width: calc(100% - 16px); background: #000; color: #fff;
+  font: 500 9.5px/1.3 var(--f-ui, "Roboto", system-ui, sans-serif); padding: 1px 10px; border-radius: 5px 5px 0 0; text-align: center; pointer-events: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* the pics.avs.io logo has empty space around the word mark: tuck "Virtual" under "SERBIA" */
+.lk-brand .vword { font-size: .3em; margin: -.62em 3% 0 0; }
+#crewcard .cc-top .vword { margin: -.3em 9% 0 0; }
+.vbrand.cab .vword { font-size: .38em; margin-top: 3px; }
+
+/* overview of ASL Fly: the radio strip in two halves – now | next frequency change; US airports with their CTAF */
+.rd-strip.halves { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 0; }
+.rd-strip.halves .half { min-width: 0; padding-right: 14px; }
+.rd-strip.halves .half.next { padding: 0 0 0 14px; border-left: 1px solid var(--line2); }
+.rd-strip.halves .rd-new { grid-column: 1 / -1; }
+.rd-strip .ctaf, .rd-row .ctaf { color: var(--fg); font-size: 13px; } .rd-strip .ctaf .num, .rd-row .ctaf .num { color: var(--accent); }
+
+/* VDGS: the pilot's own TOBT */
+.vd-tobt { margin-top: 14px; }
+.vd-tobt-row { display: flex; gap: 8px; align-items: center; justify-content: center; flex-wrap: wrap; margin-top: 6px; }
+.vd-tb { min-width: 52px; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, .25); background: rgba(255, 255, 255, .08); color: inherit; font: 700 16px var(--f-cond); cursor: pointer; }
+.vd-tb.big { min-width: 120px; font-size: 26px; letter-spacing: .04em; background: rgba(255, 196, 0, .14); border-color: rgba(255, 196, 0, .55); }
+.vd-tobt-note { margin-top: 6px; font-size: 12.5px; opacity: .8; }
 /* ASL Ops → Timetable, fleet without SimBrief link */
 .tt-bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; } .tt-bar select { min-width: 220px; }
 .tt { width: 100%; border-collapse: collapse; font-size: 14px; } .tt th { text-align: left; font: 600 11px var(--f-cond); letter-spacing: .08em; text-transform: uppercase; color: var(--dim); padding: 6px 8px; }

@@ -287,6 +287,7 @@ async function loadAslStands() {
   try { setAslStands(await getJSON("va/asl-stands.json", 15000)); aslStandsAt = Date.now(); fixedArr = null; } catch {}
 }
 export async function pollNotices() {
+  loadAslStands();
   await Promise.all(["notices", "downloads", "ranks", "routes", "vafleet"].map(async (k) => {
     try { const n = await getJSON(API[k]); if (n) { S[k] = n; store.set("asl." + k, n); } } catch {}
   }));
